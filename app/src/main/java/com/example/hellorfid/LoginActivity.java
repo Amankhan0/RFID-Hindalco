@@ -22,18 +22,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Display a Toast message when the login button is clicked
-
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int width = displayMetrics.widthPixels;
-                int height = displayMetrics.heightPixels;
-
-                // Display dimensions using a Toast
-                String dimensions = "Width: " + width + "px, Height: " + height + "px";
-                Toast.makeText(LoginActivity.this, dimensions, Toast.LENGTH_SHORT).show();
-
-
+                // Start the new activity when the button is clicked
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }

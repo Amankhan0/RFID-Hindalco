@@ -38,6 +38,11 @@ public class InprogressFragmentActivity extends Fragment {
         tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
         tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
         tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
+        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
+        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
+        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
+        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
+        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
 
         // Add more rows as needed
 

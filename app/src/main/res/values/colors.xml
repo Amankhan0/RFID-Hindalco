@@ -6,4 +6,9 @@
     <color name="red">#AE2026</color>
     <color name="yellow">#F7D552</color>
     <color name="disableButtonColor">#CCC</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="gray">#D3D3D3</color>
+
 </resources>

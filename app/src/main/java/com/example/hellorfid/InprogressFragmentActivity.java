@@ -1,9 +1,12 @@
 package com.example.hellorfid;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +27,7 @@ public class InprogressFragmentActivity extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.activity_inprogress_fragment, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
 
@@ -32,22 +36,10 @@ public class InprogressFragmentActivity extends Fragment {
         tableData.add(new InProgressTableRow("CXSBUR449", "20"));
         tableData.add(new InProgressTableRow("CITSMD449", "40"));
         tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-        tableData.add(new InProgressTableRow("KDFJ329FS", "50"));
-
         // Add more rows as needed
 
         // Set up the RecyclerView
-        tableAdapter = new InProgressTableAdapter(tableData);
+        tableAdapter = new InProgressTableAdapter(getContext(), tableData);  // Pass the context here
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(tableAdapter);
 
@@ -77,8 +69,10 @@ public class InprogressFragmentActivity extends Fragment {
     static class InProgressTableAdapter extends RecyclerView.Adapter<InProgressTableAdapter.TableViewHolder> {
 
         private List<InProgressTableRow> tableData;
+        private Context context;  // Store the context
 
-        public InProgressTableAdapter(List<InProgressTableRow> tableData) {
+        public InProgressTableAdapter(Context context, List<InProgressTableRow> tableData) {
+            this.context = context;  // Initialize the context
             this.tableData = tableData;
         }
 
@@ -86,7 +80,7 @@ public class InprogressFragmentActivity extends Fragment {
         @Override
         public TableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.inbound_inprogress_item, parent, false);
-            return new TableViewHolder(view);
+            return new TableViewHolder(view, context);  // Pass context to ViewHolder
         }
 
         @Override
@@ -104,11 +98,22 @@ public class InprogressFragmentActivity extends Fragment {
         static class TableViewHolder extends RecyclerView.ViewHolder {
             TextView column1;
             TextView column2;
+            ImageView column3Next;
 
-            public TableViewHolder(@NonNull View itemView) {
+            public TableViewHolder(@NonNull View itemView, Context context) {  // Accept context in constructor
                 super(itemView);
                 column1 = itemView.findViewById(R.id.column1);
                 column2 = itemView.findViewById(R.id.column2);
+                column3Next = itemView.findViewById(R.id.column3_next);
+
+                column3Next.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Start the new activity when the button is clicked
+                        Intent intent = new Intent(context, ScanReplace.class);
+                        context.startActivity(intent);
+                    }
+                });
             }
         }
     }

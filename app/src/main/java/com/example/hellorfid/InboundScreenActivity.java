@@ -15,6 +15,7 @@ public class InboundScreenActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +69,8 @@ public class InboundScreenActivity extends AppCompatActivity {
         });
 
 
+
+
         Button CompleteBtn = findViewById(R.id.inbound_complete_btn);
         CompleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +89,25 @@ public class InboundScreenActivity extends AppCompatActivity {
                 findViewById(R.id.inbound_fragments).setVisibility(View.VISIBLE);
             }
         });
+
+
+
+
+//
+//        ImageView nexticon = findViewById(R.id.column3_next);
+//        nexticon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(InboundScreenActivity.this, ScanReplace.class);
+//                // Clear the back stack and start the new activity
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+//                // Finish the current activity so it's removed from the back stack
+//                finish();
+//            }
+//        });
+//
+//        System.out.println("0------");
 
     }
 }

@@ -45,6 +45,20 @@ public class HandheldTerminalActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        ImageView ProfileButton = findViewById(R.id.profile);
+        ProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HandheldTerminalActivity.this, ProfileActivity.class);
+                // Clear the back stack and start the new activity
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                // Finish the current activity so it's removed from the back stack
+                finish();
+            }
+        });
+
 //
 //        buttonPicking.setOnClickListener(new View.OnClickListener() {
 //            @Override

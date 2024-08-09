@@ -23,9 +23,9 @@
         android:textSize="6pt" />
 
     <ImageView
-        android:id="@+id/column3"
-        android:layout_width="5pt"
-        android:layout_height="5pt"
+        android:id="@+id/column3_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginRight="10pt"
         android:layout_gravity="center"
         android:background="@drawable/nexticon" />

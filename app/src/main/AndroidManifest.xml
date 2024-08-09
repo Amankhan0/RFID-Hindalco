@@ -15,9 +15,7 @@
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
-        <activity
-            android:name=".Profile_Activity"
-            android:exported="false" />
+
         <activity
             android:name=".CompleteFragmentActivity"
             android:exported="false" />
@@ -27,6 +25,11 @@
         <activity
             android:name=".InboundScreenActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".HandheldTerminalActivity"
+            android:exported="false" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="true"
@@ -37,10 +40,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".HandheldTerminalActivity"
+            android:name=".ScanReplace"
             android:exported="true"
-            android:theme="@style/Theme.HelloRFID" />
+            android:theme="@style/Theme.HelloRFID">
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -2,10 +2,6 @@ package com.example.hellorfid;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,13 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hellorfid.databinding.ActivityMainBinding;
-import com.google.android.material.snackbar.Snackbar;
 import com.zebra.rfid.api3.ACCESS_OPERATION_CODE;
 import com.zebra.rfid.api3.ACCESS_OPERATION_STATUS;
 import com.zebra.rfid.api3.ENUM_TRANSPORT;
@@ -45,14 +37,12 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final Logger log = Logger.getLogger(MainActivity.class);
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
-
     private static Readers readers;
     private static ArrayList<ReaderDevice> availableRFIDReaderList;
     private static ReaderDevice readerDevice;
@@ -63,16 +53,17 @@ public class MainActivity extends AppCompatActivity {
     private EventHandler eventHandler;
     private Set<String> scannedTagIds;
 
+    private RecyclerView recyclerView;
+    private TagAdapter tagAdapter;
+    private List<Tag> tagList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
 
-        setSupportActionBar(binding.toolbar);
-
-        tagTextView = findViewById(R.id.TagText);
-        resetButton = findViewById(R.id.resetButton);
+        tagTextView = findViewById(R.id.totalScan1);
+        resetButton = findViewById(R.id.submitButton1);
         scannedTagIds = new HashSet<>();
 
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
                 resetScannedTags();
             }
         });
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        tagList = new ArrayList<>();
+        tagAdapter = new TagAdapter(this, tagList);
+        recyclerView.setAdapter(tagAdapter);
 
         // SDK
         if (readers == null) {
@@ -119,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
                 super.onPostExecute(aBoolean);
                 if (aBoolean) {
                     Toast.makeText(getApplicationContext(), "Reader Connected", Toast.LENGTH_SHORT).show();
-
                     tagTextView.setText("Reader connected");
                 }
             }
@@ -128,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void resetScannedTags() {
         scannedTagIds.clear();
+        tagList.clear();
+        tagAdapter.notifyDataSetChanged();
         tagTextView.setText("Reader connected\n");
     }
 
@@ -145,8 +144,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
     private void ConfigureReader() {
         if (reader.isConnected()) {
@@ -193,6 +190,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void addTagToList(String tagId) {
+        tagList.add(new Tag(tagId, "Lot A"));
+        tagAdapter.notifyItemInserted(tagList.size() - 1);
+    }
+
     public class EventHandler implements RfidEventsListener {
         @Override
         public void eventReadNotify(RfidReadEvents e) {
@@ -209,22 +211,14 @@ public class MainActivity extends AppCompatActivity {
 
                     // Add the scanned tag ID to the set
                     final String tagId = tagData.getTagID();
-                    scannedTagIds.add(tagId);
-
-                    // Update the TextView with all scanned tag IDs
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            StringBuilder allTags = new StringBuilder("Reader connected\n");
-                            for (String id : scannedTagIds) {
-                                allTags.append("Tag ID: ").append(id).append("\n");
+                    if (scannedTagIds.add(tagId)) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                addTagToList(tagId);
                             }
-                            SpannableString spannableString = new SpannableString(allTags.toString());
-                            spannableString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, 16, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                            tagTextView.setText(spannableString);
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }

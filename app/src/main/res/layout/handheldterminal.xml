@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Buttons grid -->
+    <GridLayout
+android:layout_margin="5pt"
+        android:paddingTop="20pt"
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:columnCount="2"
+        android:rowCount="2">
+
+        <!-- Receiving button -->
+        <Button
+            android:id="@+id/buttonReceiving"
+            style="@style/TerminalButtonStyle"
+            android:layout_width="60pt"
+            android:layout_height="40pt"
+            android:text="Receiving" />
+
+
+        <!-- Picking button -->
+        <Button
+            android:id="@+id/buttonPicking"
+            style="@style/TerminalButtonStyle"
+            android:layout_width="60pt"
+            android:layout_height="40pt"
+            android:text="Picking" />
+
+        <!-- Replace button -->
+        <Button
+            android:id="@+id/buttonReplace"
+            style="@style/TerminalButtonStyle"
+            android:layout_width="60pt"
+            android:layout_height="40pt"
+            android:text="Replace" />
+
+        <!-- Hold button -->
+        <Button
+            android:id="@+id/buttonHold"
+            style="@style/TerminalButtonStyle"
+            android:layout_width="60pt"
+            android:layout_height="40pt"
+            android:text="Hold" />
+
+        <!-- Consume button -->
+        <Button
+            android:id="@+id/buttonConsume"
+            style="@style/TerminalButtonStyle"
+            android:layout_width="60pt"
+            android:layout_height="40pt"
+            android:text="Consume" />
+    </GridLayout>
+
+</RelativeLayout>

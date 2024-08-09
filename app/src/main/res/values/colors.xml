@@ -5,4 +5,5 @@
     <color name="btnBg">#FFFFFF</color>
     <color name="red">#AE2026</color>
     <color name="yellow">#F7D552</color>
+    <color name="disableButtonColor">#CCC</color>
 </resources>

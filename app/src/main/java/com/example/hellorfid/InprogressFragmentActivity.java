@@ -85,7 +85,7 @@ public class InprogressFragmentActivity extends Fragment {
         @NonNull
         @Override
         public TableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_table_row, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.inbound_inprogress_item, parent, false);
             return new TableViewHolder(view);
         }
 

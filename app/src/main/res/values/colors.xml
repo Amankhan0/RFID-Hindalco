@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFF</color>
+    <color name="green">#20A000</color>
     <color name="btnBg">#FFFFFF</color>
     <color name="red">#AE2026</color>
     <color name="yellow">#F7D552</color>
@@ -10,5 +11,6 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="gray">#D3D3D3</color>
+    <color name="lightgray">#F0F0F0</color>
 
 </resources>

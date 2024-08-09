@@ -24,7 +24,7 @@
             android:name=".InboundScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ScanReplace"
             android:exported="true"
             android:theme="@style/Theme.HelloRFID">
             <intent-filter>
@@ -37,6 +37,13 @@
 
         <activity
             android:name=".HandheldTerminalActivity"
+            android:exported="true"
+            android:theme="@style/Theme.HelloRFID">
+        </activity>
+
+
+        <activity
+            android:name=".LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.HelloRFID">
         </activity>

@@ -14,11 +14,14 @@ import org.json.JSONObject;
 public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiCallback {
 
     private static final String TAG = "LoginActivity";
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+
+        sessionManager = new SessionManager(this);
 
         EditText usernameInput = findViewById(R.id.username);
         EditText passwordInput = findViewById(R.id.password);
@@ -29,38 +32,38 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
             public void onClick(View v) {
                 // Create JSON object with login credentials
 
-                String username = usernameInput.getText().toString().trim();
-                String password = passwordInput.getText().toString().trim();
+                String token = sessionManager.getToken();
 
-                if (username.isEmpty()){
-                    Toast.makeText(LoginActivity.this, "Please enter username", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                else if(password.isEmpty()){
-                    Toast.makeText(LoginActivity.this, "Please enter password", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                else{
-                    JSONObject loginJson = new JSONObject();
-                    try {
-                        loginJson.put("username", username);
-                        loginJson.put("password", password);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(LoginActivity.this, "Error creating JSON", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                System.out.println("token----"+token);
 
-                    // Log the JSON object being sent
-                    Log.d(TAG, "Sending login request with JSON: " + loginJson.toString());
-
-
-                    // Make the API call
-                    ApiCallBack apiCallBack = new ApiCallBack();
-                    String url = "auth/login"; // Replace with your actual URL
-                    apiCallBack.login(url, loginJson, LoginActivity.this);
-                }
-
+//                String username = usernameInput.getText().toString().trim();
+//                String password = passwordInput.getText().toString().trim();
+//
+//                if (username.isEmpty()){
+//                    Toast.makeText(LoginActivity.this, "Please enter username", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                else if(password.isEmpty()){
+//                    Toast.makeText(LoginActivity.this, "Please enter password", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                else{
+//                    JSONObject loginJson = new JSONObject();
+//                    try {
+//                        loginJson.put("username", username);
+//                        loginJson.put("password", password);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(LoginActivity.this, "Error creating JSON", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                    // Log the JSON object being sent
+//                    Log.d(TAG, "Sending login request with JSON: " + loginJson.toString());
+//                    // Make the API call
+//                    ApiCallBack apiCallBack = new ApiCallBack();
+//                    String url = "auth/login"; // Replace with your actual URL
+//                    apiCallBack.login(url, loginJson, LoginActivity.this);
+//                }
             }
         });
     }
@@ -71,6 +74,10 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
 
         // Log the successful response
         Log.d(TAG, "Login successful. Response: " + result);
+
+        String token = responseJson.optString("token");
+
+        sessionManager.setToken(token); // Save the token
 
         // Handle successful response
         runOnUiThread(() -> {

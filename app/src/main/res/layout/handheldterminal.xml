@@ -17,11 +17,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/all_screen_back_btn"
-            android:background="@drawable/backicon" />
+        <TextView
+        android:layout_width="15pt"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textAlignment="center" />
 
         <TextView
             android:layout_width="100pt"

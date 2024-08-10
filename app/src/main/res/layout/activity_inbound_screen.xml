@@ -12,7 +12,7 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="30pt"
-        android:layout_marginTop="35px"
+        android:layout_marginTop="30px"
         android:background="@color/white"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"

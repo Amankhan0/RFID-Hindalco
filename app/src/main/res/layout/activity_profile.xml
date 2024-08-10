@@ -31,7 +31,7 @@
             android:layout_width="100pt"
             android:textColor="@color/black"
             android:layout_height="wrap_content"
-            android:text="Inbound Order"
+            android:text="My Profile"
             android:gravity="center"
             android:textStyle="bold"
             android:textAlignment="center"

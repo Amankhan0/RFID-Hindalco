@@ -1,5 +1,6 @@
 package com.example.hellorfid;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +63,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ImageView AllScreenBackBtn = findViewById(R.id.all_screen_back_btn);
+        AllScreenBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ScanReplace.class);
+                // Clear the back stack and start the new activity
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                // Finish the current activity so it's removed from the back stack
+                finish();
+            }
+        });
 
         tagTextView = findViewById(R.id.totalScan1);
         resetButton = findViewById(R.id.submitButton1);

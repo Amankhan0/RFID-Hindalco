@@ -16,15 +16,20 @@ import okhttp3.Response;
 
 public class ApiCallBack {
 
+    public String baseUrl = "http://137.184.74.218/";
+
     private static final String TAG = "ApiCallBack";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
 
     public void login(String url, JSONObject loginJson, ApiCallback callback) {
+
+
+
         RequestBody body = RequestBody.create(JSON, loginJson.toString());
 
         Request request = new Request.Builder()
-                .url(url)
+                .url(baseUrl+url)
                 .post(body)
                 .addHeader("Content-Type", "application/json")
                 .build();

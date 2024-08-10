@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
 
                     // Make the API call
                     ApiCallBack apiCallBack = new ApiCallBack();
-                    String url = "http://137.184.74.218/auth/login"; // Replace with your actual URL
+                    String url = "auth/login"; // Replace with your actual URL
                     apiCallBack.login(url, loginJson, LoginActivity.this);
                 }
 

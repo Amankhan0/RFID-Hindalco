@@ -1,5 +1,6 @@
 package com.example.hellorfid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,34 +37,34 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
 
                 System.out.println("token----"+token);
 
-//                String username = usernameInput.getText().toString().trim();
-//                String password = passwordInput.getText().toString().trim();
-//
-//                if (username.isEmpty()){
-//                    Toast.makeText(LoginActivity.this, "Please enter username", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                else if(password.isEmpty()){
-//                    Toast.makeText(LoginActivity.this, "Please enter password", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                else{
-//                    JSONObject loginJson = new JSONObject();
-//                    try {
-//                        loginJson.put("username", username);
-//                        loginJson.put("password", password);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        Toast.makeText(LoginActivity.this, "Error creating JSON", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                    // Log the JSON object being sent
-//                    Log.d(TAG, "Sending login request with JSON: " + loginJson.toString());
-//                    // Make the API call
-//                    ApiCallBack apiCallBack = new ApiCallBack();
-//                    String url = "auth/login"; // Replace with your actual URL
-//                    apiCallBack.login(url, loginJson, LoginActivity.this);
-//                }
+                String username = usernameInput.getText().toString().trim();
+                String password = passwordInput.getText().toString().trim();
+
+                if (username.isEmpty()){
+                    Toast.makeText(LoginActivity.this, "Please enter username", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(password.isEmpty()){
+                    Toast.makeText(LoginActivity.this, "Please enter password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else{
+                    JSONObject loginJson = new JSONObject();
+                    try {
+                        loginJson.put("username", username);
+                        loginJson.put("password", password);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(LoginActivity.this, "Error creating JSON", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    // Log the JSON object being sent
+                    Log.d(TAG, "Sending login request with JSON: " + loginJson.toString());
+                    // Make the API call
+                    ApiCallBack apiCallBack = new ApiCallBack();
+                    String url = "auth/login"; // Replace with your actual URL
+                    apiCallBack.login(url, loginJson, LoginActivity.this);
+                }
             }
         });
     }
@@ -82,6 +83,8 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
         // Handle successful response
         runOnUiThread(() -> {
             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, HandheldTerminalActivity.class);
+            startActivity(intent);
             // You can start a new activity or handle the response as needed
         });
     }

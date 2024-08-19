@@ -23,7 +23,9 @@ public class HandheldTerminalActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
 
-        if (sessionManager.getToken().isEmpty()){
+        System.out.println("sessionManager.getToken()"+sessionManager.getToken());
+
+        if (sessionManager.getToken() == null){
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();

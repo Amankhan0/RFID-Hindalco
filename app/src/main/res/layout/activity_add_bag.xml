@@ -51,6 +51,7 @@
         android:layout_margin="10pt"
         android:prompt="@string/select_building_prompt"
         app:layout_constraintBottom_toBottomOf="parent">
+
     <Spinner
         android:id="@+id/buildingspinner"
         android:layout_width="match_parent"

@@ -51,6 +51,16 @@
         android:layout_margin="10pt"
         android:prompt="@string/select_building_prompt"
         app:layout_constraintBottom_toBottomOf="parent">
+        <AutoCompleteTextView
+            android:id="@+id/product_autocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/inputorspinerborder"
+            android:hint="Search Product"
+            android:inputType="text"
+            android:padding="8dp"
+            android:completionThreshold="1" />
 
     <Spinner
         android:id="@+id/buildingspinner"
@@ -69,6 +79,7 @@
         android:hint="Enter Lot Number"
         android:inputType="text"
         android:padding="8dp" />
+
 
         <EditText
             android:id="@+id/batchnum"
@@ -90,13 +101,8 @@
             android:inputType="text"
             android:padding="8dp" />
 
-        <Spinner
-            android:id="@+id/productspinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            android:background="@drawable/inputorspinerborder"
-            android:prompt="@string/select_product_prompt"/>
+
+
 
         <Button
             android:id="@+id/addbad_btn"

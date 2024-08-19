@@ -1,6 +1,7 @@
 package com.example.hellorfid;
 
 import android.content.Intent;
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -76,10 +77,10 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
         // Log the successful response
         Log.d(TAG, "Login successful. Response: " + result);
 
-        String token = responseJson.optString("token");
+        String token = responseJson.optString("jwtToken");
 
         sessionManager.setToken(token); // Save the token
-
+        System.out.println("token from login" + token);
         // Handle successful response
         runOnUiThread(() -> {
             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();

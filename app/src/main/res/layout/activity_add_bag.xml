@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,6 +9,7 @@
     android:background="@color/white"
     tools:context=".AddBagActivity">
 
+    <!-- Toolbar with back button and title -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -24,20 +26,86 @@
             android:id="@+id/all_screen_back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/backicon"
-            />
+            android:background="@drawable/backicon"/>
 
         <TextView
             android:layout_width="100pt"
-            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:text="Add Bag"
             android:gravity="center"
             android:textStyle="bold"
             android:textAlignment="center"
-            />
+            android:textColor="@color/black"/>
 
     </androidx.appcompat.widget.Toolbar>
 
+    <!-- Spinner for drop-down menu -->
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="10pt"
+        android:prompt="@string/select_building_prompt"
+        app:layout_constraintBottom_toBottomOf="parent">
+    <Spinner
+        android:id="@+id/buildingspinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/inputorspinerborder"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+
+    <EditText
+        android:id="@+id/lotnum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/inputorspinerborder"
+        android:hint="Enter Lot Number"
+        android:inputType="text"
+        android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/batchnum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/inputorspinerborder"
+            android:hint="Enter Batch Number"
+            android:inputType="text"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/numofbag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/inputorspinerborder"
+            android:hint="Enter Bag Quatity"
+            android:inputType="text"
+            android:padding="8dp" />
+
+        <Spinner
+            android:id="@+id/productspinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            android:background="@drawable/inputorspinerborder"
+            android:prompt="@string/select_product_prompt"/>
+
+        <Button
+            android:id="@+id/addbad_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:text="Submit"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

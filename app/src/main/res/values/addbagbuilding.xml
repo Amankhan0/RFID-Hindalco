@@ -1,0 +1,8 @@
+<resources>
+    <!-- Other string resources -->
+    <string name="select_building_prompt">Select Building</string>
+
+    <string-array name="addbagbuilding">
+        <item>Printing Room</item>
+    </string-array>
+</resources>

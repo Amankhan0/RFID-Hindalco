@@ -1,0 +1,11 @@
+<resources>
+    <!-- Other string resources -->
+
+    <string name="select_product_prompt">Select Product</string>
+
+    <string-array name="addbagproduct">
+        <item>Product 1</item>
+        <item>Product 2</item>
+        <item>Product 3</item>
+    </string-array>
+</resources>

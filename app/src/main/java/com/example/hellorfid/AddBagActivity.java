@@ -3,7 +3,9 @@ package com.example.hellorfid;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,5 +32,25 @@ public class AddBagActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        Spinner buildingSpinner = findViewById(R.id.buildingspinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> buildingadapter = ArrayAdapter.createFromResource(this,
+                R.array.addbagbuilding, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        buildingadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        buildingSpinner.setAdapter(buildingadapter);
+
+        Spinner productSpinner = findViewById(R.id.productspinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> productadapter = ArrayAdapter.createFromResource(this,
+                R.array.addbagproduct, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        productadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        productSpinner.setAdapter(productadapter);
+
+
     }
 }

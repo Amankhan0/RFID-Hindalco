@@ -13,7 +13,7 @@ import java.util.List;
 
 public class HandheldTerminalActivity extends AppCompatActivity {
 
-    private Button buttonReceiving, buttonPicking, buttonReplace, buttonHold, buttonConsume, buttonHome;
+    private Button buttonReceiving, buttonPicking, buttonReplace, buttonHold, buttonConsume, buttonHome, addBag;
 
 
     @Override
@@ -37,6 +37,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         buttonReplace = findViewById(R.id.buttonReplace);
         buttonHold = findViewById(R.id.buttonHold);
         buttonConsume = findViewById(R.id.buttonConsume);
+        addBag = findViewById(R.id.buttonAddBag);
 
 //         Set onClick listeners
         buttonReceiving.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +47,15 @@ public class HandheldTerminalActivity extends AppCompatActivity {
                 startActivity(new Intent(HandheldTerminalActivity.this, InboundScreenActivity.class));
             }
         });
+
+        addBag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Receiving button click
+                startActivity(new Intent(HandheldTerminalActivity.this, AddBagActivity.class));
+            }
+        });
+
 
         ImageView ProfileButton = findViewById(R.id.profile);
         ProfileButton.setOnClickListener(new View.OnClickListener() {

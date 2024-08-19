@@ -56,6 +56,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Add Bag -->
+        <Button
+            android:id="@+id/buttonAddBag"
+            style="@style/TerminalButtonStyle"
+            android:text="Add bag" />
+
         <!-- Receiving button -->
         <Button
             android:id="@+id/buttonReceiving"

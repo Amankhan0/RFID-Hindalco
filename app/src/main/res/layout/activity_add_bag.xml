@@ -98,7 +98,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/inputorspinerborder"
             android:hint="Enter Bag Quatity"
-            android:inputType="text"
+            android:inputType="number"
             android:padding="8dp" />
 
 

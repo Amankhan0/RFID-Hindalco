@@ -14,10 +14,16 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
 
     private Context context;
     private List<Tag> tagList;
+    private OnTagDeleteListener onTagDeleteListener;
 
-    public TagAdapter(Context context, List<Tag> tagList) {
+    public interface OnTagDeleteListener {
+        void onTagDelete(String tagId);
+    }
+
+    public TagAdapter(Context context, List<Tag> tagList, OnTagDeleteListener listener) {
         this.context = context;
         this.tagList = tagList;
+        this.onTagDeleteListener = listener;
     }
 
     @NonNull
@@ -33,17 +39,23 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
         holder.tagNumber.setText(tag.getTagNumber());
         holder.lotNumber.setText(tag.getLotNumber());
 
-        // Set color to red if condition met (e.g., tag number starts with "A")
-        if (tag.getTagNumber().startsWith("A")) {
+        if (tag.isOverLimit()) {
             holder.tagNumber.setTextColor(context.getResources().getColor(R.color.red));
             holder.lotNumber.setTextColor(context.getResources().getColor(R.color.red));
+        } else {
+            holder.tagNumber.setTextColor(context.getResources().getColor(R.color.black));
+            holder.lotNumber.setTextColor(context.getResources().getColor(R.color.black));
         }
 
         holder.deleteIcon.setOnClickListener(view -> {
-            // Remove item from list
+            String deletedTagId = tagList.get(position).getTagNumber();
             tagList.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, tagList.size());
+
+            if (onTagDeleteListener != null) {
+                onTagDeleteListener.onTagDelete(deletedTagId);
+            }
         });
 
         holder.nextIcon.setOnClickListener(view -> {
@@ -57,7 +69,6 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     }
 
     public static class TagViewHolder extends RecyclerView.ViewHolder {
-
         TextView tagNumber;
         TextView lotNumber;
         ImageView deleteIcon;

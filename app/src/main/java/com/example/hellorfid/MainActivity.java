@@ -1,21 +1,32 @@
 package com.example.hellorfid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONException;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hellorfid.session.SessionManagerBag;
 import com.zebra.rfid.api3.ACCESS_OPERATION_CODE;
 import com.zebra.rfid.api3.ACCESS_OPERATION_STATUS;
 import com.zebra.rfid.api3.ENUM_TRANSPORT;
@@ -42,7 +53,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagDeleteListener {
 
     private static final Logger log = Logger.getLogger(MainActivity.class);
     private static Readers readers;
@@ -51,34 +62,71 @@ public class MainActivity extends AppCompatActivity {
     private static RFIDReader reader;
     private static final String TAG = "DEMO";
     private TextView tagTextView;
+    private SessionManagerBag sessionManagerBag;
+    private SessionManager sessionManager;
+
+    private int totalTagsToScan;
+
     private Button resetButton;
+    private Button submitButton;
     private EventHandler eventHandler;
     private Set<String> scannedTagIds;
 
     private RecyclerView recyclerView;
     private TagAdapter tagAdapter;
     private List<Tag> tagList;
+    private MediaPlayer mediaPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        mediaPlayer = MediaPlayer.create(this, R.raw.invalid_tag);
+        sessionManagerBag = new SessionManagerBag(this);
+        sessionManager = new SessionManager(this);
+
+        if (mediaPlayer == null) {
+            Log.e(TAG, "MediaPlayer initialization failed. Check if the audio file exists in res/raw.");
+        } else {
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    Log.d(TAG, "MediaPlayer is prepared and ready to play.");
+                }
+            });
+
+            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    Log.e(TAG, "MediaPlayer error: what=" + what + ", extra=" + extra);
+                    return false;
+                }
+            });
+        }
+
+
+
         ImageView AllScreenBackBtn = findViewById(R.id.all_screen_back_btn);
         AllScreenBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ScanReplace.class);
-                // Clear the back stack and start the new activity
+                Intent intent = new Intent(MainActivity.this, AddBagActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                // Finish the current activity so it's removed from the back stack
                 finish();
             }
         });
 
         tagTextView = findViewById(R.id.totalScan1);
+        sessionManagerBag = new SessionManagerBag(this);
+        totalTagsToScan = Integer.parseInt(sessionManagerBag.getBagQuantity());
+        Log.d(TAG, "Total tags to scan initialized to: " + totalTagsToScan);
+
         resetButton = findViewById(R.id.submitButton1);
+        submitButton = findViewById(R.id.submitButton);
         scannedTagIds = new HashSet<>();
 
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -88,12 +136,58 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    JSONObject submitJson = createSubmitJson();
+                    if (submitJson == null) {
+                        Toast.makeText(MainActivity.this, "Error creating JSON object", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        tagList = new ArrayList<>();
-        tagAdapter = new TagAdapter(this, tagList);
-        recyclerView.setAdapter(tagAdapter);
+                    System.out.println("submitJson: " + submitJson.toString());
+
+                    ApiCallBackWithToken apiCallBack = new ApiCallBackWithToken();
+                    String url = "iot/api/addTag";
+
+                    String token = sessionManager.getToken();
+                    if (token == null) {
+                        Toast.makeText(MainActivity.this, "No token available. Please login first.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    apiCallBack.Api(url, submitJson, new ApiCallBackWithToken.ApiCallback() {
+                        @Override
+                        public void onSuccess(JSONObject responseJson) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this, "Submit successful", Toast.LENGTH_SHORT).show();
+                                    // Handle successful submission
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this, "Submit failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Log.e(TAG, "Submit failed", e);
+                                    // Handle submission failure
+                                }
+                            });
+                        }
+                    }, token);  // Pass the token here
+                } catch (Exception e) {
+                    Log.e(TAG, "Error in submit button onClick", e);
+                    Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        initializeRecyclerView();
 
         // SDK
         if (readers == null) {
@@ -107,22 +201,18 @@ public class MainActivity extends AppCompatActivity {
                     if (readers != null) {
                         availableRFIDReaderList = readers.GetAvailableRFIDReaderList();
                         if (availableRFIDReaderList != null && !availableRFIDReaderList.isEmpty()) {
-                            // get first reader from list
                             readerDevice = availableRFIDReaderList.get(0);
                             reader = readerDevice.getRFIDReader();
                             if (!reader.isConnected()) {
-                                // Establish connection to the RFID Reader
                                 reader.connect();
                                 ConfigureReader();
                                 return true;
                             }
                         }
                     }
-                } catch (InvalidUsageException e) {
+                } catch (InvalidUsageException | OperationFailureException e) {
                     e.printStackTrace();
-                } catch (OperationFailureException e) {
-                    e.printStackTrace();
-                    Log.d(TAG, "OperationFailureException " + e.getVendorMessage());
+                    Log.d(TAG, "OperationFailureException " + e.getMessage());
                 }
                 return false;
             }
@@ -132,19 +222,60 @@ public class MainActivity extends AppCompatActivity {
                 super.onPostExecute(aBoolean);
                 if (aBoolean) {
                     Toast.makeText(getApplicationContext(), "Reader Connected", Toast.LENGTH_SHORT).show();
-                    tagTextView.setText("Reader connected");
                 }
             }
         }.execute();
+
+        updateTagCountDisplay();
+        updateSubmitButtonState();
+
+    }
+
+    private void initializeRecyclerView() {
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        tagList = new ArrayList<>();
+        tagAdapter = new TagAdapter(this, tagList, this);
+        recyclerView.setAdapter(tagAdapter);
+
     }
 
     private void resetScannedTags() {
+        System.out.println("scannedTagIds" + scannedTagIds.toString());
+        sessionManagerBag.clearSession();
         scannedTagIds.clear();
         tagList.clear();
+
         tagAdapter.notifyDataSetChanged();
-        tagTextView.setText("Reader connected\n");
+        updateTagCountDisplay();
+        updateSubmitButtonState();
+
     }
 
+    private JSONObject createSubmitJson() {
+        JSONObject submitJson = new JSONObject();
+        try {
+            submitJson.put("product_id", sessionManagerBag.getProductName());
+            submitJson.put("lotNumber", sessionManagerBag.getLotNumber());
+            submitJson.put("batchNumber", sessionManagerBag.getBatchNumber());
+            submitJson.put("status", "ACTIVE");
+            submitJson.put("movementStatus", "Printing_Room");
+
+            // Add the scanned tag IDs
+            if (!scannedTagIds.isEmpty()) {
+                submitJson.put("scannedTags", scannedTagIds.iterator().next());
+            } else {
+                Log.w(TAG, "No scanned tags available");
+                // You might want to handle this case differently
+                submitJson.put("scannedTags", "");
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON object", e);
+            return null;
+        }
+        return submitJson;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -166,23 +297,15 @@ public class MainActivity extends AppCompatActivity {
             triggerInfo.StartTrigger.setTriggerType(START_TRIGGER_TYPE.START_TRIGGER_TYPE_IMMEDIATE);
             triggerInfo.StopTrigger.setTriggerType(STOP_TRIGGER_TYPE.STOP_TRIGGER_TYPE_IMMEDIATE);
             try {
-                // receive events from reader
                 if (eventHandler == null) eventHandler = new EventHandler();
                 reader.Events.addEventsListener(eventHandler);
-                // HH event
                 reader.Events.setHandheldEvent(true);
-                // tag event with tag data
                 reader.Events.setTagReadEvent(true);
-                // application will collect tag using getReadTags API
                 reader.Events.setAttachTagDataWithReadEvent(false);
-                // set trigger mode as RFID so scanner beam will not come
                 reader.Config.setTriggerMode(ENUM_TRIGGER_MODE.RFID_MODE, true);
-                // set start and stop triggers
                 reader.Config.setStartTrigger(triggerInfo.StartTrigger);
                 reader.Config.setStopTrigger(triggerInfo.StopTrigger);
-            } catch (InvalidUsageException e) {
-                e.printStackTrace();
-            } catch (OperationFailureException e) {
+            } catch (InvalidUsageException | OperationFailureException e) {
                 e.printStackTrace();
             }
         }
@@ -205,10 +328,63 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addTagToList(String tagId) {
-        tagList.add(new Tag(tagId, "Lot A"));
-        tagAdapter.notifyItemInserted(tagList.size() - 1);
+    private void updateTagCountDisplay() {
+        runOnUiThread(() -> {
+            tagTextView.setText("Total scan - " + scannedTagIds.size() + "/" + totalTagsToScan);
+        });
     }
+
+    public void addTagToList(String tagId) {
+        scannedTagIds.add(tagId);  // Add the new tag first
+        int currentSize = scannedTagIds.size();
+        boolean isOverLimit = currentSize > totalTagsToScan;
+        Log.d(TAG, "Scanned tags: " + currentSize + ", Total tags to scan: " + totalTagsToScan + " Lot A " + isOverLimit);
+
+        tagList.add(new Tag(tagId, "Lot A", isOverLimit));
+        tagAdapter.notifyItemInserted(tagList.size() - 1);
+
+        updateTagCountDisplay();
+        updateSubmitButtonState();
+
+    }
+
+    @Override
+    public void onTagDelete(String tagId) {
+        scannedTagIds.remove(tagId);
+        updateTagCountDisplay();
+        updateSubmitButtonState();
+    }
+
+
+
+    private boolean isAnyTagOverLimit() {
+        for (Tag tag : tagList) {
+            if (tag.isOverLimit()) {
+                playOverLimitSound();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void playOverLimitSound() {
+        if (mediaPlayer != null) {
+            if (!mediaPlayer.isPlaying()) {
+                mediaPlayer.start();
+                Log.d(TAG, "Playing over-limit sound.");
+            } else {
+                Log.d(TAG, "Sound is already playing.");
+            }
+        } else {
+            Log.e(TAG, "MediaPlayer is null, cannot play sound.");
+        }
+    }
+
+    private void updateSubmitButtonState() {
+        boolean shouldDisable = isAnyTagOverLimit() || scannedTagIds.size() > totalTagsToScan;
+        submitButton.setEnabled(!shouldDisable);
+    }
+
 
     public class EventHandler implements RfidEventsListener {
         @Override
@@ -216,17 +392,8 @@ public class MainActivity extends AppCompatActivity {
             TagData[] myTags = reader.Actions.getReadTags(100);
             if (myTags != null) {
                 for (TagData tagData : myTags) {
-                    Log.d(TAG, "Tag ID " + tagData.getTagID());
-                    if (tagData.getOpCode() == ACCESS_OPERATION_CODE.ACCESS_OPERATION_READ &&
-                            tagData.getOpStatus() == ACCESS_OPERATION_STATUS.ACCESS_SUCCESS) {
-                        if (tagData.getMemoryBankData().length() > 0) {
-                            Log.d(TAG, "Mem Bank Data " + tagData.getMemoryBankData());
-                        }
-                    }
-
-                    // Add the scanned tag ID to the set
                     final String tagId = tagData.getTagID();
-                    if (scannedTagIds.add(tagId)) {
+                    if (!scannedTagIds.contains(tagId)) {  // Check if the tag is not already scanned
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -237,6 +404,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
 
         @Override
         public void eventStatusNotify(RfidStatusEvents rfidStatusEvents) {
@@ -251,10 +419,8 @@ public class MainActivity extends AppCompatActivity {
                         protected Void doInBackground(Void... voids) {
                             try {
                                 reader.Actions.Inventory.stop();
-                            } catch (InvalidUsageException e) {
-                                Log.e(TAG, "InvalidUsageException: " + e.getMessage());
-                            } catch (OperationFailureException e) {
-                                Log.e(TAG, "OperationFailureException: " + e.getMessage() + ", VendorMessage: " + e.getVendorMessage());
+                            } catch (InvalidUsageException | OperationFailureException e) {
+                                Log.e(TAG, "Exception: " + e.getMessage());
                             }
                             return null;
                         }
@@ -274,10 +440,8 @@ public class MainActivity extends AppCompatActivity {
                             Log.e(TAG, "Operation not allowed: Reader is charging");
                             runOnUiThread(() -> Toast.makeText(MainActivity.this, "Reader is charging. Operation not allowed.", Toast.LENGTH_SHORT).show());
                         }
-                    } catch (InvalidUsageException e) {
-                        Log.e(TAG, "InvalidUsageException: " + e.getMessage());
-                    } catch (OperationFailureException e) {
-                        Log.e(TAG, "OperationFailureException: " + e.getMessage() + ", VendorMessage: " + e.getVendorMessage());
+                    } catch (InvalidUsageException | OperationFailureException e) {
+                        Log.e(TAG, "Exception: " + e.getMessage());
                     }
                     return null;
                 }
@@ -285,3 +449,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+

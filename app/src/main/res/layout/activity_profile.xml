@@ -43,99 +43,110 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="5pt"
-            android:paddingBottom="5pt"
             android:layout_margin="5pt"
             android:background="@drawable/card_rounded"
-            android:paddingLeft="15pt">
+            android:orientation="horizontal"
+            android:paddingLeft="15pt"
+            android:paddingTop="5pt"
+            android:paddingBottom="5pt">
 
             <ImageView
                 android:layout_width="30pt"
                 android:layout_height="30pt"
-                android:background="@drawable/profile"
-            />
+                android:background="@drawable/profile" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_margin="5pt">
+                android:layout_margin="5pt"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Aman Khan"
                     android:textColor="@color/black"
-                    android:textSize="7pt"
-                    />
+                    android:textSize="7pt" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
                     android:text="+91 7011738029"
-                    android:textSize="7pt"
-                    />
+                    android:textColor="@color/black"
+                    android:textSize="7pt" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="5pt">
-
-        <TextView
+        <Button
+            android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="General"
-            android:textSize="7pt"
-            android:padding="5pt"
-            />
+            android:layout_marginTop="100dp"
+            android:text="Logout" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/card_rounded"
-            android:padding="5pt"
-            >
+        <!--    <LinearLayout-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="match_parent"-->
+        <!--        android:orientation="vertical"-->
+        <!--        android:padding="5pt">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Complete Order"
-                android:padding="2pt"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="In Progress Order"
-                android:padding="3pt"
-                />
+        <!--&lt;!&ndash;        <TextView&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:text="General"&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:textSize="7pt"&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:padding="5pt"&ndash;&gt;-->
+        <!--&lt;!&ndash;            />&ndash;&gt;-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="My Order"
-                android:padding="3pt"
-                />
+        <!--&lt;!&ndash;        <LinearLayout&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:orientation="vertical"&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:background="@drawable/card_rounded"&ndash;&gt;-->
+        <!--&lt;!&ndash;            android:padding="5pt"&ndash;&gt;-->
+        <!--&lt;!&ndash;            >&ndash;&gt;-->
 
-        </LinearLayout>
+        <!--&lt;!&ndash;            <TextView&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:text="Complete Order"&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:padding="2pt"&ndash;&gt;-->
+        <!--&lt;!&ndash;                />&ndash;&gt;-->
+        <!--&lt;!&ndash;            <TextView&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:text="In Progress Order"&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:padding="3pt"&ndash;&gt;-->
+        <!--&lt;!&ndash;                />&ndash;&gt;-->
 
+        <!--&lt;!&ndash;            <TextView&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:text="My Order"&ndash;&gt;-->
+        <!--&lt;!&ndash;                android:padding="3pt"&ndash;&gt;-->
+        <!--&lt;!&ndash;                />&ndash;&gt;-->
+        <!--&lt;!&ndash;            &ndash;&gt;-->
 
-    </LinearLayout>
+        <!--&lt;!&ndash;        </LinearLayout>&ndash;&gt;-->
+
+        <!--        <Button-->
+        <!--            android:id="@+id/button"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Button" />-->
+        <!--    </LinearLayout>-->
 
     </LinearLayout>
 

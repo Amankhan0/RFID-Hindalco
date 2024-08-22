@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,9 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-// AddBagActivity.java
+
+import com.example.hellorfid.session.SessionManagerBag;
+
 public class AddBagActivity extends AppCompatActivity implements ApiCallBackWithToken.ApiCallback {
 
     private static final String TAG = "AddBagActivity";
@@ -37,13 +38,21 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
 
     private AutoCompleteTextView productAutoCompleteTextView;
     private List<String> productList = new ArrayList<>();
-    private SessionManager sessionManager;
+
+
     private ApiCallBackWithToken apiCallBack;
+
+    private SessionManager sessionManager;  // For token
+    private SessionManagerBag sessionManagerBag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bag);
+
+        // Initialize SessionManager
+        sessionManager = new SessionManager(this);  // For token
+        sessionManagerBag = new SessionManagerBag(this);
 
         // Initialize views
         buildingSpinner = findViewById(R.id.buildingspinner);
@@ -51,7 +60,6 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
         batchNumberEditText = findViewById(R.id.batchnum);
         bagQuantityEditText = findViewById(R.id.numofbag);
         submitButton = findViewById(R.id.addbad_btn);
-        sessionManager = new SessionManager(this);
 
         ImageView allScreenBackBtn = findViewById(R.id.all_screen_back_btn);
         allScreenBackBtn.setOnClickListener(new View.OnClickListener() {
@@ -86,8 +94,6 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String token = sessionManager.getToken();
                 System.out.println("token--4rsf-sdf" + token);
-
-
                 if (s.length() >= 1) { // Start searching when there's at least 1 character
                     JSONObject json = new JSONObject();
                     try {
@@ -99,15 +105,10 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    System.out.println("token------" + token);
-
                     apiCallBack = new ApiCallBackWithToken();
-                    String url = "helper/api/searchProduct"; // Replace with your actual URL
+                    String url = "helper/api/searchProduct";
 
-                    System.out.println("json---" + json);
-
-                    apiCallBack.Api(url, json, AddBagActivity.this, token); // Updated method call
+                    apiCallBack.Api(url, json, AddBagActivity.this, token);
                 }
             }
 
@@ -189,22 +190,40 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
         String lotNumber = lotNumberEditText.getText().toString();
         String batchNumber = batchNumberEditText.getText().toString();
         String bagQuantity = bagQuantityEditText.getText().toString();
+        String searchProduct = productAutoCompleteTextView.getText().toString();
 
         // Validate inputs
         if (selectedBuilding.isEmpty() || lotNumber.isEmpty() ||
-                batchNumber.isEmpty() || bagQuantity.isEmpty()) {
+                batchNumber.isEmpty() || bagQuantity.isEmpty() || searchProduct.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
+            // Store values using SessionManager
+        sessionManagerBag.clearSession();
+        sessionManagerBag.setProductName(searchProduct);
+        sessionManagerBag.setBuilding(selectedBuilding);
+        sessionManagerBag.setLotNumber(lotNumber);
+        sessionManagerBag.setBatchNumber(batchNumber);
+        sessionManagerBag.setBagQuantity(bagQuantity);
+
         // Debugging values
+        Log.d(TAG, "Search Product: " + searchProduct);
         Log.d(TAG, "Selected Building: " + selectedBuilding);
         Log.d(TAG, "Lot Number: " + lotNumber);
         Log.d(TAG, "Batch Number: " + batchNumber);
         Log.d(TAG, "Bag Quantity: " + bagQuantity);
 
-        // TODO: Process the form data (e.g., save to database, send to server, etc.)
+
+
+        // Move to ScanPickingActivity
+        Intent intent = new Intent(AddBagActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
 
         Toast.makeText(this, "Form submitted successfully", Toast.LENGTH_SHORT).show();
+
     }
 }
+
+

@@ -6,42 +6,40 @@ public class BatchModel {
     private String id;
     private String batchName;
     private String batchNumber;
+    private String lotNumber;
     private String status;
     private String movementStatus;
     private int totalInventory;
     private Date createdAt;
     private Date updatedAt;
     private String productName;
+    private String pid;
 
 
     private ProductModel product;
 
-    // Constructor
-    public BatchModel(String id, String batchName, String batchNumber, String status, String movementStatus,
-                      int totalInventory, Date createdAt, Date updatedAt, ProductModel product) {
+
+
+
+    public BatchModel(String id, String batchName, String batchNumber, String productName,String pid,String status,String movementStatus) {
         this.id = id;
         this.batchName = batchName;
         this.batchNumber = batchNumber;
+        this.pid = pid;
         this.status = status;
         this.movementStatus = movementStatus;
-        this.totalInventory = totalInventory;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.product = product;
-    }
-
-    public BatchModel(String id, String buildingName, String buildingNo, String productName) {
-        this.id = id;
-        this.batchName = buildingName;
-        this.batchNumber = buildingNo;
         this.productName = productName;
+
     }
 
     // Getters
+    public String getPid() { return pid; }
+
     public String getId() { return id; }
     public String getBatchName() { return batchName; }
     public String getBatchNumber() { return batchNumber; }
     public String getStatus() { return status; }
+    public String getLotNumber() { return lotNumber; }
     public String getMovementStatus() { return movementStatus; }
     public int getTotalInventory() { return totalInventory; }
     public Date getCreatedAt() { return createdAt; }

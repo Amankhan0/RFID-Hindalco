@@ -1,7 +1,10 @@
 package com.example.hellorfid.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
@@ -23,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class BatchActivity extends AppCompatActivity {
@@ -52,8 +56,17 @@ public class BatchActivity extends AppCompatActivity {
 
         hitApiAndLogResult();
 
+        Button addNewBatchButton  =  findViewById(R.id.addNewBatchButton);
 
+        addNewBatchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BatchActivity.this, AddBatchFormActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
     private void hitApiAndLogResult() {
         try {
             JSONObject requestBody = new JSONObject();
@@ -64,9 +77,6 @@ public class BatchActivity extends AppCompatActivity {
 
             search.put("buildingId", sessionManager.getBuildingId());
             requestBody.put("search", search);
-
-
-
 
             System.out.println("requestBody" + requestBody);
             String apiEndpoint = "iot/api/searchBatch";
@@ -102,10 +112,12 @@ public class BatchActivity extends AppCompatActivity {
                 String batchName = buildingJson.getString("batchName");
                 String batchNumber = buildingJson.getString("batchNumber");
                 JSONObject productId = buildingJson.getJSONObject("product_id");
-
+                String status = buildingJson.getString("status");
+                String movementStatus = buildingJson.getString("movementStatus");
+                String pid = productId.getString("id");
                 String productName = productId.getString("productName");
 
-                batchModels.add(new BatchModel(id, batchName, batchNumber,productName));
+                batchModels.add(new BatchModel(id, batchName, batchNumber,productName,pid,status,movementStatus));
             }
             runOnUiThread(new Runnable() {
                 @Override

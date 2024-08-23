@@ -3,6 +3,7 @@ package com.example.hellorfid.dump;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.session.SessionManager;
 
 import org.apache.log4j.Logger;
@@ -22,7 +23,8 @@ public class ApiCallBackWithToken {
 
     private static final Logger log = Logger.getLogger(ApiCallBackWithToken.class);
 
-    public String baseUrl = "http://192.168.1.104:9090/";
+    public String baseUrl = Constants.url;
+
 //public String baseUrl = "http://137.184.74.218/";
     private static final String TAG = "ApiCallBackWithToken";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");

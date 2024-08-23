@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.example.hellorfid.R;
 import com.example.hellorfid.model.BatchModel;
 
@@ -49,6 +51,7 @@ public class BatchAdapter extends BaseAdapter {
             holder.batchNumberTextView = convertView.findViewById(R.id.batchNumber);
             holder.productNameTextView = convertView.findViewById(R.id.productName);
             holder.statusTextView = convertView.findViewById(R.id.status);
+            holder.addTagsButton = convertView.findViewById(R.id.addTagsButton);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -68,6 +71,19 @@ public class BatchAdapter extends BaseAdapter {
                     // For example, open a new activity with batch details
                 }
             });
+
+            holder.addTagsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    System.out.println("id----"+batchModel.getId());
+                    System.out.println("id----"+batchModel.getPid());
+                    System.out.println("id----"+batchModel.getBatchNumber());
+                    System.out.println("id----"+batchModel.getStatus());
+                    System.out.println("id----"+batchModel.getMovementStatus());
+
+                }
+            });
         }
 
         return convertView;
@@ -79,5 +95,6 @@ public class BatchAdapter extends BaseAdapter {
         TextView batchNumberTextView;
         TextView productNameTextView;
         TextView statusTextView;
+        Button addTagsButton;
     }
 }

@@ -35,7 +35,6 @@ public String baseUrl = "http://137.184.74.218/";
     }
 
     public void Api(String url, JSONObject loginJson, ApiCallback callback) {
-
         // Retrieve the token from SessionManager
         String token = sessionManager.getToken();
 

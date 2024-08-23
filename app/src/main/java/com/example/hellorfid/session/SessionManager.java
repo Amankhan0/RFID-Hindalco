@@ -7,6 +7,7 @@ public class SessionManager {
 
     private static final String PREF_NAME = "LoginSession";
     private static final String KEY_TOKEN = "token";
+    private static final String buildingId = "buildingId";
     private static final String KEY_PAYLOAD = "payload";
     private static final String KEY_ROLE = "role";
 
@@ -30,6 +31,18 @@ public class SessionManager {
     public String getToken() {
         return sharedPreferences.getString(KEY_TOKEN, null);
     }
+
+    // Save token
+    public void setBuildingId(String id) {
+        editor.putString(buildingId, id);
+        editor.apply();
+    }
+
+    // Get saved token
+    public String getBuildingId() {
+        return sharedPreferences.getString(buildingId, null);
+    }
+
 
     // Save payload
     public void setPayload(String payload) {

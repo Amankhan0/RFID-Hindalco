@@ -1,6 +1,7 @@
 package com.example.hellorfid.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,15 +9,21 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.hellorfid.R;
-import com.example.hellorfid.model.BuildingModel;
+import com.example.hellorfid.activities.HandheldTerminalActivity;
+import com.example.hellorfid.activities.HomeActivity;
+import com.example.hellorfid.activities.LoginActivity;
+import com.example.hellorfid.model.HomeModel;
+import com.example.hellorfid.session.SessionManager;
+
 import java.util.List;
 
-public class BuildingAdapter extends BaseAdapter {
+public class HomeAdapter extends BaseAdapter {
     private Context context;
-    private List<BuildingModel> buildingModels;
+    private List<HomeModel> buildingModels;
     private LayoutInflater inflater;
+    private SessionManager sessionManager;
 
-    public BuildingAdapter(Context context, List<BuildingModel> buildingModels) {
+    public HomeAdapter(Context context, List<HomeModel> buildingModels) {
         this.context = context;
         this.buildingModels = buildingModels;
         this.inflater = LayoutInflater.from(context);
@@ -39,6 +46,9 @@ public class BuildingAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        this.sessionManager = new SessionManager(context);
+
         ViewHolder holder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.building_list_item, parent, false);
@@ -52,17 +62,30 @@ public class BuildingAdapter extends BaseAdapter {
         }
 
         if (buildingModels != null && position < buildingModels.size()) {
-            BuildingModel buildingModel = buildingModels.get(position);
+            HomeModel buildingModel = buildingModels.get(position);
             holder.nameTextView.setText(buildingModel.getBuildingName());
             holder.addressTextView.setText(buildingModel.getBuildingNo());
 
             holder.mainCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println("cliekec"+buildingModel.getBuildingName());
+                    System.out.println("clicked " + buildingModel.getId());
+
+                    sessionManager.setBuildingId( buildingModel.getId());
+
+                    if(buildingModel.getId() == sessionManager.getBuildingId()){
+                        Intent intent = new Intent(context, HandheldTerminalActivity.class);
+                        context.startActivity(intent);
+                    }
+
+
+
+                    System.out.println("sessionManager=----"+sessionManager.getBuildingId());
+
+                    // Use sessionManager here as needed
+                    // For example: sessionManager.someMethod(buildingModel.getId());
                 }
             });
-
         }
 
         return convertView;

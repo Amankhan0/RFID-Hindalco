@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.R;
 import com.example.hellorfid.session.SessionManager;
-import com.example.hellorfid.adapter.BuildingAdapter;
-import com.example.hellorfid.model.BuildingModel;
+import com.example.hellorfid.adapter.HomeAdapter;
+import com.example.hellorfid.model.HomeModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,12 +23,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuldingActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "Home";
     private ApiCallBackWithToken apiCallBackWithToken;
     private ListView buildingList;
-    private BuildingAdapter buildingAdapter;
-    private List<BuildingModel> buildingModels;
+    private HomeAdapter buildingAdapter;
+    private List<HomeModel> buildingModels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class BuldingActivity extends AppCompatActivity {
 
         buildingList = findViewById(R.id.buildingList);
         buildingModels = new ArrayList<>();
-        buildingAdapter = new BuildingAdapter(this, buildingModels);
+        buildingAdapter = new HomeAdapter(this, buildingModels);
         buildingList.setAdapter(buildingAdapter);
 
         SessionManager sessionManager = new SessionManager(this);
@@ -57,7 +57,7 @@ public class BuldingActivity extends AppCompatActivity {
         ProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BuldingActivity.this, ProfileActivity.class);
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
                 // Clear the back stack and start the new activity
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -106,12 +106,8 @@ public class BuldingActivity extends AppCompatActivity {
                 String id = buildingJson.getString("id");
                 String name = buildingJson.getString("buildingName");
                 String address = buildingJson.getString("buildingNo");
-
-                buildingModels.add(new BuildingModel(id, name, address));
+                buildingModels.add(new HomeModel(id, name, address));
             }
-
-
-
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

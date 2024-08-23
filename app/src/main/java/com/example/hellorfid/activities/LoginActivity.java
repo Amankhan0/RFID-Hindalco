@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
 
         mainHandler.post(() -> {
             showToast("Login Successful");
-            Intent intent = new Intent(LoginActivity.this, BuldingActivity.class);
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
         });
     }

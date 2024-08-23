@@ -3,7 +3,7 @@ package com.example.hellorfid.model;
 import java.util.List;
 import java.util.Date;
 
-public class BuildingModel {
+public class HomeModel {
     private String id;
     private String buildingName;
     private String buildingNo;
@@ -22,10 +22,10 @@ public class BuildingModel {
     private List<String> tagIds;
 
     // Constructor
-    public BuildingModel(String id, String buildingName, String buildingNo, String unitName, String unitId,
-                         boolean addEmptyBag, String status, String createdBy, String updatedBy,
-                         Date createdAt, Date updatedAt, List<String> zoneIds, List<String> buildingIds,
-                         List<String> locationIds, List<String> readerIds, List<String> tagIds) {
+    public HomeModel(String id, String buildingName, String buildingNo, String unitName, String unitId,
+                     boolean addEmptyBag, String status, String createdBy, String updatedBy,
+                     Date createdAt, Date updatedAt, List<String> zoneIds, List<String> buildingIds,
+                     List<String> locationIds, List<String> readerIds, List<String> tagIds) {
         this.id = id;
         this.buildingName = buildingName;
         this.buildingNo = buildingNo;
@@ -44,7 +44,7 @@ public class BuildingModel {
         this.tagIds = tagIds;
     }
 
-    public BuildingModel(String id, String buildingName, String buildingNo) {
+    public HomeModel(String id, String buildingName, String buildingNo) {
         this.id = id;
         this.buildingName = buildingName;
         this.buildingNo = buildingNo;

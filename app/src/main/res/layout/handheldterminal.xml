@@ -60,7 +60,7 @@
         <Button
             android:id="@+id/buttonAddBag"
             style="@style/TerminalButtonStyle"
-            android:text="Add bag" />
+            android:text="Add batch" />
 
         <!-- Receiving button -->
         <Button

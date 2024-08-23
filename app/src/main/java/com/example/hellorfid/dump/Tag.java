@@ -1,4 +1,4 @@
-package com.example.hellorfid;
+package com.example.hellorfid.dump;
 
 public class Tag {
     private String tagNumber;

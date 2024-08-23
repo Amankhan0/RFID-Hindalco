@@ -1,6 +1,5 @@
-package com.example.hellorfid;
+package com.example.hellorfid.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +8,9 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.List;
+import com.example.hellorfid.R;
+import com.example.hellorfid.dump.ChooseBatch;
+import com.example.hellorfid.session.SessionManager;
 
 public class HandheldTerminalActivity extends AppCompatActivity {
 
@@ -24,12 +25,8 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(this);
 
         System.out.println("sessionManager.getToken()"+sessionManager.getToken());
+        System.out.println("sessionManager.getPayload()"+sessionManager.getPayload());
 
-        if (sessionManager.getToken() == null){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         // Initialize buttons
         buttonReceiving = findViewById(R.id.buttonReceiving);
@@ -52,7 +49,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle Receiving button click
-                startActivity(new Intent(HandheldTerminalActivity.this, AddBagActivity.class));
+                startActivity(new Intent(HandheldTerminalActivity.this, ChooseBatch.class));
             }
         });
 

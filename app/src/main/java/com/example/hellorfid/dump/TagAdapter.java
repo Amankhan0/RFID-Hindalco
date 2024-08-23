@@ -1,4 +1,4 @@
-package com.example.hellorfid;
+package com.example.hellorfid.dump;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hellorfid.R;
+
 import java.util.List;
 
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {

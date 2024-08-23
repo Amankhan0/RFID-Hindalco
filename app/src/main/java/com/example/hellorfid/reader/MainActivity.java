@@ -1,34 +1,33 @@
-package com.example.hellorfid;
+package com.example.hellorfid.reader;
 
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hellorfid.activities.AddBatchActivity;
+import com.example.hellorfid.dump.ApiCallBackWithToken;
+import com.example.hellorfid.R;
+import com.example.hellorfid.session.SessionManager;
+import com.example.hellorfid.dump.Tag;
+import com.example.hellorfid.dump.TagAdapter;
 import com.example.hellorfid.session.SessionManagerBag;
-import com.zebra.rfid.api3.ACCESS_OPERATION_CODE;
-import com.zebra.rfid.api3.ACCESS_OPERATION_STATUS;
 import com.zebra.rfid.api3.ENUM_TRANSPORT;
 import com.zebra.rfid.api3.ENUM_TRIGGER_MODE;
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE;
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
         AllScreenBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddBagActivity.class);
+                Intent intent = new Intent(MainActivity.this, AddBatchActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
                     System.out.println("submitJson: " + submitJson.toString());
 
-                    ApiCallBackWithToken apiCallBack = new ApiCallBackWithToken();
+                    ApiCallBackWithToken apiCallBack = new ApiCallBackWithToken(MainActivity.this);
                     String url = "iot/api/addTag";
 
                     String token = sessionManager.getToken();
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
                     apiCallBack.Api(url, submitJson, new ApiCallBackWithToken.ApiCallback() {
                         @Override
-                        public void onSuccess(JSONObject responseJson) {
+                        public JSONObject onSuccess(JSONObject responseJson) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -167,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                                     // Handle successful submission
                                 }
                             });
+                            return responseJson;
                         }
 
                         @Override
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                                 }
                             });
                         }
-                    }, token);  // Pass the token here
+                    });  // Pass the token here
                 } catch (Exception e) {
                     Log.e(TAG, "Error in submit button onClick", e);
                     Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();

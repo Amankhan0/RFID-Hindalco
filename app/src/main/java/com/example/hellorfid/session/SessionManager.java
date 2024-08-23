@@ -1,4 +1,4 @@
-package com.example.hellorfid;
+package com.example.hellorfid.session;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,6 +7,8 @@ public class SessionManager {
 
     private static final String PREF_NAME = "LoginSession";
     private static final String KEY_TOKEN = "token";
+    private static final String KEY_PAYLOAD = "payload";
+    private static final String KEY_ROLE = "role";
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -21,12 +23,34 @@ public class SessionManager {
     // Save token
     public void setToken(String token) {
         editor.putString(KEY_TOKEN, token);
-        editor.apply(); // Save changes
+        editor.apply();
     }
 
     // Get saved token
     public String getToken() {
         return sharedPreferences.getString(KEY_TOKEN, null);
+    }
+
+    // Save payload
+    public void setPayload(String payload) {
+        editor.putString(KEY_PAYLOAD, payload);
+        editor.apply();
+    }
+
+    // Get saved payload
+    public String getPayload() {
+        return sharedPreferences.getString(KEY_PAYLOAD, null);
+    }
+
+    // Save role
+    public void setRole(String role) {
+        editor.putString(KEY_ROLE, role);
+        editor.apply();
+    }
+
+    // Get saved role
+    public String getRole() {
+        return sharedPreferences.getString(KEY_ROLE, null);
     }
 
     // Clear session

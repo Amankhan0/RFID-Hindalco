@@ -1,6 +1,9 @@
-package com.example.hellorfid;
+package com.example.hellorfid.dump;
 
+import android.content.Context;
 import android.util.Log;
+
+import com.example.hellorfid.session.SessionManager;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -18,18 +21,28 @@ import okhttp3.Response;
 public class ApiCallBackWithToken {
 
     private static final Logger log = Logger.getLogger(ApiCallBackWithToken.class);
-//    public String baseUrl = "http://192.168.1.15:9090/";
-public String baseUrl = "http://192.168.0.114:9090/";
-// public String baseUrl = "http://137.184.74.218/";
+
+//    public String baseUrl = "http://192.168.0.114:9090/";
+public String baseUrl = "http://137.184.74.218/";
     private static final String TAG = "ApiCallBackWithToken";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
 
-    public void Api(String url, JSONObject loginJson, ApiCallback callback, String token) {
+    private SessionManager sessionManager;
+
+    public ApiCallBackWithToken(Context context) {
+        this.sessionManager = new SessionManager(context);
+    }
+
+    public void Api(String url, JSONObject loginJson, ApiCallback callback) {
+
+        // Retrieve the token from SessionManager
+        String token = sessionManager.getToken();
+
+        // Log token
+        System.out.println("Retrieved token: " + token);
 
         RequestBody body = RequestBody.create(JSON, loginJson.toString());
-
-        System.out.println("token-------sdfdfsg--dvgfd"+token);
 
         Request request = new Request.Builder()
                 .url(baseUrl + url)
@@ -43,7 +56,6 @@ public String baseUrl = "http://192.168.0.114:9090/";
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("dsfig-sfgf-rgre"+ e.getMessage());
                 Log.e(TAG, "Request failed: " + e.getMessage(), e);
                 callback.onFailure(e);
             }
@@ -53,13 +65,8 @@ public String baseUrl = "http://192.168.0.114:9090/";
                 if (response.isSuccessful()) {
                     try {
                         String responseBody = response.body().string();
-
-                        System.out.println("responseBody----"+responseBody);
-
                         JSONObject responseJson = new JSONObject(responseBody);
-
                         Log.d(TAG, "Request successful. Response: " + responseBody);
-
                         callback.onSuccess(responseJson);
                     } catch (Exception e) {
                         Log.e(TAG, "Error parsing response: " + e.getMessage(), e);
@@ -75,9 +82,7 @@ public String baseUrl = "http://192.168.0.114:9090/";
     }
 
     public interface ApiCallback {
-
-        void onSuccess(JSONObject responseJson);
-
+        JSONObject onSuccess(JSONObject responseJson);
         void onFailure(Exception e);
     }
 }

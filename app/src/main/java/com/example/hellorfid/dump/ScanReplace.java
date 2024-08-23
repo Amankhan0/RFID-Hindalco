@@ -1,4 +1,4 @@
-package com.example.hellorfid;
+package com.example.hellorfid.dump;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +8,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.example.hellorfid.R;
+import com.example.hellorfid.activities.InboundScreenActivity;
+import com.example.hellorfid.reader.MainActivity;
+
 public class ScanReplace extends AppCompatActivity {
 
     private LinearLayout linearLayout;

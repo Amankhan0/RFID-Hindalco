@@ -1,4 +1,4 @@
-package com.example.hellorfid;
+package com.example.hellorfid.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,12 +24,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.hellorfid.dump.ApiCallBackWithToken;
+import com.example.hellorfid.R;
+import com.example.hellorfid.session.SessionManager;
+import com.example.hellorfid.reader.MainActivity;
 import com.example.hellorfid.session.SessionManagerBag;
 
-public class AddBagActivity extends AppCompatActivity implements ApiCallBackWithToken.ApiCallback {
+public class AddBatchActivity extends AppCompatActivity implements ApiCallBackWithToken.ApiCallback {
 
     private static final String TAG = "AddBagActivity";
-    private static final Logger log = Logger.getLogger(AddBagActivity.class);
+    private static final Logger log = Logger.getLogger(AddBatchActivity.class);
     private Spinner buildingSpinner;
     private EditText lotNumberEditText;
     private EditText batchNumberEditText;
@@ -65,7 +69,7 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
         allScreenBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddBagActivity.this, HandheldTerminalActivity.class);
+                Intent intent = new Intent(AddBatchActivity.this, HandheldTerminalActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
@@ -105,10 +109,10 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    apiCallBack = new ApiCallBackWithToken();
+                    apiCallBack = new ApiCallBackWithToken(AddBatchActivity.this);
                     String url = "helper/api/searchProduct";
 
-                    apiCallBack.Api(url, json, AddBagActivity.this, token);
+                    apiCallBack.Api(url, json, AddBatchActivity.this);
                 }
             }
 
@@ -128,7 +132,7 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
     }
 
     @Override
-    public void onSuccess(JSONObject responseJson) {
+    public JSONObject onSuccess(JSONObject responseJson) {
         String result = responseJson.toString();
 
         // Log the successful response
@@ -167,11 +171,12 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(AddBagActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddBatchActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
             }
 
-            Toast.makeText(AddBagActivity.this, "Request Successful", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddBatchActivity.this, "Request Successful", Toast.LENGTH_SHORT).show();
         });
+        return responseJson;
     }
 
     @Override
@@ -181,7 +186,7 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
 
         // Handle failure response
         runOnUiThread(() -> {
-            Toast.makeText(AddBagActivity.this, "Request Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddBatchActivity.this, "Request Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -217,7 +222,7 @@ public class AddBagActivity extends AppCompatActivity implements ApiCallBackWith
 
 
         // Move to ScanPickingActivity
-        Intent intent = new Intent(AddBagActivity.this, MainActivity.class);
+        Intent intent = new Intent(AddBatchActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
 

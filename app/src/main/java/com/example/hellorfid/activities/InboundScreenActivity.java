@@ -1,4 +1,4 @@
-package com.example.hellorfid;
+package com.example.hellorfid.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,10 @@ import android.widget.ImageView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.hellorfid.R;
+import com.example.hellorfid.fragment.CompleteFragmentActivity;
+import com.example.hellorfid.fragment.InprogressFragmentActivity;
 
 public class InboundScreenActivity extends AppCompatActivity {
 

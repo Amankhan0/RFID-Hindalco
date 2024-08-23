@@ -21,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hellorfid.activities.AddBatchActivity;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.R;
 import com.example.hellorfid.session.SessionManager;
@@ -108,16 +107,16 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
 
 
-        ImageView AllScreenBackBtn = findViewById(R.id.all_screen_back_btn);
-        AllScreenBackBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddBatchActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-            }
-        });
+//        ImageView AllScreenBackBtn = findViewById(R.id.all_screen_back_btn);
+//        AllScreenBackBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, AddBatchActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
 
         tagTextView = findViewById(R.id.totalScan1);
         sessionManagerBag = new SessionManagerBag(this);

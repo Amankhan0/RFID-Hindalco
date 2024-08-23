@@ -43,6 +43,12 @@ public class SessionManager {
         return sharedPreferences.getString(buildingId, null);
     }
 
+    // clear building
+    public void clearBuildingId() {
+        editor.remove(buildingId);
+        editor.apply();
+    }
+
 
     // Save payload
     public void setPayload(String payload) {

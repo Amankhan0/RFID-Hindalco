@@ -73,7 +73,9 @@ public class HomeAdapter extends BaseAdapter {
 
                     sessionManager.setBuildingId( buildingModel.getId());
 
-                    if(buildingModel.getId() == sessionManager.getBuildingId()){
+                    sessionManager.clearBuildingId();
+                    if(sessionManager.getBuildingId() == null || sessionManager.getBuildingId().isEmpty()){
+                        sessionManager.setBuildingId(buildingModel.getId());
                         Intent intent = new Intent(context, HandheldTerminalActivity.class);
                         context.startActivity(intent);
                     }

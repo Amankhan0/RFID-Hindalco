@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hellorfid.R;
-import com.example.hellorfid.dump.ChooseBatch;
 import com.example.hellorfid.session.SessionManager;
 
 public class HandheldTerminalActivity extends AppCompatActivity {
@@ -49,7 +48,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle Receiving button click
-                startActivity(new Intent(HandheldTerminalActivity.this, ChooseBatch.class));
+                startActivity(new Intent(HandheldTerminalActivity.this, BatchActivity.class));
             }
         });
 

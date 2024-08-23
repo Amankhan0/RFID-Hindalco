@@ -22,8 +22,8 @@ public class ApiCallBackWithToken {
 
     private static final Logger log = Logger.getLogger(ApiCallBackWithToken.class);
 
-//    public String baseUrl = "http://192.168.0.114:9090/";
-public String baseUrl = "http://137.184.74.218/";
+    public String baseUrl = "http://192.168.1.104:9090/";
+//public String baseUrl = "http://137.184.74.218/";
     private static final String TAG = "ApiCallBackWithToken";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();

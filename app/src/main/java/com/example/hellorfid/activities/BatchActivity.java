@@ -115,9 +115,10 @@ public class BatchActivity extends AppCompatActivity {
                 String status = buildingJson.getString("status");
                 String movementStatus = buildingJson.getString("movementStatus");
                 String pid = productId.getString("id");
+                int totalInventory = buildingJson.getInt("totalInventory");
                 String productName = productId.getString("productName");
 
-                batchModels.add(new BatchModel(id, batchName, batchNumber,productName,pid,status,movementStatus));
+                batchModels.add(new BatchModel(id, batchName, batchNumber,productName,pid,status,movementStatus,totalInventory));
             }
             runOnUiThread(new Runnable() {
                 @Override

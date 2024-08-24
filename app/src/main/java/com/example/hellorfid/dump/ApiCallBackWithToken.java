@@ -7,6 +7,7 @@ import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.session.SessionManager;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -24,8 +25,6 @@ public class ApiCallBackWithToken {
     private static final Logger log = Logger.getLogger(ApiCallBackWithToken.class);
 
     public String baseUrl = Constants.url;
-
-//public String baseUrl = "http://137.184.74.218/";
     private static final String TAG = "ApiCallBackWithToken";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
@@ -36,14 +35,23 @@ public class ApiCallBackWithToken {
         this.sessionManager = new SessionManager(context);
     }
 
-    public void Api(String url, JSONObject loginJson, ApiCallback callback) {
+    public void Api(String url, Object jsonData, ApiCallback callback) {
         // Retrieve the token from SessionManager
         String token = sessionManager.getToken();
 
         // Log token
         System.out.println("Retrieved token: " + token);
 
-        RequestBody body = RequestBody.create(JSON, loginJson.toString());
+        String jsonString;
+        if (jsonData instanceof JSONObject) {
+            jsonString = ((JSONObject) jsonData).toString();
+        } else if (jsonData instanceof JSONArray) {
+            jsonString = ((JSONArray) jsonData).toString();
+        } else {
+            throw new IllegalArgumentException("Input must be either JSONObject or JSONArray");
+        }
+
+        RequestBody body = RequestBody.create(JSON, jsonString);
 
         Request request = new Request.Builder()
                 .url(baseUrl + url)
@@ -52,7 +60,7 @@ public class ApiCallBackWithToken {
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
 
-        Log.d(TAG, "Sending request to URL: " + url + " with body: " + loginJson.toString());
+        Log.d(TAG, "Sending request to URL: " + url + " with body: " + jsonString);
 
         client.newCall(request).enqueue(new Callback() {
             @Override

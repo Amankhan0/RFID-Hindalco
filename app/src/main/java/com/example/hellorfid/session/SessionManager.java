@@ -3,6 +3,8 @@ package com.example.hellorfid.session;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.json.JSONObject;
+
 public class SessionManager {
 
     private static final String PREF_NAME = "LoginSession";
@@ -10,6 +12,8 @@ public class SessionManager {
     private static final String buildingId = "buildingId";
     private static final String KEY_PAYLOAD = "payload";
     private static final String KEY_ROLE = "role";
+
+    private static final String BatchData = "BatchData";
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -46,6 +50,23 @@ public class SessionManager {
     // clear building
     public void clearBuildingId() {
         editor.remove(buildingId);
+        editor.apply();
+    }
+
+
+    public void setBatch(String batch) {
+        editor.putString(BatchData, batch);
+        editor.apply();
+    }
+
+    // Get saved token
+    public String getBatch() {
+        return sharedPreferences.getString(BatchData, null);
+    }
+
+    // clear building
+    public void clearBatch() {
+        editor.remove(BatchData);
         editor.apply();
     }
 

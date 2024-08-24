@@ -16,12 +16,13 @@ public class BatchModel {
     private String pid;
 
 
+
     private ProductModel product;
 
 
 
 
-    public BatchModel(String id, String batchName, String batchNumber, String productName,String pid,String status,String movementStatus) {
+    public BatchModel(String id, String batchName, String batchNumber, String productName,String pid,String status,String movementStatus,int totalInventory) {
         this.id = id;
         this.batchName = batchName;
         this.batchNumber = batchNumber;
@@ -29,6 +30,7 @@ public class BatchModel {
         this.status = status;
         this.movementStatus = movementStatus;
         this.productName = productName;
+        this.totalInventory = totalInventory;
 
     }
 

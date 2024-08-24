@@ -1,6 +1,7 @@
 package com.example.hellorfid.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +11,33 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.hellorfid.R;
+import com.example.hellorfid.activities.AddBatchFormActivity;
+import com.example.hellorfid.activities.BatchActivity;
+import com.example.hellorfid.activities.HandheldTerminalActivity;
+import com.example.hellorfid.constants.Constants;
+import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.model.BatchModel;
+import com.example.hellorfid.reader.MainActivity;
+import com.example.hellorfid.session.SessionManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
 public class BatchAdapter extends BaseAdapter {
+
+
     private Context context;
     private List<BatchModel> batchModels;
     private LayoutInflater inflater;
+    private SessionManager sessionManager;
 
     public BatchAdapter(Context context, List<BatchModel> batchModels) {
         this.context = context;
         this.batchModels = batchModels;
         this.inflater = LayoutInflater.from(context);
+        this.sessionManager = new SessionManager(context);
     }
 
     @Override
@@ -75,13 +90,38 @@ public class BatchAdapter extends BaseAdapter {
             holder.addTagsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    JSONObject BatchJson = new JSONObject();
 
-                    System.out.println("id----"+batchModel.getId());
-                    System.out.println("id----"+batchModel.getPid());
-                    System.out.println("id----"+batchModel.getBatchNumber());
-                    System.out.println("id----"+batchModel.getStatus());
-                    System.out.println("id----"+batchModel.getMovementStatus());
+                    try {
+                        BatchJson.put("batchId", batchModel.getId());
+                        BatchJson.put("product_id", batchModel.getPid());
+                        BatchJson.put("batchNumber", batchModel.getBatchNumber());
+                        BatchJson.put("status", batchModel.getStatus());
+                        BatchJson.put("movementStatus", batchModel.getMovementStatus());
+                        BatchJson.put("totalInventory", batchModel.getTotalInventory());
 
+
+                        sessionManager.clearBatch();
+                        // Store BatchJson in SessionManager
+                        sessionManager.setBatch(BatchJson.toString());
+
+
+                        System.out.println("batch save -----"+sessionManager.getBatch());
+
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.putExtra("totalInventory", batchModel.getTotalInventory());
+                        intent.putExtra("apiUrl", Constants.addBulkTags);  // Add this line
+                        context.startActivity(intent);
+
+                        // Show a toast message to confirm the action
+                        Toast.makeText(context, "Batch data stored in session", Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "Error storing batch data", Toast.LENGTH_SHORT).show();
+                    }
+
+                    // If you still want to print the JSON object for debugging purposes:
+                    System.out.println("BatchJson: " + BatchJson.toString());
                 }
             });
         }

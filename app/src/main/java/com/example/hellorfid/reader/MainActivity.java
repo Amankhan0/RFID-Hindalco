@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
@@ -21,6 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hellorfid.activities.AddBatchFormActivity;
+import com.example.hellorfid.activities.BatchActivity;
+import com.example.hellorfid.activities.HandheldTerminalActivity;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.R;
 import com.example.hellorfid.session.SessionManager;
@@ -48,6 +52,7 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -60,10 +65,12 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
     private static RFIDReader reader;
     private static final String TAG = "DEMO";
     private TextView tagTextView;
-    private SessionManagerBag sessionManagerBag;
+//    private SessionManagerBag sessionManagerBag;
     private SessionManager sessionManager;
 
-    private int totalTagsToScan;
+    private int totalInventoryToScan;
+    private String apiUrl;
+    private ApiCallBackWithToken apiCallBackWithToken;
 
     private Button resetButton;
     private Button submitButton;
@@ -81,9 +88,12 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        apiCallBackWithToken = new ApiCallBackWithToken(this);
+
+
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         mediaPlayer = MediaPlayer.create(this, R.raw.invalid_tag);
-        sessionManagerBag = new SessionManagerBag(this);
+//        sessionManagerBag = new SessionManagerBag(this);
         sessionManager = new SessionManager(this);
 
         if (mediaPlayer == null) {
@@ -119,9 +129,12 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 //        });
 
         tagTextView = findViewById(R.id.totalScan1);
-        sessionManagerBag = new SessionManagerBag(this);
-        totalTagsToScan = Integer.parseInt(sessionManagerBag.getBagQuantity());
-        Log.d(TAG, "Total tags to scan initialized to: " + totalTagsToScan);
+//        sessionManagerBag = new SessionManagerBag(this);
+
+        totalInventoryToScan = getIntent().getIntExtra("totalInventory",0);
+        apiUrl = getIntent().getStringExtra("apiUrl");
+
+        Log.d(TAG, "Total tags to scan initialized to: " + totalInventoryToScan);
 
         resetButton = findViewById(R.id.submitButton1);
         submitButton = findViewById(R.id.submitButton);
@@ -138,48 +151,26 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
             @Override
             public void onClick(View view) {
                 try {
-                    JSONObject submitJson = createSubmitJson();
-                    if (submitJson == null) {
-                        Toast.makeText(MainActivity.this, "Error creating JSON object", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    JSONArray submitJson = createSubmitJson();
 
-                    System.out.println("submitJson: " + submitJson.toString());
+                    System.out.println("onclick----submitJson"+submitJson);
 
-                    ApiCallBackWithToken apiCallBack = new ApiCallBackWithToken(MainActivity.this);
-                    String url = "iot/api/addTag";
-
-                    String token = sessionManager.getToken();
-                    if (token == null) {
-                        Toast.makeText(MainActivity.this, "No token available. Please login first.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    apiCallBack.Api(url, submitJson, new ApiCallBackWithToken.ApiCallback() {
+                    apiCallBackWithToken.Api(apiUrl, submitJson, new ApiCallBackWithToken.ApiCallback() {
                         @Override
                         public JSONObject onSuccess(JSONObject responseJson) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(MainActivity.this, "Submit successful", Toast.LENGTH_SHORT).show();
-                                    // Handle successful submission
-                                }
-                            });
+                            Toast.makeText(MainActivity.this, "Bulk RFID tags added successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this, BatchActivity.class);
+                            startActivity(intent);
                             return responseJson;
                         }
 
                         @Override
                         public void onFailure(Exception e) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(MainActivity.this, "Submit failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    Log.e(TAG, "Submit failed", e);
-                                    // Handle submission failure
-                                }
-                            });
+                            Log.e("TAG", "API call failed", e);
                         }
-                    });  // Pass the token here
+                    });
+
+
                 } catch (Exception e) {
                     Log.e(TAG, "Error in submit button onClick", e);
                     Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -242,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
     private void resetScannedTags() {
         System.out.println("scannedTagIds" + scannedTagIds.toString());
-        sessionManagerBag.clearSession();
+//        sessionManagerBag.clearSession();
         scannedTagIds.clear();
         tagList.clear();
 
@@ -252,33 +243,43 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
     }
 
-    private JSONObject createSubmitJson() {
-        JSONObject submitJson = new JSONObject();
+    private JSONArray createSubmitJson() {
+        JSONArray submitJson;
         try {
-            submitJson.put("product_id", sessionManagerBag.getProductName());
-            submitJson.put("lotNumber", sessionManagerBag.getLotNumber());
-            submitJson.put("batchNumber", sessionManagerBag.getBatchNumber());
-            submitJson.put("status", "ACTIVE");
-            submitJson.put("movementStatus", "Printing_Room");
+            System.out.println("scannedTagIds: " + scannedTagIds);
+            System.out.println("apiUrl: " + apiUrl);
 
-            // Add the scanned tag IDs
-            if (!scannedTagIds.isEmpty()) {
-                submitJson.put("scannedTags", scannedTagIds.iterator().next());
-            } else {
-                Log.w(TAG, "No scanned tags available");
-                // You might want to handle this case differently
-                submitJson.put("scannedTags", "");
+            submitJson = new JSONArray();
+
+            String batch = sessionManager.getBatch();
+            JSONObject batchObject = new JSONObject(batch);
+
+            for (String rfidTag : scannedTagIds) {
+                JSONObject tagObject = new JSONObject();
+                tagObject.put("rfidTag", rfidTag);
+
+                System.out.println("batchObject---" + batchObject);
+                System.out.println("tagObject---" + tagObject);
+
+                Iterator<String> keys = batchObject.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    if (!key.equals("totalInventory")) {
+                        tagObject.put(key, batchObject.get(key));
+                    }
+                }
+
+                submitJson.put(tagObject);
             }
-        } catch (JSONException e) {
-            Log.e(TAG, "Error creating JSON object", e);
+
+            System.out.println("onclick----submitJson" + submitJson.toString());
+
+        } catch (Exception e) {
+            Log.e("TAG", "Error creating JSON object", e);
             return null;
         }
+        System.out.println("submitJson----"+submitJson) ;
         return submitJson;
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     @Override
@@ -329,15 +330,15 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
     private void updateTagCountDisplay() {
         runOnUiThread(() -> {
-            tagTextView.setText("Total scan - " + scannedTagIds.size() + "/" + totalTagsToScan);
+            tagTextView.setText("Total scan - " + scannedTagIds.size() + "/" + totalInventoryToScan);
         });
     }
 
     public void addTagToList(String tagId) {
         scannedTagIds.add(tagId);  // Add the new tag first
         int currentSize = scannedTagIds.size();
-        boolean isOverLimit = currentSize > totalTagsToScan;
-        Log.d(TAG, "Scanned tags: " + currentSize + ", Total tags to scan: " + totalTagsToScan + " Lot A " + isOverLimit);
+        boolean isOverLimit = currentSize > totalInventoryToScan;
+        Log.d(TAG, "Scanned tags: " + currentSize + ", Total tags to scan: " + totalInventoryToScan + " Lot A " + isOverLimit);
 
         tagList.add(new Tag(tagId, "Lot A", isOverLimit));
         tagAdapter.notifyItemInserted(tagList.size() - 1);
@@ -380,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
     }
 
     private void updateSubmitButtonState() {
-        boolean shouldDisable = isAnyTagOverLimit() || scannedTagIds.size() > totalTagsToScan;
+        boolean shouldDisable = isAnyTagOverLimit() || scannedTagIds.size() > totalInventoryToScan;
         submitButton.setEnabled(!shouldDisable);
     }
 

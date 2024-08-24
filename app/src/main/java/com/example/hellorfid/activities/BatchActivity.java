@@ -117,8 +117,8 @@ public class BatchActivity extends AppCompatActivity {
                 String pid = productId.getString("id");
                 int totalInventory = buildingJson.getInt("totalInventory");
                 String productName = productId.getString("productName");
-
-                batchModels.add(new BatchModel(id, batchName, batchNumber,productName,pid,status,movementStatus,totalInventory));
+                boolean isTagAdded = buildingJson.optBoolean("isTagAdded", false);
+                batchModels.add(new BatchModel(id, batchName, batchNumber,productName,pid,status,movementStatus,totalInventory,isTagAdded));
             }
             runOnUiThread(new Runnable() {
                 @Override

@@ -14,6 +14,7 @@ public class BatchModel {
     private Date updatedAt;
     private String productName;
     private String pid;
+    private boolean isTagAdded;
 
 
 
@@ -22,7 +23,7 @@ public class BatchModel {
 
 
 
-    public BatchModel(String id, String batchName, String batchNumber, String productName,String pid,String status,String movementStatus,int totalInventory) {
+    public BatchModel(String id, String batchName, String batchNumber, String productName,String pid,String status,String movementStatus,int totalInventory,boolean isTagAdded) {
         this.id = id;
         this.batchName = batchName;
         this.batchNumber = batchNumber;
@@ -31,7 +32,15 @@ public class BatchModel {
         this.movementStatus = movementStatus;
         this.productName = productName;
         this.totalInventory = totalInventory;
+        this.isTagAdded = isTagAdded;
+    }
 
+    public boolean isTagAdded() {
+        return isTagAdded;
+    }
+
+    public void setTagAdded(boolean tagAdded) {
+        isTagAdded = tagAdded;
     }
 
     // Getters

@@ -8,22 +8,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.example.hellorfid.R;
 import com.example.hellorfid.activities.HandheldTerminalActivity;
-import com.example.hellorfid.activities.HomeActivity;
-import com.example.hellorfid.activities.LoginActivity;
-import com.example.hellorfid.model.HomeModel;
+import com.example.hellorfid.model.DispatchModel;
 import com.example.hellorfid.session.SessionManager;
 
 import java.util.List;
 
-public class HomeAdapter extends BaseAdapter {
+public class DispatchAdapter extends BaseAdapter {
     private Context context;
-    private List<HomeModel> buildingModels;
+    private List<DispatchModel> buildingModels;
     private LayoutInflater inflater;
     private SessionManager sessionManager;
 
-    public HomeAdapter(Context context, List<HomeModel> buildingModels) {
+    public DispatchAdapter(Context context, List<DispatchModel> buildingModels) {
         this.context = context;
         this.buildingModels = buildingModels;
         this.inflater = LayoutInflater.from(context);
@@ -62,7 +61,7 @@ public class HomeAdapter extends BaseAdapter {
         }
 
         if (buildingModels != null && position < buildingModels.size()) {
-            HomeModel buildingModel = buildingModels.get(position);
+            DispatchModel buildingModel = buildingModels.get(position);
             holder.nameTextView.setText(buildingModel.getBuildingName());
             holder.addressTextView.setText(buildingModel.getBuildingNo());
 
@@ -70,12 +69,11 @@ public class HomeAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     System.out.println("clicked " + buildingModel.getId());
-                    sessionManager.setBuildingId( buildingModel.getId());
-                    sessionManager.clearBuildingId();
-                    if(sessionManager.getBuildingId() == null || sessionManager.getBuildingId().isEmpty()){
-                        sessionManager.setBuildingId(buildingModel.getId());
-                        Intent intent = new Intent(context, HandheldTerminalActivity.class);
-                        context.startActivity(intent);
+                    sessionManager.setBuildingIdTo( buildingModel.getId());
+                    sessionManager.clearBuildingIdTo();
+                    if(sessionManager.getBuildingIdTo() == null || sessionManager.getBuildingIdTo().isEmpty()){
+                        sessionManager.setBuildingIdTo(buildingModel.getId());
+                        System.out.println("call-----Dispatch");
                     }
                 }
             });

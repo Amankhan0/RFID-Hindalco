@@ -10,6 +10,7 @@ public class SessionManager {
     private static final String PREF_NAME = "LoginSession";
     private static final String KEY_TOKEN = "token";
     private static final String buildingId = "buildingId";
+    private static final String buildingIdTo = "buildingIdTo";
     private static final String KEY_PAYLOAD = "payload";
     private static final String KEY_ROLE = "role";
 
@@ -50,6 +51,22 @@ public class SessionManager {
     // clear building
     public void clearBuildingId() {
         editor.remove(buildingId);
+        editor.apply();
+    }
+
+    public void setBuildingIdTo(String id) {
+        editor.putString(buildingIdTo, id);
+        editor.apply();
+    }
+
+    // Get saved token
+    public String getBuildingIdTo() {
+        return sharedPreferences.getString(buildingIdTo, null);
+    }
+
+    // clear building
+    public void clearBuildingIdTo() {
+        editor.remove(buildingIdTo);
         editor.apply();
     }
 

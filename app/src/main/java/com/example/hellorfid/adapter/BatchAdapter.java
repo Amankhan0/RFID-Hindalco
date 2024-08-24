@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.hellorfid.R;
 import com.example.hellorfid.activities.AddBatchFormActivity;
 import com.example.hellorfid.activities.BatchActivity;
+import com.example.hellorfid.activities.DispatchActivity;
 import com.example.hellorfid.activities.HandheldTerminalActivity;
 import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
@@ -65,8 +66,10 @@ public class BatchAdapter extends BaseAdapter {
             holder.batchNameTextView = convertView.findViewById(R.id.batchName);
             holder.batchNumberTextView = convertView.findViewById(R.id.batchNumber);
             holder.productNameTextView = convertView.findViewById(R.id.productName);
-            holder.statusTextView = convertView.findViewById(R.id.status);
+            holder.totalInventoryTextView = convertView.findViewById(R.id.totalInventory);
             holder.addTagsButton = convertView.findViewById(R.id.addTagsButton);
+            holder.dispatchButton = convertView.findViewById(R.id.dispatchButton);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -77,13 +80,29 @@ public class BatchAdapter extends BaseAdapter {
             holder.batchNameTextView.setText(batchModel.getBatchName());
             holder.batchNumberTextView.setText(batchModel.getBatchNumber());
             holder.productNameTextView.setText(batchModel.getProductName());
-            holder.statusTextView.setText(batchModel.getStatus());
+            holder.totalInventoryTextView.setText("Total Inventory: " + batchModel.getTotalInventory());
+
+            if (batchModel.isTagAdded()) {
+                holder.addTagsButton.setVisibility(View.GONE);
+                holder.dispatchButton.setVisibility(View.VISIBLE);
+            } else {
+                holder.addTagsButton.setVisibility(View.VISIBLE);
+                holder.dispatchButton.setVisibility(View.GONE);
+            }
 
             holder.mainCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // Handle click event
                     // For example, open a new activity with batch details
+                }
+            });
+
+            holder.dispatchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, DispatchActivity.class);  // Add this line
+                    context.startActivity(intent);
                 }
             });
 
@@ -134,7 +153,9 @@ public class BatchAdapter extends BaseAdapter {
         TextView batchNameTextView;
         TextView batchNumberTextView;
         TextView productNameTextView;
-        TextView statusTextView;
+        TextView totalInventoryTextView;
         Button addTagsButton;
+        Button dispatchButton;
+
     }
 }

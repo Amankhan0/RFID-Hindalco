@@ -22,12 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.hellorfid.R;
+import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.session.SessionManager;
 
-public class AddBatchFormActivity extends AppCompatActivity implements ApiCallBackWithToken.ApiCallback {
+public class AddBatchFormActivity extends AppCompatActivity {
 
     private static final String TAG = "AddBatchFormActivity";
+
+    private ApiCallBackWithToken apiCallBackWithToken;
+
     private EditText lotNumberEditText;
     private EditText batchNumberEditText;
     private EditText bagQuantityEditText;
@@ -35,7 +39,6 @@ public class AddBatchFormActivity extends AppCompatActivity implements ApiCallBa
     private Button submitButton;
     private AutoCompleteTextView productAutoCompleteTextView;
     private List<String> productList = new ArrayList<>();
-    private ApiCallBackWithToken apiCallBack;
     private SessionManager sessionManager;
 
     @Override
@@ -45,6 +48,8 @@ public class AddBatchFormActivity extends AppCompatActivity implements ApiCallBa
         setContentView(R.layout.activity_add_batch_form);
 
         sessionManager = new SessionManager(this);
+
+        apiCallBackWithToken = new ApiCallBackWithToken(this);
 
         batchNameEditText = findViewById(R.id.batchName);
         lotNumberEditText = findViewById(R.id.lotnum);
@@ -83,6 +88,7 @@ public class AddBatchFormActivity extends AppCompatActivity implements ApiCallBa
         submitButton.setOnClickListener(v -> {
             try {
                 Log.d(TAG, "Submit button clicked");
+                System.out.println("Submit button clicked");
                 submitForm();
             } catch (Exception e) {
                 Log.e(TAG, "Error in onClick", e);
@@ -104,13 +110,44 @@ public class AddBatchFormActivity extends AppCompatActivity implements ApiCallBa
             Log.e(TAG, "Error creating JSON for product search", e);
             return;
         }
-        apiCallBack = new ApiCallBackWithToken(this);
         String url = "helper/api/searchProduct";
-        apiCallBack.Api(url, json, this);
+        apiCallBackWithToken.Api(url, json, new ApiCallBackWithToken.ApiCallback() {
+            @Override
+            public JSONObject onSuccess(JSONObject responseJson) {
+                handleProductSearchResponse(responseJson);
+                return responseJson;
+            }
+            @Override
+            public void onFailure(Exception e) {
+                Log.e(TAG, "API call failed", e);
+            }
+        });
+    }
+
+    private void handleProductSearchResponse(JSONObject responseJson) {
+        runOnUiThread(() -> {
+            try {
+                JSONArray contentArray = responseJson.getJSONArray("content");
+                productList.clear();
+                for (int i = 0; i < contentArray.length(); i++) {
+                    JSONObject product = contentArray.getJSONObject(i);
+                    String productNameid = product.getString("id");
+                    productList.add(productNameid);
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                        android.R.layout.simple_dropdown_item_1line, productList);
+                productAutoCompleteTextView.setAdapter(adapter);
+                productAutoCompleteTextView.showDropDown();
+            } catch (JSONException e) {
+                Log.e(TAG, "Error parsing response", e);
+                Toast.makeText(AddBatchFormActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void submitForm() {
         Log.d(TAG, "submitForm method called");
+        System.out.println("submitForm method called");
         String batchName = batchNameEditText.getText().toString().trim();
         String productId = productAutoCompleteTextView.getText().toString().trim();
         String batchNumber = batchNumberEditText.getText().toString().trim();
@@ -148,56 +185,24 @@ public class AddBatchFormActivity extends AppCompatActivity implements ApiCallBa
 
             // Call the new API endpoint
             String url = "iot/api/addBatch";
-            apiCallBack = new ApiCallBackWithToken(this);
-            apiCallBack.Api(url, formData, this);
+            apiCallBackWithToken.Api(url, formData, new ApiCallBackWithToken.ApiCallback() {
+                @Override
+                public JSONObject onSuccess(JSONObject responseJson) {
+                    Intent intent = new Intent(AddBatchFormActivity.this, BatchActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(AddBatchFormActivity.this, "Batch added successfully", Toast.LENGTH_SHORT).show();
+                    return responseJson;
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    Log.e(TAG, "API call failed", e);
+                }
+            });
 
         } catch (JSONException e) {
             Log.e(TAG, "Error creating JSON from form data", e);
             Toast.makeText(this, "Error submitting form", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public JSONObject onSuccess(JSONObject responseJson) {
-        Log.d(TAG, "API call successful. Response: " + responseJson.toString());
-        runOnUiThread(() -> {
-            try {
-                // Check if the response is from the search product API
-                if (responseJson.has("content")) {
-                    JSONArray contentArray = responseJson.getJSONArray("content");
-                    productList.clear();
-                    for (int i = 0; i < contentArray.length(); i++) {
-                        JSONObject product = contentArray.getJSONObject(i);
-                        String productNameid = product.getString("id");
-                        productList.add(productNameid);
-                    }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                            android.R.layout.simple_dropdown_item_1line, productList);
-                    productAutoCompleteTextView.setAdapter(adapter);
-                    productAutoCompleteTextView.showDropDown();
-                } else {
-                    Intent intent = new Intent(AddBatchFormActivity.this, BatchActivity.class);
-                    startActivity(intent);
-                    // This is the response from the addBatch API
-                    Toast.makeText(AddBatchFormActivity.this, "Batch added successfully", Toast.LENGTH_SHORT).show();
-                    // Clear the form
-                    clearForm();
-                    // Optionally, navigate to another activity or refresh the current one
-                }
-            } catch (JSONException e) {
-                Log.e(TAG, "Error parsing response", e);
-                Toast.makeText(AddBatchFormActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
-            }
-        });
-        return responseJson;
-    }
-
-    @Override
-    public void onFailure(Exception e) {
-        Log.e(TAG, "API call failed", e);
-        runOnUiThread(() -> {
-            Toast.makeText(AddBatchFormActivity.this, "Request Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
     }
 
     private void clearForm() {

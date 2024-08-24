@@ -25,16 +25,23 @@
         android:text="Product Name" />
 
     <TextView
-        android:id="@+id/status"
+        android:id="@+id/totalInventory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status" />
+        android:text="totalInventory" />
 
     <Button
         android:id="@+id/addTagsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Tags"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/dispatchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dispatch"
         android:layout_marginTop="8dp" />
 
 </LinearLayout>

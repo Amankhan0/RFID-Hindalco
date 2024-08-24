@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hellorfid.activities.AddBatchFormActivity;
 import com.example.hellorfid.activities.BatchActivity;
 import com.example.hellorfid.activities.HandheldTerminalActivity;
+import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.R;
 import com.example.hellorfid.session.SessionManager;
@@ -150,31 +151,8 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    JSONArray submitJson = createSubmitJson();
-
-                    System.out.println("onclick----submitJson"+submitJson);
-
-                    apiCallBackWithToken.Api(apiUrl, submitJson, new ApiCallBackWithToken.ApiCallback() {
-                        @Override
-                        public JSONObject onSuccess(JSONObject responseJson) {
-                            Toast.makeText(MainActivity.this, "Bulk RFID tags added successfully", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity.this, BatchActivity.class);
-                            startActivity(intent);
-                            return responseJson;
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-                            Log.e("TAG", "API call failed", e);
-                        }
-                    });
-
-
-                } catch (Exception e) {
-                    Log.e(TAG, "Error in submit button onClick", e);
-                    Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                JSONArray submitJson = createSubmitJson();
+                ApiHit(submitJson);
             }
         });
         initializeRecyclerView();
@@ -221,6 +199,69 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
     }
 
+    public void ApiHit(JSONArray submitJson ){
+        try {
+
+            apiCallBackWithToken.Api(apiUrl, submitJson, new ApiCallBackWithToken.ApiCallback() {
+                @Override
+                public JSONObject onSuccess(JSONObject responseJson) {
+                    System.out.println("onclick----submitJson"+submitJson);
+                    batchUpdate(sessionManager.getBatch());
+                    return responseJson;
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Log.e("TAG", "API call failed", e);
+                }
+            });
+
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error in submit button onClick", e);
+            Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void batchUpdate(String batchData){
+
+        System.out.println("onclick----submitcallJson"+batchData);
+
+        try {
+            // Extract the "data" object from the response
+
+            JSONObject jsonObject = new JSONObject(batchData);
+
+            String batchId = jsonObject.getString("batchId");
+            JSONObject batchUpdateJson = new JSONObject();
+            batchUpdateJson.put("id" , batchId);
+            batchUpdateJson.put("isTagAdded" , true);
+            System.out.println("batchUpdateJson-----"+batchUpdateJson);
+            apiCallBackWithToken.Api(Constants.updateBatch, batchUpdateJson, new ApiCallBackWithToken.ApiCallback() {
+                @Override
+                public JSONObject onSuccess(JSONObject responseJson) {
+                    System.out.println("responseJson-----dsfdsf"+responseJson);
+                    Intent intent = new Intent(MainActivity.this, BatchActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "Batch added successfully", Toast.LENGTH_SHORT).show();
+                    return responseJson;
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    Log.e(TAG, "API call failed", e);
+                }
+            });
+
+        } catch (JSONException e) {
+            System.err.println("Error parsing JSON: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        System.out.println("id------"+batchData);
+    }
+
+
+
     private void initializeRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -256,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
             for (String rfidTag : scannedTagIds) {
                 JSONObject tagObject = new JSONObject();
-                tagObject.put("rfidTag", rfidTag);
+                tagObject.put("rfidTag", rfidTag.toLowerCase());
 
                 System.out.println("batchObject---" + batchObject);
                 System.out.println("tagObject---" + tagObject);
@@ -338,7 +379,6 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
         scannedTagIds.add(tagId);  // Add the new tag first
         int currentSize = scannedTagIds.size();
         boolean isOverLimit = currentSize > totalInventoryToScan;
-        Log.d(TAG, "Scanned tags: " + currentSize + ", Total tags to scan: " + totalInventoryToScan + " Lot A " + isOverLimit);
 
         tagList.add(new Tag(tagId, "Lot A", isOverLimit));
         tagAdapter.notifyItemInserted(tagList.size() - 1);
@@ -381,7 +421,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
     }
 
     private void updateSubmitButtonState() {
-        boolean shouldDisable = isAnyTagOverLimit() || scannedTagIds.size() > totalInventoryToScan;
+        boolean shouldDisable = isAnyTagOverLimit() || scannedTagIds.size() != totalInventoryToScan;
         submitButton.setEnabled(!shouldDisable);
     }
 

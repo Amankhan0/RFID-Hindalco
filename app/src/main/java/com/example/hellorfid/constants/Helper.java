@@ -55,21 +55,28 @@ public class Helper {
     }
 
 
+//    public static JSONObject commanUpdate(ApiCallBackWithToken apiCallBackWithToken, String URL,
+//                                          String whereKey,String wherevalue,String andKey, String andValue) throws JSONException {
+//                try {
+//                    JSONObject jsonObject = new JSONObject();
+//                    jsonObject.put(whereKey, wherevalue);
+//                    jsonObject.put(andKey, andValue);
+//                    return internalHit(apiCallBackWithToken,URL,jsonObject);
+//                } catch (JSONException | InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//        return null;
+//    }
+//
+
     public static JSONObject commanUpdate(ApiCallBackWithToken apiCallBackWithToken, String URL,
-                                          String whereKey,String wherevalue,String andKey, String andValue) throws JSONException {
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put(whereKey, wherevalue);
-                    jsonObject.put(andKey, andValue);
-                    return internalHit(apiCallBackWithToken,URL,jsonObject);
-                } catch (JSONException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-        return null;
+                                          String whereKey, String whereValue, String andKey, String andValue) throws JSONException, InterruptedException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(whereKey, whereValue);
+        jsonObject.put(andKey, andValue);
+        return internalHit(apiCallBackWithToken, URL, jsonObject);
     }
-
-
 
     static JSONArray tag(String data) throws JSONException {
         return new JSONArray(data);
@@ -111,6 +118,9 @@ public class Helper {
 //        JSONObject jsonObject = new JSONObject(requestBody);
         final JSONObject[] result = new JSONObject[1];
         final boolean[] isComplete = {false};
+
+        System.out.println("requestBody---"+requestBody);
+
         apiCallBackWithToken.Api(URL, requestBody, new ApiCallBackWithToken.ApiCallback() {
             @Override
             public JSONObject onSuccess(JSONObject responseJson) {

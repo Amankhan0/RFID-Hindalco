@@ -21,6 +21,7 @@ import com.example.hellorfid.reader.MainActivity;
 import com.example.hellorfid.session.SessionManager;
 import com.google.gson.JsonParser;
 
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,8 +33,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnOrderClickListener {
-git
+
     private static final int REQUEST_CODE_MAIN_ACTIVITY = 1001;
+    private static final Logger log = Logger.getLogger(OrderActivity.class);
     private SessionManager sessionManager;
     private ApiCallBackWithToken apiCallBackWithToken;
     private List<OrderModel> orderList;
@@ -58,6 +60,7 @@ git
 
         ImageView allScreenBackBtn = findViewById(R.id.allScreenBackBtn);
         allScreenBackBtn.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OrderActivity.this, HandheldTerminalActivity.class);
@@ -72,16 +75,16 @@ git
 
     @Override
     public void onOrderClick(OrderModel order) throws JSONException, InterruptedException {
-
+        System.out.println("Order clicked: " + order.getId());
         commanModel.setOrderStatus(Constants.ORDER_PICKING);
         JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
-                "_id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_PICKING);
+                "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_PICKING);
 
         System.out.println("updated order--->"+res);
-//        Intent intent = new Intent(this, MainActivity.class);
-//        intent.putExtra("totalInventory", order.getQty());
-//        intent.putExtra("apiUrl", Constants.addBulkTags);
-//        startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("totalInventory", order.getQty());
+        intent.putExtra("apiUrl", Constants.addBulkTags);
+        startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
     }
 
     @Override
@@ -91,16 +94,31 @@ git
         if (requestCode == REQUEST_CODE_MAIN_ACTIVITY) {
             if (resultCode == RESULT_OK) {
                 String result = data.getStringExtra("result_key");
-                System.out.println("result----->>>"+result);
-
                    String finalJson  = Helper.commanParser(result,false,commanModel);
+                System.out.println("finalJson----->>>"+finalJson);
                    JSONObject res = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags, finalJson);
-
                 System.out.println("final json recevied"+res);
+
+                if(res.getInt("status")==200){
+//                    commanModel.setOrderStatus(Constants.ORDER_PICKED);
+                    JSONObject updatedOrderResult = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
+                            "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_PICKED);
+
+                    System.out.println("updatedOrderResult order--->"+updatedOrderResult);
+                }
+
+
+
+
+
 
                 Toast.makeText(this, "Result from MainActivity: " + result, Toast.LENGTH_SHORT).show();
                 hitApiAndLogResult(); // Refresh the order list
             } else if (resultCode == RESULT_CANCELED) {
+                System.out.println("result cancelled");
+                JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
+                        "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_INITIATED);
+                System.out.println("-----updated order--->"+res);
                 Toast.makeText(this, "Operation cancelled", Toast.LENGTH_SHORT).show();
             }
         }

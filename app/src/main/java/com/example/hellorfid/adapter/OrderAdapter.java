@@ -8,6 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.hellorfid.R;
+import com.example.hellorfid.constants.Constants;
+import com.example.hellorfid.constants.Helper;
+import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.model.OrderModel;
 
 import org.json.JSONException;
@@ -22,6 +25,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     private List<OrderModel> orderList;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     private OnOrderClickListener onOrderClickListener;
+    private ApiCallBackWithToken apiCallBackWithToken;
 
     public interface OnOrderClickListener {
         void onOrderClick(OrderModel order) throws JSONException, InterruptedException;
@@ -48,6 +52,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.itemView.setOnClickListener(v -> {
             if (onOrderClickListener != null) {
                 try {
+//                    Helper.commanHitApi(apiCallBackWithToken, Constants.addBulkTags, );
                     onOrderClickListener.onOrderClick(order);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);

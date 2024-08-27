@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
     private TagAdapter tagAdapter;
     private List<Tag> tagList;
     private MediaPlayer mediaPlayer;
+    private ArrayList tagListArr;
 
 
     @Override
@@ -96,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
         mediaPlayer = MediaPlayer.create(this, R.raw.invalid_tag);
 //        sessionManagerBag = new SessionManagerBag(this);
         sessionManager = new SessionManager(this);
+
+        tagListArr = new ArrayList<>();
 
         if (mediaPlayer == null) {
             Log.e(TAG, "MediaPlayer initialization failed. Check if the audio file exists in res/raw.");
@@ -151,8 +154,16 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JSONArray submitJson = createSubmitJson();
-                ApiHit(submitJson);
+
+                System.out.println("new array list---"+tagListArr.toString());
+
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("result_key", tagListArr.toString());
+                setResult(RESULT_OK, resultIntent);
+                finish();
+
+//                JSONArray submitJson = createSubmitJson();
+//                ApiHit(submitJson);
             }
         });
         initializeRecyclerView();
@@ -277,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 //        sessionManagerBag.clearSession();
         scannedTagIds.clear();
         tagList.clear();
-
+        tagListArr.clear();
         tagAdapter.notifyDataSetChanged();
         updateTagCountDisplay();
         updateSubmitButtonState();
@@ -380,6 +391,8 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
         int currentSize = scannedTagIds.size();
         boolean isOverLimit = currentSize > totalInventoryToScan;
 
+        tagListArr.add(tagId);
+
         tagList.add(new Tag(tagId, "Lot A", isOverLimit));
         tagAdapter.notifyItemInserted(tagList.size() - 1);
 
@@ -390,6 +403,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
     @Override
     public void onTagDelete(String tagId) {
+        tagListArr.remove(tagId);
         scannedTagIds.remove(tagId);
         updateTagCountDisplay();
         updateSubmitButtonState();

@@ -13,7 +13,7 @@ import com.example.hellorfid.session.SessionManager;
 
 public class HandheldTerminalActivity extends AppCompatActivity {
 
-    private Button buttonReceiving, buttonPicking, buttonReplace, buttonHold, buttonConsume, buttonHome, addBag;
+    private Button orderButton, buttonReceiving, buttonPicking, buttonReplace, buttonHold, buttonConsume, buttonHome, addBag;
 
 
     @Override
@@ -34,6 +34,9 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         buttonHold = findViewById(R.id.buttonHold);
         buttonConsume = findViewById(R.id.buttonConsume);
         addBag = findViewById(R.id.buttonAddBag);
+        orderButton = findViewById(R.id.ordersButton);
+
+
 
 //         Set onClick listeners
         buttonReceiving.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +52,14 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Handle Receiving button click
                 startActivity(new Intent(HandheldTerminalActivity.this, BatchActivity.class));
+            }
+        });
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Receiving button click
+                startActivity(new Intent(HandheldTerminalActivity.this, OrderActivity.class));
             }
         });
 

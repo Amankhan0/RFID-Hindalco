@@ -91,6 +91,11 @@
             android:id="@+id/buttonConsume"
             style="@style/TerminalButtonStyle"
             android:text="Consume" />
+
+        <Button
+            android:id="@+id/ordersButton"
+            style="@style/TerminalButtonStyle"
+            android:text="Orders" />
     </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

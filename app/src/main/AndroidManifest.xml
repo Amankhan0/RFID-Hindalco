@@ -15,6 +15,24 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ReplaceMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ReplaceFromActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ReplaceToActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.UnHoldActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.HoldActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.InboundOrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.OrderActivity"
             android:exported="false" />
         <activity

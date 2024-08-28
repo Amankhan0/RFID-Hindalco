@@ -13,8 +13,7 @@ import com.example.hellorfid.session.SessionManager;
 
 public class HandheldTerminalActivity extends AppCompatActivity {
 
-    private Button orderButton, buttonReceiving, buttonPicking, buttonReplace, buttonHold, buttonConsume, buttonHome, addBag;
-
+    private Button orderButton,inboundorderButton, buttonReplace, buttonHold,buttonUnHold, buttonConsume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,37 +22,23 @@ public class HandheldTerminalActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
 
+
+
         System.out.println("sessionManager.getToken()"+sessionManager.getToken());
         System.out.println("sessionManager.getPayload()"+sessionManager.getPayload());
 
 
         // Initialize buttons
-        buttonReceiving = findViewById(R.id.buttonReceiving);
-        buttonPicking = findViewById(R.id.buttonPicking);
         buttonReplace = findViewById(R.id.buttonReplace);
         buttonHold = findViewById(R.id.buttonHold);
         buttonConsume = findViewById(R.id.buttonConsume);
-        addBag = findViewById(R.id.buttonAddBag);
         orderButton = findViewById(R.id.ordersButton);
+        inboundorderButton = findViewById(R.id.inBoundOrder);
+        buttonHold = findViewById(R.id.buttonHold);
+        buttonUnHold = findViewById(R.id.unHold);
 
 
 
-//         Set onClick listeners
-        buttonReceiving.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle Receiving button click
-                startActivity(new Intent(HandheldTerminalActivity.this, InboundScreenActivity.class));
-            }
-        });
-
-        addBag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle Receiving button click
-                startActivity(new Intent(HandheldTerminalActivity.this, BatchActivity.class));
-            }
-        });
 
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +48,40 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             }
         });
 
+        inboundorderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Receiving button click
+                startActivity(new Intent(HandheldTerminalActivity.this, InboundOrderActivity.class));
+            }
+        });
+
+        buttonHold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Receiving button click
+                startActivity(new Intent(HandheldTerminalActivity.this, HoldActivity.class));
+            }
+        });
+
+
+        buttonUnHold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Receiving button click
+                startActivity(new Intent(HandheldTerminalActivity.this, UnHoldActivity.class));
+            }
+        });
+
+        buttonReplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Receiving button click
+                sessionManager.clearReplaceScan();
+                sessionManager.clearSecondReplaceScan();
+                startActivity(new Intent(HandheldTerminalActivity.this, ReplaceMainActivity.class));
+            }
+        });
 
         ImageView ProfileButton = findViewById(R.id.profile);
         ProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -76,47 +95,5 @@ public class HandheldTerminalActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-//
-//        buttonPicking.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Handle Picking button click
-//                startActivity(new Intent(HandheldTerminalActivity.this, PickingActivity.class));
-//            }
-//        });
-//
-//        buttonReplace.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Handle Replace button click
-//                startActivity(new Intent(HandheldTerminalActivity.this, ReplaceActivity.class));
-//            }
-//        });
-//
-//        buttonHold.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Handle Hold button click
-//                startActivity(new Intent(HandheldTerminalActivity.this, HoldActivity.class));
-//            }
-//        });
-//
-//        buttonConsume.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Handle Consume button click
-//                startActivity(new Intent(HandheldTerminalActivity.this, ConsumeActivity.class));
-//            }
-//        });
-//
-//        buttonHome.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Handle Home button click
-//                // This could return to a home screen or perform another action
-//                finish();
-//            }
-//        });
     }
 }

@@ -73,7 +73,6 @@ public class ApiCallBackWithToken {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     try {
-
                         System.out.println("responseBody---"+response);
 
                         String responseBody = response.body().string();
@@ -87,7 +86,7 @@ public class ApiCallBackWithToken {
                 } else {
                     String errorMessage = "Request failed with status code: " + response.code() + " and message: " + response.message();
                     Log.e(TAG, errorMessage);
-                    callback.onFailure(new IOException(errorMessage));
+                    callback.onFailure(new ApiException(response.code(), errorMessage));
                 }
             }
         });
@@ -96,5 +95,18 @@ public class ApiCallBackWithToken {
     public interface ApiCallback {
         JSONObject onSuccess(JSONObject responseJson);
         void onFailure(Exception e);
+    }
+
+    public static class ApiException extends Exception {
+        private int statusCode;
+
+        public ApiException(int statusCode, String message) {
+            super(message);
+            this.statusCode = statusCode;
+        }
+
+        public int getStatusCode() {
+            return statusCode;
+        }
     }
 }

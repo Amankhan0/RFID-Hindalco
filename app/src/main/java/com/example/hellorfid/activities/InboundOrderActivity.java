@@ -32,10 +32,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnOrderClickListener {
+public class InboundOrderActivity extends AppCompatActivity implements OrderAdapter.OnOrderClickListener {
 
     private static final int REQUEST_CODE_MAIN_ACTIVITY = 1001;
-    private static final Logger log = Logger.getLogger(OrderActivity.class);
+    private static final Logger log = Logger.getLogger(InboundOrderActivity.class);
     private SessionManager sessionManager;
     private ApiCallBackWithToken apiCallBackWithToken;
     private List<OrderModel> orderList;
@@ -63,7 +63,7 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(OrderActivity.this, HandheldTerminalActivity.class);
+                Intent intent = new Intent(InboundOrderActivity.this, HandheldTerminalActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
@@ -76,17 +76,14 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
     @Override
     public void onOrderClick(OrderModel order) throws JSONException, InterruptedException {
         System.out.println("Order clicked: " + order.getId());
-        commanModel.setOrderStatus(Constants.ORDER_PICKING);
+        commanModel.setOrderStatus(Constants.ORDER_RECEIVING);
         JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
-                "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_PICKING);
+                "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_RECEIVING);
 
         System.out.println("updated order--->" + res);
 
         if(res.getInt("status")==200) {
             Intent intent = new Intent(this, MainActivity.class);
-
-            System.out.println("order.getQty()"+order.getQty());
-
             intent.putExtra("totalInventory", order.getQty());
             intent.putExtra("apiUrl", Constants.addBulkTags);
             startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
@@ -97,31 +94,36 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
     protected void onActivityResult(int requestCode, int resultCode, Intent data)  {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-        if (requestCode == REQUEST_CODE_MAIN_ACTIVITY) {
-            if (resultCode == RESULT_OK) {
-                String result = data.getStringExtra("result_key");
-                   String finalJson  = Helper.commanParser(result,false,commanModel);
-                System.out.println("finalJson----->>>"+finalJson);
-                   JSONObject res = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags, finalJson);
-                System.out.println("final json recevied"+res);
+            if (requestCode == REQUEST_CODE_MAIN_ACTIVITY) {
+                if (resultCode == RESULT_OK) {
+                    String result = data.getStringExtra("result_key");
+                    String finalJson  = Helper.commanParser(result,false,commanModel);
+                    System.out.println("finalJson----->>>"+finalJson);
+                    JSONObject res = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags, finalJson);
+                    System.out.println("final json recevied"+res);
 
-                if(res.getInt("status")==200){
-//                    commanModel.setOrderStatus(Constants.ORDER_PICKED);
-                    JSONObject updatedOrderResult = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
-                            "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_PICKED);
+                    if(res.getInt("status")==200){
+                        JSONObject updatedOrderResult = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
+                                "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_RECEIVED);
 
-                    System.out.println("updatedOrderResult order--->"+updatedOrderResult);
+                        System.out.println("updatedOrderResult order--->"+updatedOrderResult);
+                    }
+
+
+
+
+
+
+                    Toast.makeText(this, "Result from MainActivity: " + result, Toast.LENGTH_SHORT).show();
+                    hitApiAndLogResult(); // Refresh the order list
+                } else if (resultCode == RESULT_CANCELED) {
+                    System.out.println("result cancelled");
+                    JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
+                            "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_INITIATED);
+                    System.out.println("-----updated order--->"+res);
+                    Toast.makeText(this, "Operation cancelled", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(this, "Result from MainActivity: " + result, Toast.LENGTH_SHORT).show();
-                hitApiAndLogResult(); // Refresh the order list
-            } else if (resultCode == RESULT_CANCELED) {
-                System.out.println("result cancelled");
-                JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
-                        "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_INITIATED);
-                System.out.println("-----updated order--->"+res);
-                Toast.makeText(this, "Operation cancelled", Toast.LENGTH_SHORT).show();
             }
-        }
         } catch (JSONException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -137,7 +139,7 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
 
             JSONObject search = new JSONObject();
             search.put("orderStatus", "ORDER_INITIATED");
-            search.put("orderType", "OUTBOUND");
+            search.put("orderType", "INBOUND");
             requestBody.put("search", search);
 
             System.out.println("requestBody" + requestBody);
@@ -153,7 +155,7 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
                 @Override
                 public void onFailure(Exception e) {
                     Log.e("TAG", "API call failed", e);
-                    runOnUiThread(() -> Toast.makeText(OrderActivity.this, "Failed to load orders", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(InboundOrderActivity.this, "Failed to load orders", Toast.LENGTH_SHORT).show());
                 }
             });
 
@@ -169,7 +171,7 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
             for (int i = 0; i < content.length(); i++) {
                 JSONObject orderJson = content.getJSONObject(i);
                 OrderModel order = new OrderModel();
-                 commanModel = new CommanModel();
+                commanModel = new CommanModel();
 
                 order.setId(orderJson.optString("id"));
                 order.setOrderDateTime(parseDate(orderJson.optString("orderDateTime")));
@@ -186,9 +188,6 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
                 order.setPickBy(orderJson.optString("pickBy"));
                 order.setReaderId(orderJson.optString("readerId"));
                 order.setQty(orderJson.optInt("qty"));
-
-                System.out.println("orderJson.optInt(\"qty\")---"+orderJson.optInt("qty"));
-
                 order.setBatchID(orderJson.optString("batchID"));
                 order.setMovementStatus(orderJson.optString("movementStatus"));
                 order.setStatus(orderJson.optString("status"));
@@ -259,12 +258,12 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
             runOnUiThread(() -> {
                 orderAdapter.notifyDataSetChanged();
                 if (orderList.isEmpty()) {
-                    Toast.makeText(OrderActivity.this, "No orders found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InboundOrderActivity.this, "No orders found", Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (JSONException e) {
             Log.e("TAG", "Error parsing JSON response", e);
-            runOnUiThread(() -> Toast.makeText(OrderActivity.this, "Error loading orders", Toast.LENGTH_SHORT).show());
+            runOnUiThread(() -> Toast.makeText(InboundOrderActivity.this, "Error loading orders", Toast.LENGTH_SHORT).show());
         }
     }
 

@@ -3,13 +3,18 @@ package com.example.hellorfid.constants;
 public class Constants {
 
     //public final static String url = "http://137.184.74.218/";
-    public final static String url = "http://192.168.1.104:9090/";
+    public final static String url = "http://192.168.0.104:9090/";
 
     public final static String addBulkTags = "iot/api/addBulkTags";
     public final static String updateBatch = "iot/api/updateBatch";
     public final static String searchBuilding = "plant/api/searchBuilding";
     public final static String searchOrders = "order/api/searchOrder";
     public final static String updateOrder = "order/api/updateOrder";
+    public final static String updateBulkTags = "iot/api/updateBulkTags";
+    public final static String searchRfidTag = "iot/api/searchRfidTag";
+
+
+
 
 
     public static String EXIT_ACTION = "EXIT";
@@ -43,6 +48,8 @@ public class Constants {
     public static String ORDER_INITIATED= "ORDER_INITIATED";
     public static String ORDER_PICKED= "ORDER_PICKED";
     public static String ORDER_PICKING= "ORDER_PICKING";
+    public static String ORDER_RECEIVING= "ORDER_RECEIVING";
+    public static String ORDER_RECEIVED= "ORDER_RECEIVED";
     public static String ORDER_READY_TO_DISPATCH= "ORDER_READY_TO_DISPATCH";
     public static String ORDER_DISPATCHED= "ORDER_DISPATCHED";
     public static String ORDER_LOADING_IN_VEHICLE= "ORDER_LOADING_IN_VEHICLE";

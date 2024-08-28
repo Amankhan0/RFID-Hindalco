@@ -14,6 +14,10 @@ public class SessionManager {
     private static final String KEY_PAYLOAD = "payload";
     private static final String KEY_ROLE = "role";
 
+    private static final String replaceScanFirst = "replaceScanFirst";
+    private static final String replaceScanSecond = "replaceScanSecond";
+
+
     private static final String BatchData = "BatchData";
 
     private SharedPreferences sharedPreferences;
@@ -32,6 +36,37 @@ public class SessionManager {
         editor.apply();
     }
 
+    // Save token
+    public void setReplaceFirstScan(String tag) {
+        editor.putString(replaceScanFirst, tag);
+        editor.apply();
+    }
+
+    public void setReplaceSecondScan(String tag) {
+        editor.putString(replaceScanSecond, tag);
+        editor.apply();
+    }
+
+    // Get saved token
+    public String getReplaceFirstScan() {
+        return sharedPreferences.getString(replaceScanFirst, null);
+    }
+
+    // Get saved token
+    public String getReplaceSecondScan() {
+        return sharedPreferences.getString(replaceScanSecond, null);
+    }
+
+    // clear building
+    public void clearReplaceScan() {
+        editor.remove(replaceScanFirst);
+        editor.apply();
+    }
+
+    public void clearSecondReplaceScan() {
+        editor.remove(replaceScanSecond);
+        editor.apply();
+    }
     // Get saved token
     public String getToken() {
         return sharedPreferences.getString(KEY_TOKEN, null);

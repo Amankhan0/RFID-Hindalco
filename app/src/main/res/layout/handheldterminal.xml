@@ -57,45 +57,56 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Add Bag -->
-        <Button
-            android:id="@+id/buttonAddBag"
-            style="@style/TerminalButtonStyle"
-            android:text="Add batch" />
+<!--        <Button-->
+<!--            android:id="@+id/buttonAddBag"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Add batch" />-->
 
         <!-- Receiving button -->
-        <Button
-            android:id="@+id/buttonReceiving"
-            style="@style/TerminalButtonStyle"
-            android:text="Receiving" />
+<!--        <Button-->
+<!--            android:id="@+id/buttonReceiving"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Receiving" />-->
 
         <!-- Picking button -->
-        <Button
-            android:id="@+id/buttonPicking"
-            style="@style/TerminalButtonStyle"
-            android:text="Picking" />
+<!--        <Button-->
+<!--            android:id="@+id/buttonPicking"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Picking" />-->
 
-        <!-- Replace button -->
         <Button
-            android:id="@+id/buttonReplace"
+            android:id="@+id/ordersButton"
             style="@style/TerminalButtonStyle"
-            android:text="Replace" />
+            android:text="Outbound Orders" />
 
-        <!-- Hold button -->
+        <Button
+            android:id="@+id/inBoundOrder"
+            style="@style/TerminalButtonStyle"
+            android:text="Inbound Orders" />
+
         <Button
             android:id="@+id/buttonHold"
             style="@style/TerminalButtonStyle"
             android:text="Hold" />
 
-        <!-- Consume button -->
+        <Button
+            android:id="@+id/unHold"
+            style="@style/TerminalButtonStyle"
+            android:text="Un Hold" />
+
+        <Button
+            android:id="@+id/buttonReplace"
+            style="@style/TerminalButtonStyle"
+            android:text="Replace" />
+
+
         <Button
             android:id="@+id/buttonConsume"
             style="@style/TerminalButtonStyle"
             android:text="Consume" />
 
-        <Button
-            android:id="@+id/ordersButton"
-            style="@style/TerminalButtonStyle"
-            android:text="Orders" />
+
+
     </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class UnHoldActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_MAIN_ACTIVITY = 1001;
@@ -27,7 +30,7 @@ public class UnHoldActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_hold);
+        setContentView(R.layout.activity_un_hold);
 
         apiCallBackWithToken = new ApiCallBackWithToken(this);
 
@@ -44,60 +47,135 @@ public class UnHoldActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_MAIN_ACTIVITY) {
             if (resultCode == RESULT_OK) {
                 String result = data.getStringExtra("result_key");
-
                 try {
-                    JSONArray tagArr = new JSONArray(result);
-                    System.out.println("result" + tagArr);
-                    JSONArray holdJsonArray = new JSONArray();
-                    for (int i = 0; i < tagArr.length(); i++) {
-                        JSONObject holdJson = new JSONObject();
-                        holdJson.put("rfidTag", tagArr.getString(i).toLowerCase());
-                        holdJson.put("opreationStatus", "Active");
-                        holdJsonArray.put(holdJson);
-                    }
-                    System.out.println("holdJsonArray: " + holdJsonArray);
-
-                    apiCallBackWithToken.Api(Constants.updateBulkTags, holdJsonArray, new ApiCallBackWithToken.ApiCallback() {
-                        @Override
-                        public JSONObject onSuccess(JSONObject responseJson) {
-                            System.out.println("responseJson tag update----" + responseJson);
-                            Intent intent = new Intent(UnHoldActivity.this, HandheldTerminalActivity.class);
-                            startActivity(intent);
-                            runOnUiThread(() -> {
-                                Toast.makeText(UnHoldActivity.this, "Tags Hold Successfully", Toast.LENGTH_LONG).show();
-                            });
-                            return responseJson;
-                        }
-                        @Override
-                        public void onFailure(Exception e) {
-                            Intent intent = new Intent(UnHoldActivity.this, HandheldTerminalActivity.class);
-                            startActivity(intent);
-                            runOnUiThread(() -> {
-                                Toast.makeText(UnHoldActivity.this, "Failed to update", Toast.LENGTH_LONG).show();
-                            });
-                            Log.e("TAG", "API call failed", e);
-                        }
-                    });
-
+                    tagArr = new JSONArray(result);
+                    processTagsAndHold();
                 } catch (JSONException e) {
-                    Intent intent = new Intent(UnHoldActivity.this, HandheldTerminalActivity.class);
-                    startActivity(intent);
-                    runOnUiThread(() -> {
-                        Toast.makeText(UnHoldActivity.this, "Error processing data", Toast.LENGTH_LONG).show();
-                    });
-                    throw new RuntimeException(e);
+                    handleError("Error processing data", e);
                 }
-
-                System.out.println("result---" + result);
-
             } else if (resultCode == RESULT_CANCELED) {
                 System.out.println("result cancelled");
-                Intent intent = new Intent(this, HandheldTerminalActivity.class);
-                startActivity(intent);
-                runOnUiThread(() -> {
-                    Toast.makeText(UnHoldActivity.this, "Operation cancelled", Toast.LENGTH_LONG).show();
-                });
+                navigateToHandheldTerminal("Operation cancelled");
             }
         }
+    }
+
+    private void processTagsAndHold() {
+        new Thread(() -> {
+            try {
+                JSONArray processedTags = new JSONArray();
+                CountDownLatch latch = new CountDownLatch(tagArr.length());
+                AtomicBoolean allSuccessful = new AtomicBoolean(true);
+
+                for (int i = 0; i < tagArr.length(); i++) {
+                    String tag = tagArr.getString(i).toLowerCase();
+                    JSONObject json = prepareJsonForTag(tag);
+
+                    apiCallBackWithToken.Api(Constants.searchRfidTag, json, new ApiCallBackWithToken.ApiCallback() {
+                        @Override
+                        public JSONObject onSuccess(JSONObject responseJson) {
+                            if (allSuccessful.get()) {
+                                processSuccessResponse(responseJson, processedTags);
+                            }
+                            latch.countDown();
+                            return responseJson;
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            Log.e("TAG", "API call failed for tag: " + tag, e);
+                            allSuccessful.set(false);
+                            showToast("Unknown tags scan" + tag);
+                            latch.countDown();
+                        }
+                    });
+                }
+
+                latch.await();
+
+                if (allSuccessful.get()) {
+                    hitHoldTagApi(processedTags.toString());
+                } else {
+                    runOnUiThread(() -> {
+                        showToast("Unknown tags scan");
+                        navigateToHandheldTerminal("Unknown tags scan");
+                    });
+                }
+
+            } catch (Exception e) {
+                handleError("Unknown tags scan", e);
+            }
+        }).start();
+    }
+
+    private JSONObject prepareJsonForTag(String tag) throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("page", 1);
+        json.put("limit", 1);
+        JSONObject search = new JSONObject();
+        search.put("rfidTag", tag);
+        json.put("search", search);
+        return json;
+    }
+
+    private void processSuccessResponse(JSONObject responseJson, JSONArray processedTags) {
+        try {
+            JSONArray content = responseJson.getJSONArray("content");
+            JSONObject firstObject = content.getJSONObject(0);
+            String id = firstObject.getString("id");
+            String tag = firstObject.getString("rfidTag");
+            JSONObject json = new JSONObject();
+            json.put("id", id);
+            json.put("rfidTag", tag);
+            json.put("opreationStatus", "ACTIVE");
+            synchronized (processedTags) {
+                processedTags.put(json);
+            }
+            showToast("Processed tag: " + tag);
+        } catch (Exception e) {
+            Log.e("TAG", "Error processing success response", e);
+            showToast("Unknown tags scan");
+        }
+    }
+
+    private void hitHoldTagApi(String tagArrString) {
+        try {
+            JSONArray newJson = new JSONArray(tagArrString);
+            apiCallBackWithToken.Api(Constants.updateBulkTags, newJson, new ApiCallBackWithToken.ApiCallback() {
+                @Override
+                public JSONObject onSuccess(JSONObject responseJson) {
+                    Log.i("TAG", "Tags Hold Successfully: " + responseJson);
+                    navigateToHandheldTerminal("Tags Hold Successfully");
+                    return responseJson;
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    handleError("Unknown tags scan", e);
+                }
+            });
+        } catch (JSONException e) {
+            handleError("Unknown tags scan", e);
+        }
+    }
+
+    private void navigateToHandheldTerminal(String message) {
+        Intent intent = new Intent(UnHoldActivity.this, HandheldTerminalActivity.class);
+        startActivity(intent);
+        showToast(message);
+    }
+
+    private void handleError(String message, Exception e) {
+        Log.e("TAG", message, e);
+        showToast(message);
+        navigateToHandheldTerminal(message);
+    }
+
+    private void showToast(final String message) {
+        runOnUiThread(() -> {
+            if (!isFinishing()) {
+                Toast.makeText(UnHoldActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

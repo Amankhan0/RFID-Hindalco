@@ -83,6 +83,13 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             }
         });
 
+        buttonConsume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HandheldTerminalActivity.this, ConsumeActivity.class));
+            }
+        });
+
         ImageView ProfileButton = findViewById(R.id.profile);
         ProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override

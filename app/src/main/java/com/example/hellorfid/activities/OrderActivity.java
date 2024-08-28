@@ -75,6 +75,9 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
 
     @Override
     public void onOrderClick(OrderModel order) throws JSONException, InterruptedException {
+
+        System.out.println("order"+order);
+
         System.out.println("Order clicked: " + order.getId());
         commanModel.setOrderStatus(Constants.ORDER_PICKING);
         JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
@@ -171,7 +174,7 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
                 OrderModel order = new OrderModel();
                  commanModel = new CommanModel();
 
-                order.setId(orderJson.optString("id"));
+                order.setId(orderJson.optString("_id"));
                 order.setOrderDateTime(parseDate(orderJson.optString("orderDateTime")));
                 order.setExpectedArrival(parseDate(orderJson.optString("expectedArrival")));
                 order.setSaleType(orderJson.optString("saleType"));

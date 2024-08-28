@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class HoldActivity extends AppCompatActivity {
+public class ConsumeActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_MAIN_ACTIVITY = 1001;
     public JSONArray tagArr;
@@ -30,7 +30,7 @@ public class HoldActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_hold);
+        setContentView(R.layout.activity_consume);
 
         apiCallBackWithToken = new ApiCallBackWithToken(this);
 
@@ -127,7 +127,7 @@ public class HoldActivity extends AppCompatActivity {
             JSONObject json = new JSONObject();
             json.put("id", id);
             json.put("rfidTag", tag);
-            json.put("opreationStatus", "HOLD");
+            json.put("opreationStatus", "CONSUME");
             synchronized (processedTags) {
                 processedTags.put(json);
             }
@@ -144,8 +144,8 @@ public class HoldActivity extends AppCompatActivity {
             apiCallBackWithToken.Api(Constants.updateBulkTags, newJson, new ApiCallBackWithToken.ApiCallback() {
                 @Override
                 public JSONObject onSuccess(JSONObject responseJson) {
-                    Log.i("TAG", "Tags Hold Successfully: " + responseJson);
-                    navigateToHandheldTerminal("Tags Hold Successfully");
+                    Log.i("TAG", "Tags Consume Successfully: " + responseJson);
+                    navigateToHandheldTerminal("Tags Consume Successfully");
                     return responseJson;
                 }
 
@@ -160,7 +160,7 @@ public class HoldActivity extends AppCompatActivity {
     }
 
     private void navigateToHandheldTerminal(String message) {
-        Intent intent = new Intent(HoldActivity.this, HandheldTerminalActivity.class);
+        Intent intent = new Intent(ConsumeActivity.this, HandheldTerminalActivity.class);
         startActivity(intent);
         showToast(message);
     }
@@ -174,7 +174,7 @@ public class HoldActivity extends AppCompatActivity {
     private void showToast(final String message) {
         runOnUiThread(() -> {
             if (!isFinishing()) {
-                Toast.makeText(HoldActivity.this, message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ConsumeActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }

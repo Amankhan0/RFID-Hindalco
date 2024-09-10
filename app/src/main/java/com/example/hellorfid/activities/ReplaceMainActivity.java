@@ -108,7 +108,7 @@ public class ReplaceMainActivity extends AppCompatActivity {
                                JSONArray content = responseJson.getJSONArray("content");
                                String firstId = "";
                                if (content.length() > 0) {
-                                   firstId = content.getJSONObject(0).getString("id");
+                                   firstId = content.getJSONObject(0).getString("_id");
                                    System.out.println("ID of the first item: " + firstId);
                                } else {
                                    System.out.println("The content array is empty.");
@@ -117,7 +117,7 @@ public class ReplaceMainActivity extends AppCompatActivity {
                                System.out.println("ID from responseJson: " + firstId);
 
                                if (!firstId.isEmpty() && replaceSecondScan != null && !replaceSecondScan.isEmpty()) {
-                                   json.put("id", firstId);
+                                   json.put("_id", firstId);
                                    json.put("rfidTag", replaceSecondScan);
 
                                    System.out.println("json object before adding to array: " + json);

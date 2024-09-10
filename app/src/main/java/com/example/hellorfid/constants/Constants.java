@@ -3,7 +3,9 @@ package com.example.hellorfid.constants;
 public class Constants {
 
     //public final static String url = "http://137.184.74.218/";
-    public final static String url = "http://192.168.0.104:9090/";
+    public final static String url = "http://192.168.0.117:9090/";
+
+//    public final static String url = "https://api.hindalco.headsupcorporation.com/";
 
     public final static String addBulkTags = "iot/api/addBulkTags";
     public final static String updateBatch = "iot/api/updateBatch";

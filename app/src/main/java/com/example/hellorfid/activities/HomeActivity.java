@@ -77,6 +77,8 @@ public class HomeActivity extends AppCompatActivity {
             System.out.println("requestBody" + requestBody);
             String apiEndpoint = "plant/api/searchBuilding";
 
+            System.out.println("requestBody---"+requestBody);
+
             apiCallBackWithToken.Api(apiEndpoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
                 @Override
                 public JSONObject onSuccess(JSONObject responseJson) {
@@ -103,7 +105,7 @@ public class HomeActivity extends AppCompatActivity {
             buildingModels.clear();
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject buildingJson = arr.getJSONObject(i);
-                String id = buildingJson.getString("id");
+                String id = buildingJson.getString("_id");
                 String name = buildingJson.getString("buildingName");
                 String address = buildingJson.getString("buildingNo");
                 buildingModels.add(new HomeModel(id, name, address));

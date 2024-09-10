@@ -122,10 +122,10 @@ public class ConsumeActivity extends AppCompatActivity {
         try {
             JSONArray content = responseJson.getJSONArray("content");
             JSONObject firstObject = content.getJSONObject(0);
-            String id = firstObject.getString("id");
+            String _id = firstObject.getString("_id");
             String tag = firstObject.getString("rfidTag");
             JSONObject json = new JSONObject();
-            json.put("id", id);
+            json.put("_id", _id);
             json.put("rfidTag", tag);
             json.put("opreationStatus", "CONSUME");
             synchronized (processedTags) {

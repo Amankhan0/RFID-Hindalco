@@ -78,7 +78,7 @@ public class InboundOrderActivity extends AppCompatActivity implements OrderAdap
         System.out.println("Order clicked: " + order.getId());
         commanModel.setOrderStatus(Constants.ORDER_RECEIVING);
         JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
-                "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_RECEIVING);
+                "_id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_RECEIVING);
 
         System.out.println("updated order--->" + res);
 
@@ -91,43 +91,53 @@ public class InboundOrderActivity extends AppCompatActivity implements OrderAdap
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)  {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if (requestCode == REQUEST_CODE_MAIN_ACTIVITY) {
-                if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK && data != null) {
                     String result = data.getStringExtra("result_key");
-                    String finalJson  = Helper.commanParser(result,false,commanModel);
-                    System.out.println("finalJson----->>>"+finalJson);
-                    JSONObject res = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags, finalJson);
-                    System.out.println("final json recevied"+res);
+                    if (result != null) {
+                        String finalJson = Helper.commanParser(result, false, commanModel);
+                        System.out.println("finalJson----->>>" + finalJson);
+                        JSONObject res = Helper.commanHitApi(apiCallBackWithToken, Constants.addBulkTags, finalJson);
+                        System.out.println("final json recevied" + res);
 
-                    if(res.getInt("status")==200){
-                        JSONObject updatedOrderResult = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
-                                "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_RECEIVED);
+                        if (res == null) {
+                            System.out.println("call eles");
+                            JSONObject resultAgain = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,
+                                    "_id", commanModel.getOrderId(), "orderStatus", Constants.ORDER_INITIATED);
+                            System.out.println("resultAgain--" + resultAgain);
+                        } else {
+                            if (res.getInt("status") == 200) {
+                                JSONObject updatedOrderResult = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,
+                                        "_id", commanModel.getOrderId(), "orderStatus", Constants.ORDER_RECEIVED);
+                                System.out.println("updatedOrderResult order--->" + updatedOrderResult);
+                            }
+                        }
 
-                        System.out.println("updatedOrderResult order--->"+updatedOrderResult);
+                        hitApiAndLogResult(); // Refresh the order list
+                    } else {
+                        Log.e("InboundOrderActivity", "Received null result from MainActivity");
+                        Toast.makeText(this, "Error: Received null result from MainActivity", Toast.LENGTH_SHORT).show();
                     }
-
-
-
-
-
-
-                    Toast.makeText(this, "Result from MainActivity: " + result, Toast.LENGTH_SHORT).show();
-                    hitApiAndLogResult(); // Refresh the order list
                 } else if (resultCode == RESULT_CANCELED) {
                     System.out.println("result cancelled");
-                    JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
-                            "id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_INITIATED);
-                    System.out.println("-----updated order--->"+res);
+                    JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,
+                            "_id", commanModel.getOrderId(), "orderStatus", Constants.ORDER_INITIATED);
+                    System.out.println("-----updated order--->" + res);
                     Toast.makeText(this, "Operation cancelled", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            Log.e("InboundOrderActivity", "JSONException in onActivityResult", e);
+            Toast.makeText(this, "Error processing result: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Log.e("InboundOrderActivity", "InterruptedException in onActivityResult", e);
+            Toast.makeText(this, "Operation interrupted: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("InboundOrderActivity", "Unexpected error in onActivityResult", e);
+            Toast.makeText(this, "Unexpected error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -173,7 +183,7 @@ public class InboundOrderActivity extends AppCompatActivity implements OrderAdap
                 OrderModel order = new OrderModel();
                 commanModel = new CommanModel();
 
-                order.setId(orderJson.optString("id"));
+                order.setId(orderJson.optString("_id"));
                 order.setOrderDateTime(parseDate(orderJson.optString("orderDateTime")));
                 order.setExpectedArrival(parseDate(orderJson.optString("expectedArrival")));
                 order.setSaleType(orderJson.optString("saleType"));
@@ -188,7 +198,7 @@ public class InboundOrderActivity extends AppCompatActivity implements OrderAdap
                 order.setPickBy(orderJson.optString("pickBy"));
                 order.setReaderId(orderJson.optString("readerId"));
                 order.setQty(orderJson.optInt("qty"));
-                order.setBatchID(orderJson.optString("batchID"));
+                order.setBatchID(orderJson.optString("batchId"));
                 order.setMovementStatus(orderJson.optString("movementStatus"));
                 order.setStatus(orderJson.optString("status"));
                 order.setError(orderJson.optBoolean("isError"));

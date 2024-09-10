@@ -47,6 +47,7 @@ public class HoldActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_MAIN_ACTIVITY) {
             if (resultCode == RESULT_OK) {
                 String result = data.getStringExtra("result_key");
+                System.out.println("result---->>>>"+result);
                 try {
                     tagArr = new JSONArray(result);
                     processTagsAndHold();
@@ -122,10 +123,10 @@ public class HoldActivity extends AppCompatActivity {
         try {
             JSONArray content = responseJson.getJSONArray("content");
             JSONObject firstObject = content.getJSONObject(0);
-            String id = firstObject.getString("id");
+            String _id = firstObject.getString("_id");
             String tag = firstObject.getString("rfidTag");
             JSONObject json = new JSONObject();
-            json.put("id", id);
+            json.put("_id", _id);
             json.put("rfidTag", tag);
             json.put("opreationStatus", "HOLD");
             synchronized (processedTags) {

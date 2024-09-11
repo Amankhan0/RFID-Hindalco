@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +38,8 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
 
         EditText usernameInput = findViewById(R.id.username);
         EditText passwordInput = findViewById(R.id.password);
+        ImageView settingIcon = findViewById(R.id.setting_icon);
+
 
         Button loginButton = findViewById(R.id.sign_in_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -62,12 +65,19 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
                         return;
                     }
                     Log.d(TAG, "Sending login request with JSON: " + loginJson.toString());
-                    ApiCallBack apiCallBack = new ApiCallBack();
+                    ApiCallBack apiCallBack = new ApiCallBack(LoginActivity.this);
                     String url = "auth/login";
                     apiCallBack.login(url, loginJson, LoginActivity.this);
                 }
             }
         });
+
+        settingIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }});
     }
 
     @Override

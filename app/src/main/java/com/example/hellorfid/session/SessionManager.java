@@ -16,6 +16,8 @@ public class SessionManager {
 
     private static final String replaceScanFirst = "replaceScanFirst";
     private static final String replaceScanSecond = "replaceScanSecond";
+    private static final String IP_ADDRESS_KEY = "IP_ADDRESS_KEY";
+
 
 
     private static final String BatchData = "BatchData";
@@ -149,5 +151,14 @@ public class SessionManager {
     public void logout() {
         editor.clear();
         editor.apply();
+    }
+
+    public void setIpAddress(String ipAddress) {
+        editor.putString(IP_ADDRESS_KEY, ipAddress);
+        editor.apply();
+    }
+
+    public String getIpAddress() {
+        return sharedPreferences.getString(IP_ADDRESS_KEY, null);
     }
 }

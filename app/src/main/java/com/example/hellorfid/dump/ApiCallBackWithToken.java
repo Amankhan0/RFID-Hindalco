@@ -24,7 +24,6 @@ public class ApiCallBackWithToken {
 
     private static final Logger log = Logger.getLogger(ApiCallBackWithToken.class);
 
-    public String baseUrl = Constants.url;
     private static final String TAG = "ApiCallBackWithToken";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
@@ -54,7 +53,7 @@ public class ApiCallBackWithToken {
         RequestBody body = RequestBody.create(JSON, jsonString);
 
         Request request = new Request.Builder()
-                .url(baseUrl + url)
+                .url(sessionManager.getIpAddress())
                 .post(body)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + token)

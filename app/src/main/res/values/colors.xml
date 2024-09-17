@@ -12,5 +12,7 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="gray">#D3D3D3</color>
     <color name="lightgray">#F0F0F0</color>
+    <color name="hindalcoRed">#990C0C</color>
+
 
 </resources>

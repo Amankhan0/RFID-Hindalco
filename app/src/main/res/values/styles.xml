@@ -11,13 +11,12 @@
     <style name="TerminalButtonStyle">
         <item name="android:layout_width">60pt</item>
         <item name="android:layout_height">30pt</item>
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:backgroundTint">@color/hindalcoRed</item>
+<!--        <item name="android:background">@drawable/button_background</item>-->
         <item name="android:textColor">@android:color/white</item>
-
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_margin">8dp</item>
-
         <item name="android:gravity">center</item>
     </style>
 

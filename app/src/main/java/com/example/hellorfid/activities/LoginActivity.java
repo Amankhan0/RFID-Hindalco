@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.dump.ApiCallBack;
 import com.example.hellorfid.R;
 import com.example.hellorfid.session.SessionManager;
@@ -66,8 +67,8 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
                     }
                     Log.d(TAG, "Sending login request with JSON: " + loginJson.toString());
                     ApiCallBack apiCallBack = new ApiCallBack(LoginActivity.this);
-                    String url = "auth/login";
-                    apiCallBack.login(url, loginJson, LoginActivity.this);
+                    String login = Constants.login;
+                    apiCallBack.login(login, loginJson, LoginActivity.this);
                 }
             }
         });

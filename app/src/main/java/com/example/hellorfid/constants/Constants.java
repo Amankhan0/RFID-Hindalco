@@ -1,8 +1,5 @@
 package com.example.hellorfid.constants;
 
-import com.example.hellorfid.session.SessionManager;
-
-
 
 public class Constants {
 
@@ -16,10 +13,12 @@ public class Constants {
     public final static String addBulkTags = "iot/api/addBulkTags";
     public final static String updateBatch = "iot/api/updateBatch";
     public final static String searchBuilding = "plant/api/searchBuilding";
-    public final static String searchOrders = "order/api/searchOrder";
     public final static String updateOrder = "order/api/updateOrder";
     public final static String updateBulkTags = "iot/api/updateBulkTags";
     public final static String searchRfidTag = "iot/api/searchRfidTag";
+
+    public final static String searchOrders = "order/api/searchOrder";
+    public final static String login = "auth/login";
 
 
 

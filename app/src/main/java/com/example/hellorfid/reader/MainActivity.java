@@ -43,6 +43,7 @@ import com.zebra.rfid.api3.RfidReadEvents;
 import com.zebra.rfid.api3.RfidStatusEvents;
 import com.zebra.rfid.api3.ReaderDevice;
 import com.zebra.rfid.api3.Readers;
+import com.zebra.rfid.api3.Antennas;
 import com.zebra.rfid.api3.START_TRIGGER_TYPE;
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE;
 import com.zebra.rfid.api3.STOP_TRIGGER_TYPE;
@@ -393,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
         tagListArr.add(tagId);
 
-        tagList.add(new Tag(tagId, "Lot A", isOverLimit));
+        tagList.add(new Tag(tagId, isOverLimit));
         tagAdapter.notifyItemInserted(tagList.size() - 1);
 
         updateTagCountDisplay();

@@ -1,9 +1,15 @@
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--    <corners android:radius="2dp" /> &lt;!&ndash; Adjust the radius value as needed &ndash;&gt;-->
+<!--    <solid android:color="@color/gray" /> &lt;!&ndash; Background color &ndash;&gt;-->
+<!--    <padding-->
+<!--        android:left="10dp"-->
+<!--        android:right="10dp"-->
+<!--        android:top="10dp"-->
+<!--        android:bottom="10dp" />-->
+<!--</shape>-->
+
+<!-- res/drawable/rounded_button_background.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="20dp" /> <!-- Adjust the radius value as needed -->
-    <solid android:color="@color/gray" /> <!-- Background color -->
-    <padding
-        android:left="10dp"
-        android:right="10dp"
-        android:top="10dp"
-        android:bottom="10dp" />
+    <solid android:color="#990C0C" />
+    <corners android:radius="16dp" />
 </shape>

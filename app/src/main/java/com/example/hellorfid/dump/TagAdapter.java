@@ -40,7 +40,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
         Tag tag = tagList.get(position);
         holder.tagNumber.setText(tag.getTagNumber());
-        holder.lotNumber.setText(tag.getLotNumber());
+//        holder.lotNumber.setText(tag.getLotNumber());
 
         if (tag.isOverLimit()) {
             holder.tagNumber.setTextColor(context.getResources().getColor(R.color.red));
@@ -61,9 +61,9 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
             }
         });
 
-        holder.nextIcon.setOnClickListener(view -> {
-            // Handle next icon click
-        });
+//        holder.nextIcon.setOnClickListener(view -> {
+//            // Handle next icon click
+//        });
     }
 
     @Override
@@ -82,7 +82,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
             tagNumber = itemView.findViewById(R.id.tagNumber1);
             lotNumber = itemView.findViewById(R.id.lotNumber1);
             deleteIcon = itemView.findViewById(R.id.deleteIcon1);
-            nextIcon = itemView.findViewById(R.id.nextIcon1);
+//            nextIcon = itemView.findViewById(R.id.nextIcon1);
         }
     }
 }

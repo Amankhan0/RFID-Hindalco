@@ -10,6 +10,7 @@ import android.widget.ListView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.R;
 import com.example.hellorfid.session.SessionManager;
@@ -75,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
             requestBody.put("search", new JSONObject());
 
             System.out.println("requestBody" + requestBody);
-            String apiEndpoint = "plant/api/searchBuilding";
+            String apiEndpoint = Constants.searchBuilding;
 
             System.out.println("requestBody---"+requestBody);
 

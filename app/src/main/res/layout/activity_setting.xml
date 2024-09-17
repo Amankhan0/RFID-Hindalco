@@ -12,7 +12,7 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
+        android:background="#ffffff"
         android:elevation="4dp"
         android:layout_marginTop="7pt"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -25,12 +25,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/backicon"
+            android:tint="#FFFFFF"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Inbound Order"
+            android:text="Settings"
             android:textColor="@color/black"
             android:gravity="center"
             android:textStyle="bold"
@@ -42,7 +43,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F0F0F0"
+        android:background="#FFF0F0"
         android:padding="16dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +56,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Accordion 1 -->
+            <!-- Accordion 1 (IP Address) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/accordion1"
                 android:layout_width="match_parent"
@@ -73,21 +74,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="16dp">
+                        android:padding="16dp"
+                        android:background="@color/hindalcoRed">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="IP Address"
-                            android:textColor="#000000"
+                            android:textColor="#FFFFFF"
                             android:textAppearance="?attr/textAppearanceHeadline6"/>
 
                         <Button
                             android:id="@+id/toggleButton1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Toggle"/>
+                            android:text="Toggle"
+                            android:textColor="#FFFFFF"
+                            android:backgroundTint="#7A0909"/>
 
                     </LinearLayout>
 
@@ -95,7 +99,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:id="@+id/content1">
+                        android:id="@+id/content1"
+                        android:visibility="gone"
+                        android:padding="16dp">
+
+                        <Spinner
+                            android:id="@+id/ipAddressSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp" />
 
                         <EditText
                             android:id="@+id/ipAddressEditText"
@@ -103,13 +115,88 @@
                             android:layout_height="wrap_content"
                             android:hint="Enter IP Address"
                             android:inputType="text"
-                            android:padding="8dp" />
+                            android:padding="8dp"
+                            android:layout_marginTop="8dp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Accordion 2 (RFID Reader Range) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/accordion2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:background="@color/hindalcoRed">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="RFID Reader Range"
+                            android:textColor="#FFFFFF"
+                            android:textAppearance="?attr/textAppearanceHeadline6"/>
+
+                        <Button
+                            android:id="@+id/toggleButton2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Toggle"
+                            android:textColor="#FFFFFF"
+                            android:backgroundTint="#7A0909"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:id="@+id/content2"
+                        android:visibility="gone">
+
+                        <SeekBar
+                            android:id="@+id/rfidRangeSeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:max="100"
+                            android:progress="50"
+                            android:progressTint="@color/hindalcoRed"
+                            android:thumbTint="@color/hindalcoRed"/>
+
+                        <TextView
+                            android:id="@+id/rfidRangeValueText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="8dp"
+                            android:text="Current Range: 50%"
+                            android:textAppearance="?attr/textAppearanceBody1"
+                            android:textColor="@color/hindalcoRed"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

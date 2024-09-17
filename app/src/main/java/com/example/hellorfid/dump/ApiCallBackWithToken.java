@@ -40,6 +40,7 @@ public class ApiCallBackWithToken {
 
         // Log token
         System.out.println("Retrieved token: " + token);
+        System.out.println("Retrieved url: " + url);
 
         String jsonString;
         if (jsonData instanceof JSONObject) {
@@ -51,9 +52,10 @@ public class ApiCallBackWithToken {
         }
 
         RequestBody body = RequestBody.create(JSON, jsonString);
-
+        System.out.println("sessionManager.getIpAddress()" + sessionManager.getIpAddress());
+        System.out.println("sessionManager.getIpAddress() + url" + sessionManager.getIpAddress() + url);
         Request request = new Request.Builder()
-                .url(sessionManager.getIpAddress())
+                .url(sessionManager.getIpAddress() + url)
                 .post(body)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + token)
@@ -84,7 +86,8 @@ public class ApiCallBackWithToken {
                     }
                 } else {
                     String errorMessage = "Request failed with status code: " + response.code() + " and message: " + response.message();
-                    Log.e(TAG, errorMessage);
+//                    Log.e(TAG, errorMessage);
+                    System.out.println("Error Message: " + errorMessage);
                     callback.onFailure(new ApiException(response.code(), errorMessage));
                 }
             }

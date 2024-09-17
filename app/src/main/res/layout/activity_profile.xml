@@ -24,130 +24,69 @@
             android:id="@+id/all_screen_back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/backicon"
-            />
+            android:background="@drawable/backicon" />
 
         <TextView
             android:layout_width="100pt"
-            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:text="My Profile"
+            android:textColor="@color/black"
             android:gravity="center"
             android:textStyle="bold"
-            android:textAlignment="center"
-            />
+            android:textAlignment="center" />
 
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintVertical_bias="0.0">
+        android:id="@+id/profile_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5pt"
+        android:background="@drawable/card_rounded"
+        android:orientation="horizontal"
+        android:paddingLeft="15pt"
+        android:paddingTop="5pt"
+        android:paddingBottom="5pt"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <ImageView
+            android:layout_width="30pt"
+            android:layout_height="30pt"
+            android:background="@drawable/profile" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="5pt"
-            android:background="@drawable/card_rounded"
-            android:orientation="horizontal"
-            android:paddingLeft="15pt"
-            android:paddingTop="5pt"
-            android:paddingBottom="5pt">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="30pt"
-                android:layout_height="30pt"
-                android:background="@drawable/profile" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aman Khan"
+                android:textColor="@color/black"
+                android:textSize="7pt" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5pt"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Aman Khan"
-                    android:textColor="@color/black"
-                    android:textSize="7pt" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="+91 7011738029"
-                    android:textColor="@color/black"
-                    android:textSize="7pt" />
-
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+91 7011738029"
+                android:textColor="@color/black"
+                android:textSize="7pt" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:text="Logout" />
-
-        <!--    <LinearLayout-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="match_parent"-->
-        <!--        android:orientation="vertical"-->
-        <!--        android:padding="5pt">-->
-
-        <!--&lt;!&ndash;        <TextView&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:text="General"&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:textSize="7pt"&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:padding="5pt"&ndash;&gt;-->
-        <!--&lt;!&ndash;            />&ndash;&gt;-->
-
-        <!--&lt;!&ndash;        <LinearLayout&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:orientation="vertical"&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:background="@drawable/card_rounded"&ndash;&gt;-->
-        <!--&lt;!&ndash;            android:padding="5pt"&ndash;&gt;-->
-        <!--&lt;!&ndash;            >&ndash;&gt;-->
-
-        <!--&lt;!&ndash;            <TextView&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:text="Complete Order"&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:padding="2pt"&ndash;&gt;-->
-        <!--&lt;!&ndash;                />&ndash;&gt;-->
-        <!--&lt;!&ndash;            <TextView&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:text="In Progress Order"&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:padding="3pt"&ndash;&gt;-->
-        <!--&lt;!&ndash;                />&ndash;&gt;-->
-
-        <!--&lt;!&ndash;            <TextView&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:text="My Order"&ndash;&gt;-->
-        <!--&lt;!&ndash;                android:padding="3pt"&ndash;&gt;-->
-        <!--&lt;!&ndash;                />&ndash;&gt;-->
-        <!--&lt;!&ndash;            &ndash;&gt;-->
-
-        <!--&lt;!&ndash;        </LinearLayout>&ndash;&gt;-->
-
-        <!--        <Button-->
-        <!--            android:id="@+id/button"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Button" />-->
-        <!--    </LinearLayout>-->
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="234dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/hindalcoRed"
+        android:text="Logout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_info" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

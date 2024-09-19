@@ -44,7 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
         AllScreenBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, HandheldTerminalActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
                 // Clear the back stack and start the new activity
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

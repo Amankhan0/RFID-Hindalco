@@ -282,7 +282,7 @@ public class SettingActivity extends AppCompatActivity {
     private void setupBackButton() {
         ImageView allScreenBackBtn = findViewById(R.id.allScreenBackBtn);
         allScreenBackBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(SettingActivity.this, HandheldTerminalActivity.class);
+            Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

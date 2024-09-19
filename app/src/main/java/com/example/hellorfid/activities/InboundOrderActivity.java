@@ -198,7 +198,7 @@ public class InboundOrderActivity extends AppCompatActivity implements OrderAdap
                 order.setPickBy(orderJson.optString("pickBy"));
                 order.setReaderId(orderJson.optString("readerId"));
                 order.setQty(orderJson.optInt("qty"));
-                order.setBatchID(orderJson.optString("batchId"));
+                order.setBatchNumber(orderJson.optString("batchId"));
                 order.setMovementStatus(orderJson.optString("movementStatus"));
                 order.setStatus(orderJson.optString("status"));
                 order.setError(orderJson.optBoolean("isError"));
@@ -211,7 +211,7 @@ public class InboundOrderActivity extends AppCompatActivity implements OrderAdap
 
 
                 commanModel.setOrderId(order.getId());
-                commanModel.setBatchID(order.getBatchID());
+                commanModel.setBatchID(order.getBatchNumber());
                 commanModel.setBillTo(order.getBillTo());
                 commanModel.setCurrentLocation(order.getCurrentLocation());
                 commanModel.setDispatchFrom(order.getDispatchFrom());

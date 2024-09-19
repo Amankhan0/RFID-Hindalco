@@ -91,7 +91,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             if (orderTypeTextView != null) orderTypeTextView.setText("Order Type: " + order.getOrderType());
             if (orderStatusTextView != null) orderStatusTextView.setText("Order Status: " + order.getOrderStatus());
             if (qtyTextView != null) qtyTextView.setText("Quantity: " + order.getQty());
-            if (batchIDTextView != null) batchIDTextView.setText("Batch ID: " + order.getBatchID());
+            if (batchIDTextView != null) batchIDTextView.setText("Batch ID: " + order.getBatchNumber());
             if (movementStatusTextView != null) movementStatusTextView.setText("Movement Status: " + order.getMovementStatus());
         }
     }

@@ -15,6 +15,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.LoadProductAcordingToOrdersActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.SettingActivity"
             android:exported="false" />
         <activity
@@ -52,16 +55,15 @@
             android:exported="false" />
         <activity
             android:name=".activities.HandheldTerminalActivity"
-            android:exported="false" />
-        <activity
-            android:name=".dump.AddBatch"
-            android:exported="false" />
-        <activity
-            android:name=".dump.ChooseBatch"
-            android:exported="false" />
-        <activity
-            android:name=".activities.AddBatchActivity"
-            android:exported="false" />
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".dump.AddBatch" -->
+        <!-- android:exported="false" /> -->
+        <!-- <activity -->
+        <!-- android:name=".dump.ChooseBatch" -->
+        <!-- android:exported="false" /> -->
+        <!-- <activity -->
+        <!-- android:name=".activities.AddBatchActivity" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".activities.ProfileActivity"
             android:exported="false" />
@@ -70,17 +72,17 @@
             android:exported="false" />
         <activity
             android:name=".activities.HomeActivity"
-            android:exported="true">
+            android:exported="true"></activity>
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.HelloRFID">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.LoginActivity"
-            android:exported="true"
-            android:theme="@style/Theme.HelloRFID" />
         <activity
             android:name=".dump.ScanReplace"
             android:exported="true"

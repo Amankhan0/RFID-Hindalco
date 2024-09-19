@@ -41,6 +41,11 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
         EditText passwordInput = findViewById(R.id.password);
         ImageView settingIcon = findViewById(R.id.setting_icon);
 
+        if (sessionManager.getToken() != null) {
+            System.out.println("call --- login --- intent");
+            startHomeActivity();
+            return;
+        }
 
         Button loginButton = findViewById(R.id.sign_in_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +83,8 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SettingActivity.class);
                 startActivity(intent);
-            }});
+            }
+        });
     }
 
     @Override
@@ -99,8 +105,7 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
 
         mainHandler.post(() -> {
             showToast("Login Successful");
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
+            startHomeActivity();
         });
     }
 
@@ -149,5 +154,12 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
 
     private void showToast(final String message) {
         mainHandler.post(() -> Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show());
+    }
+
+    private void startHomeActivity() {
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

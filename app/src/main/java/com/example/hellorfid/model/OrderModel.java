@@ -6,7 +6,7 @@ import java.util.List;
 
 public class OrderModel {
 
-    private String id;
+    private String _id;
     private Date orderDateTime;
     private Date expectedArrival;
     private String saleType;
@@ -23,7 +23,7 @@ public class OrderModel {
     private String pickBy;
     private String readerId;
     private int qty;
-    private String batchID;
+    private String batchNumber;
     private String movementStatus;
     private String status;
     private boolean isError;
@@ -41,11 +41,11 @@ public class OrderModel {
         this.productIds = new ArrayList<>();
     }
 
-    public OrderModel(String id, String batchName, String batchNumber, String productName, String pid,
+    public OrderModel(String _id, String batchName, String batchNumber, String productName, String pid,
                       String status, String movementStatus, int totalInventory, boolean isTagAdded) {
         this();  // Call default constructor to initialize lists
-        this.id = id;
-        this.batchID = batchName;
+        this._id = _id;
+        this.batchNumber = batchName;
         this.qty = totalInventory;
         this.status = status;
         this.movementStatus = movementStatus;
@@ -61,8 +61,8 @@ public class OrderModel {
     }
 
     // Getters and setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() { return _id; }
+    public void setId(String _id) { this._id = _id; }
 
     public Date getOrderDateTime() { return orderDateTime; }
     public void setOrderDateTime(Date orderDateTime) { this.orderDateTime = orderDateTime; }
@@ -112,8 +112,8 @@ public class OrderModel {
     public int getQty() { return qty; }
     public void setQty(int qty) { this.qty = qty; }
 
-    public String getBatchID() { return batchID; }
-    public void setBatchID(String batchID) { this.batchID = batchID; }
+    public String getBatchNumber() { return batchNumber; }
+    public void setBatchNumber(String batchNumber) { this.batchNumber = batchNumber; }
 
     public String getMovementStatus() { return movementStatus; }
     public void setMovementStatus(String movementStatus) { this.movementStatus = movementStatus; }
@@ -145,7 +145,7 @@ public class OrderModel {
     @Override
     public String toString() {
         return "OrderModel{" +
-                "id='" + id + '\'' +
+                "_id='" + _id + '\'' +
                 ", orderDateTime=" + orderDateTime +
                 ", expectedArrival=" + expectedArrival +
                 ", saleType='" + saleType + '\'' +
@@ -162,7 +162,7 @@ public class OrderModel {
                 ", pickBy='" + pickBy + '\'' +
                 ", readerId='" + readerId + '\'' +
                 ", qty=" + qty +
-                ", batchID='" + batchID + '\'' +
+                ", batchNumber='" + batchNumber + '\'' +
                 ", movementStatus='" + movementStatus + '\'' +
                 ", status='" + status + '\'' +
                 ", isError=" + isError +
@@ -207,7 +207,7 @@ public class OrderModel {
     }
 
     public static class Product {
-        private String id;
+        private String _id;
         private String productName;
         private String productCode;
         private int quantity;
@@ -225,8 +225,8 @@ public class OrderModel {
         public Product() {}
 
         // Getters and setters for Product class
-        public String getId() { return id; }
-        public void setId(String id) { this.id = id; }
+        public String getId() { return _id; }
+        public void setId(String _id) { this._id = _id; }
 
         public String getProductName() { return productName; }
         public void setProductName(String productName) { this.productName = productName; }

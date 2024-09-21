@@ -161,7 +161,7 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
                                     JSONObject updatedProduct = new JSONObject();
                                     updatedProduct.put("productId", productId);
                                     updatedProduct.put("quantity", product.getInt("quantity"));
-                                    updatedProduct.put("status", "ORDER_PICKED");
+                                    updatedProduct.put("status", "ORDER_sfgtgtPICKED");
 
                                     // Replace the old product object with the updated one
                                     productIds.put(productIndex, updatedProduct);
@@ -171,10 +171,36 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
 
                                     System.out.println("jsonObject: " + jsonObject);
 
+
+                                    JSONArray updateProductIds = jsonObject.getJSONArray("productIds");
+
+                                    // Track whether all products are picked
+                                    boolean allPicked = true;
+
+                                    // Loop through the productIds array to check their status
+                                    for (int i = 0; i < updateProductIds.length(); i++) {
+                                        JSONObject newproduct = productIds.getJSONObject(i);
+
+                                        // Check if the status of the product is "ORDER_PICKED"
+                                        if (!"ORDER_PICKED".equals(newproduct.getString("status"))) {
+                                            allPicked = false; // If any product is not picked, set flag to false
+                                            break; // No need to continue checking, exit the loop
+                                        }
+                                    }
+
+                                    // If all products are picked, update the orderStatus
+                                    if (allPicked) {
+                                        System.out.println("call ---- call");
+                                        jsonObject.put("orderStatus", "ORDER_PICKED");
+                                    }
+
+                                    System.out.println("jsonObject" + jsonObject);
+
                                     // Convert the updated JSONObject back to a string
                                     apiCallBackWithToken.Api(Constants.updateOrder, jsonObject, new ApiCallBackWithToken.ApiCallback() {
                                         @Override
                                         public JSONObject onSuccess(JSONObject responseJson) {
+
                                             System.out.println("responseJson------" + responseJson);
                                             return responseJson;
                                         }
@@ -187,7 +213,6 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
                                 } else {
                                     System.out.println("Invalid productIndex: " + productIndex);
                                 }
-
                             }
                             catch (JSONException e) {
                                 e.printStackTrace();

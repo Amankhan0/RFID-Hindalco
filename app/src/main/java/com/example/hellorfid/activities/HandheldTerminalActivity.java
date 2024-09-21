@@ -13,7 +13,7 @@ import com.example.hellorfid.session.SessionManager;
 
 public class HandheldTerminalActivity extends AppCompatActivity {
 
-    private Button orderButton,inboundorderButton, buttonReplace, buttonHold,buttonUnHold, buttonConsume;
+    private Button orderButton,inboundorderButton, buttonReplace, buttonHold,buttonUnHold, buttonConsume, buttonMapping;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         inboundorderButton = findViewById(R.id.inBoundOrder);
         buttonHold = findViewById(R.id.buttonHold);
         buttonUnHold = findViewById(R.id.unHold);
+        buttonMapping = findViewById(R.id.buttonMapping);
 
 
 
@@ -45,6 +46,14 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Handle Receiving button click
                 startActivity(new Intent(HandheldTerminalActivity.this, OrderActivity.class));
+            }
+        });
+
+        buttonMapping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Receiving button click
+                startActivity(new Intent(HandheldTerminalActivity.this, Mapping.class));
             }
         });
 

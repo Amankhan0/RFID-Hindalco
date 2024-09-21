@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">HelloRFID</string>
     <string name="action_settings">Settings</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label"></string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -8,6 +10,16 @@
     <string name="previous">Previous</string>
 
     <string name="lorem_ipsum">
-
     </string>
+
+    <!-- Dropdown options -->
+    <string name="spinner_prompt">Choose an option</string>
+    <string-array name="dropdown_options">
+        <item>Choose an option</item>
+        <item>Vehicle</item>
+        <item>Zone</item>
+        <item>Nozzle</item>
+        <item>Location</item>
+        <item>Weighing Scale</item>
+    </string-array>
 </resources>

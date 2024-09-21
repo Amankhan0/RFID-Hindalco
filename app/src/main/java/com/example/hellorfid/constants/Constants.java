@@ -11,6 +11,8 @@ public class Constants {
     public final static String url = "https://api.hindalco.headsupcorporation.com/";
 
     public final static String addBulkTags = "iot/api/addBulkTags";
+    public final static String addTag = "iot/api/addTag";
+
     public final static String updateBatch = "iot/api/updateBatch";
     public final static String searchBuilding = "plant/api/searchBuilding";
     public final static String updateOrder = "order/api/updateOrder";
@@ -19,6 +21,13 @@ public class Constants {
 
     public final static String searchOrders = "order/api/searchOrder";
     public final static String login = "auth/login";
+
+    public final static String searchVehicle = "helper/api/searchVehicle";
+    public final static String searchZone = "plant/api/searchZone";
+
+    public final static String searchLocation = "plant/api/searchLocation";
+
+
 
 
 

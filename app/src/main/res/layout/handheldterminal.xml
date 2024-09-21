@@ -105,6 +105,11 @@
             style="@style/TerminalButtonStyle"
             android:text="Consume" />
 
+        <Button
+            android:id="@+id/buttonMapping"
+            style="@style/TerminalButtonStyle"
+            android:text="Mapping" />
+
 
 
     </GridLayout>

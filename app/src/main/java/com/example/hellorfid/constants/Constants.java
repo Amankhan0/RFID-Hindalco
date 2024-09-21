@@ -22,8 +22,6 @@ public class Constants {
 
 
 
-
-
     public static String EXIT_ACTION = "EXIT";
     public static String EXIT_MOVEMENT_STATUS = "IN_TRANSIT";
 

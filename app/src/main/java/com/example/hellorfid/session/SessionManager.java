@@ -3,6 +3,8 @@ package com.example.hellorfid.session;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.hellorfid.constants.Constants;
+
 import org.json.JSONObject;
 
 public class SessionManager {
@@ -159,6 +161,11 @@ public class SessionManager {
     }
 
     public String getIpAddress() {
+
+        if (sharedPreferences.getString(IP_ADDRESS_KEY, null) == null) {
+            return Constants.url;
+        }
+
         return sharedPreferences.getString(IP_ADDRESS_KEY, null);
     }
 }

@@ -34,7 +34,7 @@ public class ApiCallBack {
 //public String baseUrl = "http://192.168.1.15:9090/";
 
 
-public String baseUrl = "http://137.184.74.218/";
+//public String baseUrl = "http://137.184.74.218/";
     private static final String TAG = "ApiCallBack";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
@@ -43,6 +43,10 @@ public String baseUrl = "http://137.184.74.218/";
 
 
        String ipAddress = sessionManager.getIpAddress();
+//       String ipAddress = sessionManager.getIpAddress();
+       System.out.println("ipAddress" + ipAddress);
+       System.out.println("session manager from api callback" + sessionManager.getIpAddress());
+
        if (ipAddress == null || ipAddress.isEmpty()) {
            Log.e(TAG, "IP address is null or empty");
            callback.onFailure(new IllegalStateException("IP address is not set"));

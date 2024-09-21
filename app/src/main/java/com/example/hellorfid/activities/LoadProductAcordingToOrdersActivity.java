@@ -161,7 +161,7 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
                                     JSONObject updatedProduct = new JSONObject();
                                     updatedProduct.put("productId", productId);
                                     updatedProduct.put("quantity", product.getInt("quantity"));
-                                    updatedProduct.put("status", "ORDER_sfgtgtPICKED");
+                                    updatedProduct.put("status", "ORDER_PICKED");
 
                                     // Replace the old product object with the updated one
                                     productIds.put(productIndex, updatedProduct);

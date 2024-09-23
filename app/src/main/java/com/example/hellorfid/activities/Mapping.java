@@ -359,6 +359,7 @@ public class Mapping extends AppCompatActivity {
                         }
                     }
                 }
+
             }
 
             @Override
@@ -475,6 +476,27 @@ public class Mapping extends AppCompatActivity {
         return json;
     }
 
+    private void updateApiHit(String endPoint, JSONObject requestBody) {
+
+        System.out.println("requestBody"+requestBody);
+
+        apiCallBackWithToken.Api(endPoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
+            @Override
+            public JSONObject onSuccess(JSONObject responseJson) {
+                runOnUiThread(() -> {
+                    System.out.println("come------"+responseJson);
+                });
+                return responseJson;
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("Mapping", "API call failed", e);
+                runOnUiThread(() -> Toast.makeText(Mapping.this, "Failed to load items", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -495,11 +517,51 @@ public class Mapping extends AppCompatActivity {
                             @Override
                             public JSONObject onSuccess(JSONObject responseJson) {
 
-                                System.out.println("responseJson>>>>>"+responseJson);
+                                try {
+                                    // Check if status is 201
+                                    int status = responseJson.getInt("status");
+                                    if (status == 201) {
+                                        // Extract the _id from responseJson
+                                        String newTagId = responseJson.getJSONObject("data").getString("_id");
 
-                                runOnUiThread(() -> {
-                                    Toast.makeText(Mapping.this, "Tag added successfully", Toast.LENGTH_SHORT).show();
-                                });
+                                        // Create a new JSONObject for selectedItemInfo with only tagIds and _id
+                                        JSONObject updatedSelectedItemInfo = new JSONObject();
+                                        updatedSelectedItemInfo.put("tagIds", newTagId);
+                                        updatedSelectedItemInfo.put("_id", selectedItemInfo.getString("_id"));
+
+                                        System.out.println("Updated selectedItemInfo with new tagId: " + updatedSelectedItemInfo);
+                                        // Run on UI thread to show success message
+
+                                        System.out.println("selectedEndpointInfo.tagType"+selectedEndpointInfo.tagType);
+
+                                            if(selectedEndpointInfo.tagType=="Vehicle"){
+                                                updateApiHit(Constants.updateVehicle,updatedSelectedItemInfo);
+                                            }else if(selectedEndpointInfo.tagType=="Zone"){
+                                                updateApiHit(Constants.updateZone,updatedSelectedItemInfo);
+                                            }
+                                            else if(selectedEndpointInfo.tagType=="Location"){
+                                                updateApiHit(Constants.updateLocation,updatedSelectedItemInfo);
+                                            }
+
+
+                                        runOnUiThread(() -> {
+                                            Toast.makeText(Mapping.this, "Tag added successfully", Toast.LENGTH_SHORT).show();
+                                        });
+                                    } else {
+                                        // If status is not 201, show an error toast
+                                        runOnUiThread(() -> {
+                                            Toast.makeText(Mapping.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                        });
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Log.e("Mapping", "Failed to parse responseJson", e);
+
+                                    // Show error toast in case of JSON parsing error
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(Mapping.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                    });
+                                }
                                 return responseJson;
                             }
 

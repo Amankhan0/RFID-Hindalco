@@ -1,6 +1,7 @@
 package com.example.hellorfid.reader;
 
 import android.content.Intent;
+import android.health.connect.datatypes.units.Power;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -43,7 +44,7 @@ import com.zebra.rfid.api3.RfidReadEvents;
 import com.zebra.rfid.api3.RfidStatusEvents;
 import com.zebra.rfid.api3.ReaderDevice;
 import com.zebra.rfid.api3.Readers;
-import com.zebra.rfid.api3.Antennas;
+import com.zebra.rfid.api3.POWER_EVENT;
 import com.zebra.rfid.api3.START_TRIGGER_TYPE;
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE;
 import com.zebra.rfid.api3.STOP_TRIGGER_TYPE;

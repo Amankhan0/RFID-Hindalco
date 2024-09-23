@@ -23,9 +23,18 @@ public class Constants {
     public final static String login = "auth/login";
 
     public final static String searchVehicle = "helper/api/searchVehicle";
+    public final static String updateVehicle = "helper/api/updateVehicle";
+
+
+
     public final static String searchZone = "plant/api/searchZone";
+    public final static String updateZone = "plant/api/updateZone";
+
+
 
     public final static String searchLocation = "plant/api/searchLocation";
+    public final static String updateLocation = "plant/api/updateLocation";
+
 
 
 

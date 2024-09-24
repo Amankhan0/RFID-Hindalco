@@ -287,7 +287,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Mapping extends AppCompatActivity {
@@ -512,8 +514,53 @@ public class Mapping extends AppCompatActivity {
                     // Now execute the API call with the received tagId
                     try {
                         JSONObject body = generateRequestBody(selectedEndpointInfo.tagType, selectedItemInfo.toString(), selectedEndpointInfo.fieldName);
+
+                        System.out.println("selectedItemInfo.toString()"+selectedItemInfo.toString());
                         System.out.println("body" + body);
-                        apiCallBackWithToken.Api(Constants.addTag, body, new ApiCallBackWithToken.ApiCallback() {
+                        System.out.println("addTagJson"+Constants.addTagJson);
+                        JSONObject newBody = new JSONObject(Constants.addTagJson);
+                        System.out.println("jsonObject"+newBody);
+
+                        if(selectedEndpointInfo.tagType=="Vehicle"){
+                            newBody.put("tagPlacement", selectedItemInfo.get("_id"));
+                            newBody.put("rfidTag", body.get("rfidTag"));
+                            newBody.put("tagInfo", body.get("tagInfo"));
+                            newBody.put("tagType", body.get("tagType"));
+                            newBody.put("status", "Active");
+                        }else if(selectedEndpointInfo.tagType=="Zone"){
+
+                            JSONArray buildingIds = selectedItemInfo.getJSONArray("buildingIds");
+                            if (buildingIds.length() > 0) {
+                                newBody.put("currentLocation", buildingIds.get(0));
+                                newBody.put("buildingId", buildingIds.get(0));
+                            } else {
+                                System.out.println("---buildingIds--- No building IDs available");
+                            }
+                            newBody.put("operationStatus", "NA");
+                            newBody.put("tagPlacement", selectedItemInfo.get("_id"));
+                            newBody.put("rfidTag", body.get("rfidTag"));
+                            newBody.put("tagInfo", body.get("tagInfo"));
+                            newBody.put("tagType", body.get("tagType"));
+                            newBody.put("status", "Active");
+                        }
+                        else if(selectedEndpointInfo.tagType=="Location"){
+                            JSONArray buildingIds = selectedItemInfo.getJSONArray("buildingIds");
+                            if (buildingIds.length() > 0) {
+                                newBody.put("currentLocation", buildingIds.get(0));
+                                newBody.put("buildingId", buildingIds.get(0));
+                            } else {
+                                System.out.println("---buildingIds--- No building IDs available");
+                            }
+                            newBody.put("tagPlacement", selectedItemInfo.get("_id"));
+                            newBody.put("rfidTag", body.get("rfidTag"));
+                            newBody.put("tagInfo", body.get("tagInfo"));
+                            newBody.put("tagType", body.get("tagType"));
+                            newBody.put("status", "Active");
+                        }
+
+                        System.out.println("updated newBody"+newBody);
+
+                        apiCallBackWithToken.Api(Constants.addTag, newBody, new ApiCallBackWithToken.ApiCallback() {
                             @Override
                             public JSONObject onSuccess(JSONObject responseJson) {
 

@@ -118,7 +118,7 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                System.out.println("orderdata"+orderData);
+
 
                 productIndex = index;
 
@@ -141,16 +141,19 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
             if (requestCode == REQUEST_CODE_MAIN_ACTIVITY) {
                 if (resultCode == RESULT_OK && data != null) {
                     String result = data.getStringExtra("result_key");
+
+                    JSONObject jsonObject = new JSONObject(orderData);
+                    JSONArray productIds = jsonObject.getJSONArray("productIds");
+
                     if (result != null) {
-                        String finalJson = Helper.commanParser(result, false, commanModel);
+                        String finalJson = Helper.commanParser(result, false, commanModel,this,productIds);
                         System.out.println("finalJson----->>>" + finalJson);
+
                         JSONObject res = Helper.commanHitApi(apiCallBackWithToken, Constants.addBulkTags, finalJson);
                         System.out.println("final json received --- " + res);
                         if (res.getInt("status") == 200) {
 
                             try {
-                                JSONObject jsonObject = new JSONObject(orderData);
-                                JSONArray productIds = jsonObject.getJSONArray("productIds");
                                 if (productIndex >= 0 && productIndex < productIds.length()) {
                                     JSONObject product = productIds.getJSONObject(productIndex);
 

@@ -85,7 +85,7 @@ public class Constants {
     public static String inventoryRfidTagCol= "inventoryRfidTag";
 
 
-    public static String addTagJson = "{\"rfidTag\":\"NA\",\"readerId\":\"NA\",\"status\":\"NA\",\"movementStatus\":\"NA\",\"currentLocation\":\"NA\",\"operationStatus\":\"NA\",\"createdAt\":\"NA\",\"updatedAt\":\"NA\",\"tagType\":\"NA\",\"tagInfo\":\"NA\",\"tagPlacement\":\"NA\",\"tagMovementInfo\":\"NA\",\"tagMovementTime\":\"NA\",\"tagLotNumber\":\"NA\",\"tagWeight\":\"NA\",\"tagWeightUnit\":\"NA\",\"tagWeightInfo\":\"NA\",\"createdBy\":\"NA\",\"updatedBy\":\"NA\",\"batchId\":\"NA\",\"product_id\":\"NA\",\"dispatchTo\":\"NA\",\"batchNumber\":\"NA\",\"orderId\":\"NA\",\"buildingId\":\"NA\",\"batching\":\"NA\",\"weight\":\"NA\",\"errorMsg\":\"NA\",\"isError\":\"NA\"}";
+    public static String addTagJson = "{\"rfidTag\":\"NA\",\"readerId\":\"NA\",\"status\":\"NA\",\"movementStatus\":\"NA\",\"currentLocation\":\"NA\",\"operationStatus\":\"NA\",\"tagType\":\"NA\",\"tagInfo\":\"NA\",\"tagPlacement\":\"NA\",\"tagMovementInfo\":\"NA\",\"tagMovementTime\":\"NA\",\"tagLotNumber\":\"NA\",\"tagWeight\":-1,\"tagWeightUnit\":\"NA\",\"tagWeightInfo\":\"NA\",\"createdBy\":\"NA\",\"updatedBy\":\"NA\",\"batchId\":\"NA\",\"product_id\":\"NA\",\"dispatchTo\":\"NA\",\"batchNumber\":\"NA\",\"orderId\":\"NA\",\"buildingId\":\"NA\",\"weight\":-1}";
 
 
 }

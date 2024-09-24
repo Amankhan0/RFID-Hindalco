@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.example.hellorfid.activities.OrderActivity;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.model.CommanModel;
+import com.example.hellorfid.session.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,39 +17,60 @@ import java.util.ArrayList;
 
 public class Helper {
 
-    public static String commanParser(String data, Boolean obj, CommanModel commanModel) throws JSONException {
+    private static SessionManager sessionManager;
+
+    public static String commanParser(String data, Boolean obj, CommanModel commanModel,Context context,JSONArray productIds) throws JSONException {
+        if (sessionManager == null) {
+            sessionManager = new SessionManager(context);
+        }
+
+        System.out.println("data- >>>> "+data);
+
         if (!obj) {
             // Get the JSONArray from the data
             JSONArray jsonArray = tag(data);
-            JSONArray finalArray = new JSONArray() ;
+            System.out.println("jsonArray....."+jsonArray);
+            JSONArray finalArray = new JSONArray();
+
+            JSONObject product = productIds.getJSONObject(0);
+            JSONObject productId = product.getJSONObject("productId");
+
             // Loop through the JSONArray
             for (int i = 0; i < jsonArray.length(); i++) {
                 String rfidTag = jsonArray.getString(i);
+
+
+                System.out.println("i>>>>>"+productId.getString("_id"));
+
                 try {
-                    // Create a new JSONObject
-                    JSONObject jsonObject = new JSONObject();
+
+
+
+                    JSONObject jsonObject = new JSONObject(Constants.addTagJson);
+
                     // Add key-value pairs to the JSONObject
                     jsonObject.put("batchId", commanModel.getBatchID());
                     jsonObject.put("rfidTag", rfidTag.toLowerCase());
                     jsonObject.put("orderId", commanModel.getOrderId());
-                    jsonObject.put("currentLocation", commanModel.getCurrentLocation());
+                    jsonObject.put("currentLocation", sessionManager.getBuildingId());
+                    jsonObject.put("buildingId", sessionManager.getBuildingId());
+                    jsonObject.put("tagPlacement", productId.getString("_id"));
+                    jsonObject.put("product_id", productId.getString("_id"));
+                    jsonObject.put("tagType", "Inventory");
+                    jsonObject.put("tagInfo", productId.getString("productName"));
                     jsonObject.put("dispatchTo", commanModel.getDispatchTo());
                     jsonObject.put("readerId", null);
                     jsonObject.put("status", commanModel.getStatus());
                     jsonObject.put("movementStatus", commanModel.getMovementStatus());
-                    jsonObject.put("errorMsg", JSONObject.NULL);
-                    jsonObject.put("isError", false);
                     // Convert the JSONObject to a string and print it
                     finalArray.put(jsonObject);
                 } catch (JSONException e) {
+                    System.out.println("error Create new scratch file from selection"+e.getMessage());
                     e.printStackTrace();
                 }
             }
 
-
-
             return finalArray.toString();
-
         }
 
         return null;

@@ -282,6 +282,8 @@ import com.example.hellorfid.R;
 import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.reader.MainActivity;
+import com.example.hellorfid.session.SessionManager;
+import com.example.hellorfid.utils.JwtDecoder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -304,6 +306,8 @@ public class Mapping extends AppCompatActivity {
     private String currentEndpoint;
     private JSONObject selectedItemInfo;
     private EndpointInfo selectedEndpointInfo;
+    private SessionManager sessionManager;
+    public String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -316,6 +320,23 @@ public class Mapping extends AppCompatActivity {
         ImageView allScreenBackBtn = findViewById(R.id.allScreenBackBtn);
         spinnerOptions = findViewById(R.id.spinner_options);
         itemListView = findViewById(R.id.item_list_view);
+        sessionManager = new SessionManager(this);
+
+        JSONObject decodedToken = null;
+        try {
+            decodedToken = JwtDecoder.decoded(sessionManager.getToken());
+            userId = decodedToken.getString("userId");  // Assuming 'sub' claim contains the user ID
+            System.out.println("userId"+userId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("decodedToken"+decodedToken);
+
+        // Now you can access claims from the decoded token
+
+
+
+        System.out.println("session === "+sessionManager.getToken());
 
         setupBackButton(allScreenBackBtn);
         setupSpinner();
@@ -521,6 +542,8 @@ public class Mapping extends AppCompatActivity {
                         JSONObject newBody = new JSONObject(Constants.addTagJson);
                         System.out.println("jsonObject"+newBody);
 
+
+                            newBody.put("createdBy",userId);
                         if(selectedEndpointInfo.tagType=="Vehicle"){
                             newBody.put("tagPlacement", selectedItemInfo.get("_id"));
                             newBody.put("rfidTag", body.get("rfidTag"));

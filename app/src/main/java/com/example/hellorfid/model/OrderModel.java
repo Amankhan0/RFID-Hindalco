@@ -56,7 +56,7 @@ public class OrderModel {
         product.setId(pid);
         product.setProductName(productName);
 
-        ProductOrder productOrder = new ProductOrder(product, totalInventory);
+        ProductOrder productOrder = new ProductOrder(product, totalInventory,status);
         this.productIds.add(productOrder);
     }
 
@@ -192,12 +192,14 @@ public class OrderModel {
     public static class ProductOrder {
         private Product productId;
         private int quantity;
+        private String status;
 
         public ProductOrder() {}
 
-        public ProductOrder(Product productId, int quantity) {
+        public ProductOrder(Product productId, int quantity, String status) {
             this.productId = productId;
             this.quantity = quantity;
+            this.status = status;
         }
 
         public Product getProductId() { return productId; }

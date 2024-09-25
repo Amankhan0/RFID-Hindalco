@@ -75,6 +75,8 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
             commanModel = gson.fromJson(commanModelJson, CommanModel.class);
         }
 
+        System.out.println("orderData---"+orderData);
+
         productContainer = findViewById(R.id.productContainer);
         noDataTextView = findViewById(R.id.noDataTextView);
         apiCallBackWithToken = new ApiCallBackWithToken(this);
@@ -113,33 +115,71 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
         noDataTextView.setVisibility(View.VISIBLE);
     }
 
+//    private View createProductCard(final int index, final JSONObject productData) throws JSONException {
+//        View cardView = LayoutInflater.from(this).inflate(R.layout.order_acording_product_list, productContainer, false);
+//
+//        JSONObject productId = productData.getJSONObject("productId");
+//        final int quantity = productData.getInt("quantity");
+//        final String productName = productId.getString("productName");
+//
+//        TextView productNameTextView = cardView.findViewById(R.id.productNameTextView);
+//        TextView quantityTextView = cardView.findViewById(R.id.quantityTextView);
+//
+//        productNameTextView.setText("Product Name: " + productName);
+//        quantityTextView.setText("Quantity: " + quantity);
+//
+//        cardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                productIndex = index;
+//
+//                System.out.println("Product Index: " + index);
+//                System.out.println("Product Name: " + productName);
+//                System.out.println("Quantity: " + quantity);
+//                Intent intent = new Intent(LoadProductAcordingToOrdersActivity.this, MainActivity.class);
+//                intent.putExtra("totalInventory", quantity);
+//                startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
+//            }
+//        });
+//
+//        return cardView;
+//    }
+
     private View createProductCard(final int index, final JSONObject productData) throws JSONException {
         View cardView = LayoutInflater.from(this).inflate(R.layout.order_acording_product_list, productContainer, false);
 
         JSONObject productId = productData.getJSONObject("productId");
         final int quantity = productData.getInt("quantity");
         final String productName = productId.getString("productName");
+//        final String status = productId.getString("status");
+
+        // Check product status and update the background color if it's "ORDER_PICKED"
+        String productStatus = productData.optString("status", "ORDER_INITIATED"); // Default to "ORDER_INITIATED" if status is missing
+        if ("ORDER_PICKED".equals(productStatus)) {
+            cardView.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light)); // Set background to green
+        } else {
+            cardView.setBackgroundColor(getResources().getColor(android.R.color.white)); // Default background to white
+        }
 
         TextView productNameTextView = cardView.findViewById(R.id.productNameTextView);
         TextView quantityTextView = cardView.findViewById(R.id.quantityTextView);
+        TextView statusTextView = cardView.findViewById(R.id.status);
 
         productNameTextView.setText("Product Name: " + productName);
         quantityTextView.setText("Quantity: " + quantity);
+        statusTextView.setText("Status: " + productStatus);
 
-        cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                productIndex = index;
-
-                System.out.println("Product Index: " + index);
-                System.out.println("Product Name: " + productName);
-                System.out.println("Quantity: " + quantity);
-                Intent intent = new Intent(LoadProductAcordingToOrdersActivity.this, MainActivity.class);
-                intent.putExtra("totalInventory", quantity);
-                startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
-            }
-        });
-
+        if(!"ORDER_PICKED".equals(productStatus)){
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    productIndex = index;
+                    Intent intent = new Intent(LoadProductAcordingToOrdersActivity.this, MainActivity.class);
+                    intent.putExtra("totalInventory", quantity);
+                    startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
+                }
+            });
+        }
         return cardView;
     }
 
@@ -163,49 +203,51 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
                     JSONObject res = Helper.commanHitApi(apiCallBackWithToken, Constants.addBulkTags, finalJson);
                     System.out.println("final json received --- " + res);
                     if (res.getInt("status") == 200) {
-                        if (productIndex >= 0 && productIndex < productIds.length()) {
-                            JSONObject product = productIds.getJSONObject(productIndex);
 
-                            // Extract the _id from the nested productId object
-                            String productId = product.getJSONObject("productId").getString("_id");
+                            if (jsonObject.has("productIds")) {
+                                JSONArray productArr = jsonObject.getJSONArray("productIds");
+                                JSONArray newProductIds = new JSONArray();
 
-                            // Create a new JSONObject with the desired structure
-                            JSONObject updatedProduct = new JSONObject();
-                            updatedProduct.put("productId", productId);
-                            updatedProduct.put("quantity", product.getInt("quantity"));
-                            updatedProduct.put("status", "ORDER_PICKED");
+                                for (int i = 0; i < productArr.length(); i++) {
+                                    JSONObject productObject = productArr.getJSONObject(i);
+                                    System.out.println("productObject"+productObject);
+                                    // Get the productId object directly
+                                    JSONObject innerProductObject = productObject.getJSONObject("productId");
 
-                            // Replace the old product object with the updated one
-                            productIds.put(productIndex, updatedProduct);
+                                    // Extract the fields you need
+                                    String id = innerProductObject.getString("_id");
+                                    int quantity = productObject.getInt("quantity");
+                                    String status = productObject.getString("status");
 
-                            // Update the productIds array in the main object
-                            jsonObject.put("productIds", productIds);
+                                    // Create a new JSON object with the extracted fields
+                                    JSONObject newProductObject = new JSONObject();
+                                    newProductObject.put("productId", id);
+                                    newProductObject.put("quantity", quantity);
+                                    newProductObject.put("status", productIndex == i ?"ORDER_PICKED":status);
 
-                            System.out.println("jsonObject: " + jsonObject);
-
-                            JSONArray updateProductIds = jsonObject.getJSONArray("productIds");
-
-                            // Track whether all products are picked
-                            boolean allPicked = true;
-
-                            // Loop through the productIds array to check their status
-                            for (int i = 0; i < updateProductIds.length(); i++) {
-                                JSONObject newproduct = productIds.getJSONObject(i);
-
-                                // Check if the status of the product is "ORDER_PICKED"
-                                if (!"ORDER_PICKED".equals(newproduct.getString("status"))) {
-                                    allPicked = false; // If any product is not picked, set flag to false
-                                    break; // No need to continue checking, exit the loop
+                                    // Add the new product object to your array
+                                    newProductIds.put(newProductObject);
                                 }
-                            }
 
-                            // If all products are picked, update the orderStatus
-                            if (allPicked) {
-                                System.out.println("call ---- call");
-                                jsonObject.put("orderStatus", "ORDER_PICKED");
-                            }
+                                jsonObject.put("productIds", newProductIds);
 
-                            // New code to update vehicleIds array
+                                boolean allPicked = true;
+                                for (int i = 0; i < newProductIds.length(); i++) {
+                                    System.out.println("newProductIds"+newProductIds);
+
+
+                                    JSONObject productObject = newProductIds.getJSONObject(i);
+
+                                    System.out.println("productObject === "+productObject);
+
+                                    String status = productObject.getString("status");
+
+                                    if (!"ORDER_PICKED".equals(status)) {
+                                        allPicked = false; // If any product is not picked, set flag to false
+                                        break; // No need to continue checking, exit the loop
+                                    }
+                                }
+
                             if (jsonObject.has("vehicleIds")) {
                                 JSONArray vehicleIds = jsonObject.getJSONArray("vehicleIds");
                                 JSONArray newVehicleIds = new JSONArray();
@@ -220,20 +262,23 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
                                     newVehicleObject.put("vehicleId", id);
                                     newVehicleIds.put(newVehicleObject);
                                 }
-
                                 jsonObject.put("vehicleIds", newVehicleIds);
                             }
 
-                            jsonObject.put("updatedBy",userId);
+                                if (allPicked) {
+                                    System.out.println("call ---- call");
+                                    jsonObject.put("orderStatus", "ORDER_PICKED");
+                                }
 
-                            System.out.println("Updated jsonObject: " + jsonObject);
+                            System.out.println("jsonObject veupdate ---- "+jsonObject);
 
-                            // Uncomment and modify as needed for your API call
 
                             apiCallBackWithToken.Api(Constants.updateOrder, jsonObject, new ApiCallBackWithToken.ApiCallback() {
                                 @Override
                                 public JSONObject onSuccess(JSONObject responseJson) {
                                     System.out.println("responseJson------" + responseJson);
+                                    Intent intent = new Intent(LoadProductAcordingToOrdersActivity.this, HandheldTerminalActivity.class);
+                                    startActivity(intent);
                                     return responseJson;
                                 }
                                 @Override
@@ -242,11 +287,8 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
                                     runOnUiThread(() -> Toast.makeText(LoadProductAcordingToOrdersActivity.this, "Failed to load orders", Toast.LENGTH_SHORT).show());
                                 }
                             });
-                        } else {
-                            System.out.println("Invalid productIndex: " + productIndex);
+
                         }
-                        System.out.println("res ---- " + orderData);
-                        System.out.println("res ---- " + productIndex);
                     }
                     Toast.makeText(this, "Order processing completed", Toast.LENGTH_SHORT).show();
                 } else {

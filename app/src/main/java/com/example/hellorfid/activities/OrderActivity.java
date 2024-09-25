@@ -35,6 +35,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnOrderClickListener {
 
@@ -45,9 +47,16 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
     private List<OrderModel> orderList;
     private OrderAdapter orderAdapter;
     private RecyclerView recyclerView;
+
+    private ProgressBar progressBar;
+    private TextView loadingText;
+
+
     CommanModel commanModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        System.out.println("hehehe-----");
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order);
@@ -61,6 +70,10 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
         recyclerView = findViewById(R.id.recyclerViewOrders);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(orderAdapter);
+        progressBar = findViewById(R.id.progressBar);
+        loadingText = findViewById(R.id.loadingText);
+
+
 
         ImageView allScreenBackBtn = findViewById(R.id.allScreenBackBtn);
         allScreenBackBtn.setOnClickListener(new View.OnClickListener() {
@@ -73,8 +86,25 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
                 finish();
             }
         });
-
+        showLoader();
         hitApiAndLogResult();
+    }
+
+    private void showLoader() {
+        runOnUiThread(() -> {
+            progressBar.setVisibility(View.VISIBLE);
+            loadingText.setVisibility(View.VISIBLE);
+            loadingText.setText("Loading...");
+            recyclerView.setVisibility(View.GONE);
+        });
+    }
+
+    private void hideLoader() {
+        runOnUiThread(() -> {
+            progressBar.setVisibility(View.GONE);
+            loadingText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        });
     }
 
     @Override
@@ -99,67 +129,10 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
 //            intent.putExtra("totalInventory", order.getQty());
             intent.putExtra("orderData", orderJson);
             intent.putExtra("commonModal", commanModelJson);
-
-
-
-
             startActivity(intent);
 //            startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
         }
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        try {
-//            if (requestCode == REQUEST_CODE_MAIN_ACTIVITY) {
-//                if (resultCode == RESULT_OK && data != null) {
-//                    String result = data.getStringExtra("result_key");
-//                    if (result != null) {
-//                        String finalJson = Helper.commanParser(result, false, commanModel);
-//                        System.out.println("finalJson----->>>" + finalJson);
-//                        JSONObject res = Helper.commanHitApi(apiCallBackWithToken, Constants.addBulkTags, finalJson);
-//                        System.out.println("final json received --- " + res);
-//
-//                        if (res == null) {
-//                            System.out.println("API call failed");
-//                            JSONObject resultAgain = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,
-//                                    "_id", commanModel.getOrderId(), "orderStatus", Constants.ORDER_INITIATED);
-//                            System.out.println("Order status reset to INITIATED: " + resultAgain);
-//                        } else {
-//                            if (res.getInt("status") == 200) {
-//                                JSONObject updatedOrderResult = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,
-//                                        "_id", commanModel.getOrderId(), "orderStatus", Constants.ORDER_PICKED);
-//                                System.out.println("Order status updated to PICKED: " + updatedOrderResult);
-//                            }
-//                        }
-//
-//                        Toast.makeText(this, "Order processing completed", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Log.e("OrderActivity", "Received null result from MainActivity");
-//                        Toast.makeText(this, "Error: Received null result from MainActivity", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else if (resultCode == RESULT_CANCELED) {
-//                    System.out.println("Operation cancelled");
-//                    JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,
-//                            "_id", commanModel.getOrderId(), "orderStatus", Constants.ORDER_INITIATED);
-//                    System.out.println("Order status reset to INITIATED: " + res);
-//                    Toast.makeText(this, "Operation cancelled", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                hitApiAndLogResult(); // Refresh the order list
-//            }
-//        } catch (JSONException e) {
-//            Log.e("OrderActivity", "JSONException in onActivityResult", e);
-//            Toast.makeText(this, "Error processing result: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//        } catch (InterruptedException e) {
-//            Log.e("OrderActivity", "InterruptedException in onActivityResult", e);
-//            Toast.makeText(this, "Operation interrupted: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//        } catch (Exception e) {
-//            Log.e("OrderActivity", "Unexpected error in onActivityResult", e);
-//            Toast.makeText(this, "Unexpected error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void hitApiAndLogResult() {
         try {
@@ -185,20 +158,28 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
             apiCallBackWithToken.Api(apiEndpoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
                 @Override
                 public JSONObject onSuccess(JSONObject responseJson) {
-                    System.out.println("responseJson------"+responseJson);
-                    parseAndDisplayOrder(responseJson);
+                    runOnUiThread(() -> {
+                        parseAndDisplayOrder(responseJson);
+                        hideLoader();
+                    });
                     return responseJson;
                 }
+
                 @Override
                 public void onFailure(Exception e) {
                     Log.e("TAG", "API call failed", e);
-                    runOnUiThread(() -> Toast.makeText(OrderActivity.this, "Failed to load orders", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> {
+                        hideLoader();
+                        Toast.makeText(OrderActivity.this, "Failed to load orders", Toast.LENGTH_SHORT).show();
+                    });
                 }
             });
 
         } catch (JSONException e) {
             Log.e("TAG", "Error creating JSON request body", e);
+            runOnUiThread(this::hideLoader);
         }
+
     }
 
     private void parseAndDisplayOrder(JSONObject responseJson) {

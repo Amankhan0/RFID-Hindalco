@@ -23,6 +23,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "Home";
@@ -30,6 +32,8 @@ public class HomeActivity extends AppCompatActivity {
     private ListView buildingList;
     private HomeAdapter buildingAdapter;
     private List<HomeModel> buildingModels;
+    private ProgressBar progressBar;
+    private TextView loadingText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +46,13 @@ public class HomeActivity extends AppCompatActivity {
         buildingAdapter = new HomeAdapter(this, buildingModels);
         buildingList.setAdapter(buildingAdapter);
 
+        // Loader Views
+        progressBar = findViewById(R.id.progressBar);
+        loadingText = findViewById(R.id.loadingText);
+
         SessionManager sessionManager = new SessionManager(this);
 
-        if (sessionManager.getToken() == null){
+        if (sessionManager.getToken() == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -52,19 +60,33 @@ public class HomeActivity extends AppCompatActivity {
 
         apiCallBackWithToken = new ApiCallBackWithToken(this);
 
-        // Call the API
+        // Call the API and show the loader
+        showLoader();
         hitApiAndLogResult();
-        ImageView ProfileButton = findViewById(R.id.profile);
-        ProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-                // Clear the back stack and start the new activity
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                // Finish the current activity so it's removed from the back stack
-                finish();
-            }
+
+        ImageView profileButton = findViewById(R.id.profile);
+        profileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        });
+    }
+
+    private void showLoader() {
+        runOnUiThread(() -> {
+            progressBar.setVisibility(View.VISIBLE);
+            loadingText.setVisibility(View.VISIBLE);
+            loadingText.setText("Loading...");
+            buildingList.setVisibility(View.GONE);
+        });
+    }
+
+    private void hideLoader() {
+        runOnUiThread(() -> {
+            progressBar.setVisibility(View.GONE);
+            loadingText.setVisibility(View.GONE);
+            buildingList.setVisibility(View.VISIBLE);
         });
     }
 
@@ -75,34 +97,37 @@ public class HomeActivity extends AppCompatActivity {
             requestBody.put("limit", "5");
             requestBody.put("search", new JSONObject());
 
-            System.out.println("requestBody" + requestBody);
             String apiEndpoint = Constants.searchBuilding;
-
-            System.out.println("requestBody---"+requestBody);
 
             apiCallBackWithToken.Api(apiEndpoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
                 @Override
                 public JSONObject onSuccess(JSONObject responseJson) {
-                    Log.d(TAG, "API call successful. Response: " + responseJson.toString());
-                    parseAndDisplayBuildings(responseJson);
+                    runOnUiThread(() -> {
+                        parseAndDisplayBuildings(responseJson);
+                        hideLoader();  // Hide the loader once data is loaded
+                    });
                     return responseJson;
                 }
 
                 @Override
                 public void onFailure(Exception e) {
                     Log.e(TAG, "API call failed", e);
+                    runOnUiThread(() -> {
+                        hideLoader();  // Hide the loader if the API fails
+                        loadingText.setText("Failed to load buildings");
+                    });
                 }
             });
 
         } catch (JSONException e) {
             Log.e(TAG, "Error creating JSON request body", e);
+            runOnUiThread(this::hideLoader);
         }
     }
 
     private void parseAndDisplayBuildings(JSONObject responseJson) {
         try {
-            JSONObject jsonObject = new JSONObject(String.valueOf(responseJson));
-            JSONArray arr = jsonObject.getJSONArray("content");
+            JSONArray arr = responseJson.getJSONArray("content");
             buildingModels.clear();
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject buildingJson = arr.getJSONObject(i);
@@ -111,12 +136,7 @@ public class HomeActivity extends AppCompatActivity {
                 String address = buildingJson.getString("buildingNo");
                 buildingModels.add(new HomeModel(id, name, address));
             }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    buildingAdapter.notifyDataSetChanged();
-                }
-            });
+            runOnUiThread(() -> buildingAdapter.notifyDataSetChanged());
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing JSON response", e);
         }

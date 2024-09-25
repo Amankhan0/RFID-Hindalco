@@ -35,7 +35,7 @@ public class HoldActivity extends AppCompatActivity {
         apiCallBackWithToken = new ApiCallBackWithToken(this);
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("totalInventory", 2);
+        intent.putExtra("totalInventory", 1);
         intent.putExtra("apiUrl", Constants.addBulkTags);
         startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
     }

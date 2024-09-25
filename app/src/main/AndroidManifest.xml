@@ -15,6 +15,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.WhichProductLocationOrZone"
+            android:exported="false" />
+        <activity
             android:name=".activities.Mapping"
             android:exported="false" />
         <activity

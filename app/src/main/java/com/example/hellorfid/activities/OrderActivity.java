@@ -287,7 +287,7 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
                             product.setSellingCost(productJson.optDouble("sellingCost"));
                             product.setGrade(productJson.optString("grade"));
 
-                            OrderModel.ProductOrder productOrder = new OrderModel.ProductOrder(product, productOrderJson.optInt("quantity"));
+                            OrderModel.ProductOrder productOrder = new OrderModel.ProductOrder(product, productOrderJson.optInt("quantity"),productOrderJson.optString("status"));
                             productOrders.add(productOrder);
                         }
                     }

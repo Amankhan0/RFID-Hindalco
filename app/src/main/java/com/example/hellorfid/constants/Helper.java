@@ -60,7 +60,7 @@ public class Helper {
                     jsonObject.put("tagInfo", productId.getString("productName"));
                     jsonObject.put("dispatchTo", commanModel.getDispatchTo());
                     jsonObject.put("readerId", null);
-                    jsonObject.put("status", commanModel.getStatus());
+                    jsonObject.put("status", "EMPTY");
                     jsonObject.put("movementStatus", commanModel.getMovementStatus());
                     // Convert the JSONObject to a string and print it
                     finalArray.put(jsonObject);

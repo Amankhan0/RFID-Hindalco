@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hellorfid.R;
+import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.session.SessionManager;
 
 public class HandheldTerminalActivity extends AppCompatActivity {
@@ -45,6 +46,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle Receiving button click
+                sessionManager.setOptionSelected(Constants.OUTBOUND_ORDER);
                 startActivity(new Intent(HandheldTerminalActivity.this, OrderActivity.class));
             }
         });
@@ -61,7 +63,8 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle Receiving button click
-                startActivity(new Intent(HandheldTerminalActivity.this, InboundOrderActivity.class));
+                sessionManager.setOptionSelected(Constants.INBOUND_ORDER);
+                startActivity(new Intent(HandheldTerminalActivity.this, OrderActivity.class));
             }
         });
 
@@ -69,7 +72,8 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle Receiving button click
-                startActivity(new Intent(HandheldTerminalActivity.this, HoldActivity.class));
+                sessionManager.setOptionSelected(Constants.HOLD);
+                startActivity(new Intent(HandheldTerminalActivity.this, WhichProductLocationOrZone.class));
             }
         });
 

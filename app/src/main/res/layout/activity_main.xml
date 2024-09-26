@@ -24,6 +24,7 @@
             android:background="@drawable/backicon" />
 
         <TextView
+            android:id="@+id/actionName"
             android:layout_width="100pt"
             android:textColor="@color/black"
             android:layout_height="wrap_content"

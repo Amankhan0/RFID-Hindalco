@@ -7,8 +7,8 @@ import java.util.List;
 public class OrderModel {
 
     private String _id;
-    private Date orderDateTime;
-    private Date expectedArrival;
+    private String orderDateTime;
+    private String expectedArrival;
     private String saleType;
     private String orderType;
     private String orderStatus;
@@ -64,11 +64,11 @@ public class OrderModel {
     public String getId() { return _id; }
     public void setId(String _id) { this._id = _id; }
 
-    public Date getOrderDateTime() { return orderDateTime; }
-    public void setOrderDateTime(Date orderDateTime) { this.orderDateTime = orderDateTime; }
+    public String getOrderDateTime() { return orderDateTime; }
+    public void setOrderDateTime(String orderDateTime) { this.orderDateTime = orderDateTime; }
 
-    public Date getExpectedArrival() { return expectedArrival; }
-    public void setExpectedArrival(Date expectedArrival) { this.expectedArrival = expectedArrival; }
+    public String getExpectedArrival() { return expectedArrival; }
+    public void setExpectedArrival(String expectedArrival) { this.expectedArrival = expectedArrival; }
 
     public String getSaleType() { return saleType; }
     public void setSaleType(String saleType) { this.saleType = saleType; }

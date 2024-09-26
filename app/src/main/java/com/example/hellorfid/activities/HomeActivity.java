@@ -11,6 +11,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hellorfid.constants.Constants;
+import com.example.hellorfid.constants.Helper;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.R;
 import com.example.hellorfid.session.SessionManager;
@@ -52,6 +53,9 @@ public class HomeActivity extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(this);
 
+
+        Helper.setUserDetails(sessionManager);
+
         if (sessionManager.getToken() == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -60,7 +64,6 @@ public class HomeActivity extends AppCompatActivity {
 
         apiCallBackWithToken = new ApiCallBackWithToken(this);
 
-        // Call the API and show the loader
         showLoader();
         hitApiAndLogResult();
 

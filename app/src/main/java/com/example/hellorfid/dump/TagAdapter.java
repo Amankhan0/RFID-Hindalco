@@ -1,6 +1,7 @@
 package com.example.hellorfid.dump;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hellorfid.R;
+import com.example.hellorfid.session.SessionManager;
 
 import java.util.List;
 
@@ -39,16 +41,28 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
         Tag tag = tagList.get(position);
-        holder.tagNumber.setText(tag.getTagNumber());
-//        holder.lotNumber.setText(tag.getLotNumber());
+        SessionManager sessionManager =new SessionManager(context);
+        holder.tagNumber.setText(tag.getTagNumber().substring(tag.getTagNumber().length()-8));
+        holder.lotNumber.setText(tag.getTagType());
 
-        if (tag.isOverLimit()) {
+        holder.scanningFor.setText(sessionManager.getCheckTagOn());
+        if(sessionManager.getCheckTagOn().equals(tag.getTagType())){
+            if (!tag.isOverLimit()) {
+                holder.scanningFor.setBackgroundColor(Color.parseColor("#039e00"));
+                holder.tagNumber.setTextColor(context.getResources().getColor(R.color.black));
+                holder.lotNumber.setTextColor(context.getResources().getColor(R.color.black));
+            }else {
+                holder.scanningFor.setBackgroundColor(Color.parseColor("#9e0005"));
+                holder.tagNumber.setTextColor(context.getResources().getColor(R.color.red));
+                holder.lotNumber.setTextColor(context.getResources().getColor(R.color.red));
+            }
+        }else {
+            holder.scanningFor.setBackgroundColor(Color.parseColor("#9e0005"));
             holder.tagNumber.setTextColor(context.getResources().getColor(R.color.red));
             holder.lotNumber.setTextColor(context.getResources().getColor(R.color.red));
-        } else {
-            holder.tagNumber.setTextColor(context.getResources().getColor(R.color.black));
-            holder.lotNumber.setTextColor(context.getResources().getColor(R.color.black));
         }
+
+
 
         holder.deleteIcon.setOnClickListener(view -> {
             String deletedTagId = tagList.get(position).getTagNumber();
@@ -75,14 +89,14 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
         TextView tagNumber;
         TextView lotNumber;
         ImageView deleteIcon;
-        ImageView nextIcon;
+        TextView scanningFor;
 
         public TagViewHolder(@NonNull View itemView) {
             super(itemView);
             tagNumber = itemView.findViewById(R.id.tagNumber1);
             lotNumber = itemView.findViewById(R.id.lotNumber1);
             deleteIcon = itemView.findViewById(R.id.deleteIcon1);
-//            nextIcon = itemView.findViewById(R.id.nextIcon1);
+            scanningFor = itemView.findViewById(R.id.scanningFor);
         }
     }
 }

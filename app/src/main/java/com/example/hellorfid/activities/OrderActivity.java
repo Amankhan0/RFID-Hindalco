@@ -55,8 +55,6 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
     CommanModel commanModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        System.out.println("hehehe-----");
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order);
@@ -110,74 +108,32 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
     @Override
     public void onOrderClick(OrderModel order) throws JSONException, InterruptedException {
 
-        System.out.println("order"+order);
-
-        System.out.println("Order clicked: " + order.getId());
-        commanModel.setOrderStatus(Constants.ORDER_PICKING);
         JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
-                "_id",commanModel.getOrderId(),"orderStatus",Constants.ORDER_PICKING);
-
+                "_id",order.getId(),"orderStatus",Constants.ORDER_PICKING);
         System.out.println("updated order--->" + res);
-
         if(res.getInt("status")==200) {
-
-            Gson gson = new Gson();
-            Gson commonGson = new Gson();
-            String orderJson = gson.toJson(order);
-            String commanModelJson = commonGson.toJson(commanModel);
+            sessionManager.setOrderData(res.getString("data").toString());
             Intent intent = new Intent(this, LoadProductAcordingToOrdersActivity.class);
-//            intent.putExtra("totalInventory", order.getQty());
-            intent.putExtra("orderData", orderJson);
-            intent.putExtra("commonModal", commanModelJson);
             startActivity(intent);
-//            startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
         }
     }
 
     private void hitApiAndLogResult() {
         try {
-            JSONObject requestBody = new JSONObject();
-            requestBody.put("page", "1");
-            requestBody.put("limit", "20");
 
-            JSONObject search = new JSONObject();
-
-
+            JSONObject s = new JSONObject();
             String[] status = {"ORDER_INITIATED", "ORDER_PICKING"};
-            JSONArray statusArray = new JSONArray(status);
-
-
-            search.put("orderStatus", statusArray);
-//            search.put("orderStatus", "ORDER_PICKING");
-            search.put("orderType", "OUTBOUND");
-            requestBody.put("search", search);
-
-            System.out.println("requestBody" + requestBody);
-            String apiEndpoint = Constants.searchOrders;
-
-            apiCallBackWithToken.Api(apiEndpoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
-                @Override
-                public JSONObject onSuccess(JSONObject responseJson) {
-                    runOnUiThread(() -> {
-                        parseAndDisplayOrder(responseJson);
-                        hideLoader();
-                    });
-                    return responseJson;
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    Log.e("TAG", "API call failed", e);
-                    runOnUiThread(() -> {
-                        hideLoader();
-                        Toast.makeText(OrderActivity.this, "Failed to load orders", Toast.LENGTH_SHORT).show();
-                    });
-                }
-            });
-
+            s.put("orderStatus",new JSONArray(status));
+            s.put("orderType", sessionManager.getOptionSelected());
+            JSONObject requestBody = Helper.getSearchJson(1,20,s);
+            JSONObject res = Helper.commanHitApi(apiCallBackWithToken,Constants.searchOrders,requestBody);
+            parseAndDisplayOrder(res);
+            hideLoader();
         } catch (JSONException e) {
             Log.e("TAG", "Error creating JSON request body", e);
             runOnUiThread(this::hideLoader);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
     }
@@ -192,8 +148,8 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
                  commanModel = new CommanModel();
 
                 order.setId(orderJson.optString("_id"));
-                order.setOrderDateTime(parseDate(orderJson.optString("orderDateTime")));
-                order.setExpectedArrival(parseDate(orderJson.optString("expectedArrival")));
+                order.setOrderDateTime(orderJson.optString("orderDateTime"));
+                order.setExpectedArrival(orderJson.optString("expectedArrival"));
                 order.setSaleType(orderJson.optString("saleType"));
                 order.setOrderType(orderJson.optString("orderType"));
                 order.setOrderStatus(orderJson.optString("orderStatus"));

@@ -17,7 +17,10 @@ public class Constants {
     public final static String searchBuilding = "plant/api/searchBuilding";
     public final static String updateOrder = "order/api/updateOrder";
     public final static String updateBulkTags = "iot/api/updateBulkTags";
-    public final static String searchRfidTag = "iot/api/searchRfidTag";
+
+
+//    public final static String searchRfidTag = "iot/api/searchRfidTag";
+    public final static String searchRfidTag = "iot/api/searchTag";
 
     public final static String searchOrders = "order/api/searchOrder";
     public final static String login = "auth/login";
@@ -34,10 +37,7 @@ public class Constants {
 
     public final static String searchLocation = "plant/api/searchLocation";
     public final static String updateLocation = "plant/api/updateLocation";
-
-
-
-
+    public static final String ACTIVE = "ACTIVE";
 
 
     public static String EXIT_ACTION = "EXIT";
@@ -50,6 +50,8 @@ public class Constants {
 
     public static String ENTRY_ACTION = "ENTRY";
     public static String ENTRY_MOVEMENT_STATUS = "IN_BUILDING";
+    public static String IN_BUILDING = "IN_BUILDING";
+    public static String EMPTY = "EMPTY";
 
     public static String BAGGING_AUTO_PROGRESS = "BAGGING_IN_PROGRESS";
     public static String BAGGING_AUTO_ACTION = "BAGGING_AUTO";
@@ -86,6 +88,15 @@ public class Constants {
 
 
     public static String addTagJson = "{\"rfidTag\":\"NA\",\"readerId\":\"NA\",\"status\":\"NA\",\"movementStatus\":\"NA\",\"currentLocation\":\"NA\",\"operationStatus\":\"NA\",\"tagType\":\"NA\",\"tagInfo\":\"NA\",\"tagPlacement\":\"NA\",\"tagMovementInfo\":\"NA\",\"tagMovementTime\":\"NA\",\"tagLotNumber\":\"NA\",\"tagWeight\":-1,\"tagWeightUnit\":\"NA\",\"tagWeightInfo\":\"NA\",\"createdBy\":\"NA\",\"updatedBy\":\"NA\",\"batchId\":\"NA\",\"product_id\":\"NA\",\"dispatchTo\":\"NA\",\"batchNumber\":\"NA\",\"orderId\":\"NA\",\"buildingId\":\"NA\",\"weight\":-1}";
+
+
+
+    public static String LOCATION= "Location";
+    public static String OUTBOUND_ORDER= "OUTBOUND";
+    public static String INBOUND_ORDER= "INBOUND";
+    public static String INVENTORY= "INVENTORY";
+    public static String HOLD= "HOLD";
+
 
 
 }

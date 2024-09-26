@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.example.hellorfid.constants.Constants;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SessionManager {
@@ -19,7 +21,16 @@ public class SessionManager {
     private static final String replaceScanFirst = "replaceScanFirst";
     private static final String replaceScanSecond = "replaceScanSecond";
     private static final String IP_ADDRESS_KEY = "IP_ADDRESS_KEY";
+    private static final String COMMANDATA = "COMMANDATA";
+    private static final String ORDER_DATA = "ORDER_DATA";
+    private static final String USER_ID = "USER_ID";
+    private static final String OPTION_SELECTED = "OPTION_SELECTED";
+    private static final String PRODUCT_DATA = "PRODUCT_DATA";
+    private static final String LOCATION_DATA = "LOCATION_DATA";
 
+    private static final String CHECK_TAG_ON = "CHECK_TAG_ON";
+    private static final String QTY = "QTY";
+    private static final String SET_SCAN_COUNT = "SET_SCAN_COUNT";
 
 
     private static final String BatchData = "BatchData";
@@ -32,6 +43,63 @@ public class SessionManager {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+    }
+
+
+    public void setLocationData(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(LOCATION_DATA, token);
+        editor.apply();
+    }
+    public void setProductData(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(PRODUCT_DATA, token);
+        editor.apply();
+    }
+
+    public void setSetScanCount(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(SET_SCAN_COUNT, token);
+        editor.apply();
+    }
+
+    public void setUserId(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(USER_ID, token);
+        editor.apply();
+    }
+
+    public void setOptionSelected(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(OPTION_SELECTED, token);
+        editor.apply();
+    }
+
+    public void setOrderData(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(ORDER_DATA, token);
+        editor.apply();
+    }
+
+    public void setQty(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(QTY, token);
+        editor.apply();
+    }
+
+    public void setCheckTagOn(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(CHECK_TAG_ON, token);
+        editor.apply();
+    }
+
+
+
+    // Save token
+    public void setCommandata(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(COMMANDATA, token);
+        editor.apply();
     }
 
     // Save token
@@ -57,8 +125,37 @@ public class SessionManager {
     }
 
     // Get saved token
+    public String getUserId() {
+        return sharedPreferences.getString(USER_ID, null);
+    }
+
+    // Get saved token
+    public String getSetScanCount() {
+        return sharedPreferences.getString(SET_SCAN_COUNT, null);
+    }
+
+    // Get saved token
+    public JSONObject getOrderData() throws JSONException {
+        String fec = sharedPreferences.getString(ORDER_DATA, null);
+        JSONObject jsonObject = new JSONObject(fec);
+        return jsonObject;
+    }
+
+    // Get saved token
+    public JSONObject getProductData() throws JSONException {
+        String fec = sharedPreferences.getString(PRODUCT_DATA, null);
+        JSONObject jsonObject = new JSONObject(fec);
+        return jsonObject;
+    }
+
+    // Get saved token
     public String getReplaceSecondScan() {
         return sharedPreferences.getString(replaceScanSecond, null);
+    }
+
+    // Get saved token
+    public String getOptionSelected() {
+        return sharedPreferences.getString(OPTION_SELECTED, null);
     }
 
     // clear building
@@ -103,6 +200,19 @@ public class SessionManager {
         return sharedPreferences.getString(buildingIdTo, null);
     }
 
+    // Get saved token
+    public String getCommandata() {
+        return sharedPreferences.getString(COMMANDATA, null);
+    }
+
+    public String getCheckTagOn() {
+        return sharedPreferences.getString(CHECK_TAG_ON, null);
+    }
+
+    public String getQty() {
+        return sharedPreferences.getString(QTY, null);
+    }
+
     // clear building
     public void clearBuildingIdTo() {
         editor.remove(buildingIdTo);
@@ -114,6 +224,14 @@ public class SessionManager {
         editor.putString(BatchData, batch);
         editor.apply();
     }
+
+    // Get saved token
+    public JSONArray getLocationData() throws JSONException {
+        String fec = sharedPreferences.getString(LOCATION_DATA, null);
+        JSONArray jsonObject = new JSONArray(fec);
+        return jsonObject;
+    }
+
 
     // Get saved token
     public String getBatch() {

@@ -38,6 +38,7 @@ public class Constants {
     public final static String searchLocation = "plant/api/searchLocation";
     public final static String updateLocation = "plant/api/updateLocation";
     public static final String ACTIVE = "ACTIVE";
+    public static final String UPDATE ="UPDATE" ;
 
 
     public static String EXIT_ACTION = "EXIT";
@@ -94,6 +95,8 @@ public class Constants {
     public static String LOCATION= "Location";
     public static String OUTBOUND_ORDER= "OUTBOUND";
     public static String INBOUND_ORDER= "INBOUND";
+    public static String HOLD_LOCATION= "HOLD_LOCATION";
+
     public static String INVENTORY= "INVENTORY";
     public static String HOLD= "HOLD";
 

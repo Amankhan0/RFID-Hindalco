@@ -271,21 +271,62 @@ public class CaseExecutorHandler {
             System.out.println("RESSS tag updated------>>>>>>> "+res1);
             sessionManager.clearPendingOps();
         }
-
-//        JSONObject from = fromArr.getJSONObject(0);
-//
-//
-//        JSONObject toObj = jsonArray.getJSONObject(1);
-//        String toData = toObj.getString("data");
-//        JSONArray toArr = new JSONArray(toData);
-//        JSONObject to = toArr.getJSONObject(0);
-//
-//        from.put("rfidTag",to.getString("rfidTag"));
-//        System.out.println("RESSS from------>>>>>>> "+from);
-//        System.out.println("RESSS to------>>>>>>> "+to);
-//
+        return new JSONObject();
+    }
 
 
+    public static JSONObject cycleCount(String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager,String status) throws JSONException, InterruptedException {
+
+        System.out.println("story------>>>>>>> "+story);
+
+        JSONArray jsonArray = new JSONArray(story);
+        JSONObject locationObj = jsonArray.getJSONObject(0);
+        String locationObjString = locationObj.getString("data");
+        JSONArray locationArr = new JSONArray(locationObjString);
+        JSONObject location = locationArr.getJSONObject(0);
+
+        JSONObject inventoryObj = jsonArray.getJSONObject(1);
+        String inventoryObjString = inventoryObj.getString("data");
+        JSONArray inventoryArr = new JSONArray(inventoryObjString);
+
+        for (int i = 0; i < inventoryArr.length(); i++) {
+            inventoryArr.getJSONObject(i).put("cycleCountBy",Constants.LOCATION);
+            inventoryArr.getJSONObject(i).put("cycleCountById",location.getString("locationIds"));
+        }
+        System.out.println("RESSS inventoryArr------>>>>>>> "+inventoryArr.toString());
+
+        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkCycleCount,inventoryArr);
+        if(res1.getInt("status") == 200) {
+            System.out.println("RESSS tag updated------>>>>>>> "+res1);
+            sessionManager.clearPendingOps();
+        }
+        return new JSONObject();
+    }
+
+
+    public static JSONObject moveInventoryToLocation (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager,String status) throws JSONException, InterruptedException {
+        System.out.println("RESSSS Inventory move---->"+story);
+        JSONArray jsonArray = new JSONArray(story);
+        JSONObject locationObj = jsonArray.getJSONObject(0);
+        String locationObjString = locationObj.getString("data");
+        JSONArray locationArr = new JSONArray(locationObjString);
+        JSONObject location = locationArr.getJSONObject(0);
+
+        JSONObject inventoryObj = jsonArray.getJSONObject(1);
+        String inventoryObjString = inventoryObj.getString("data");
+        JSONArray inventoryArr = new JSONArray(inventoryObjString);
+
+        for (int i = 0; i < inventoryArr.length(); i++) {
+            inventoryArr.getJSONObject(i).put("locationIds",location.getString("locationIds"));
+        }
+
+        System.out.println("RESSSS Inventory move location---->"+location);
+        System.out.println("RESSSS Inventory move inventoryArr---->"+inventoryArr);
+        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateBulkTags,inventoryArr);
+        if(res1.getInt("status") == 200) {
+            System.out.println("RESSS tag updated------>>>>>>> "+res1);
+            sessionManager.clearPendingOps();
+        }
         return new JSONObject();
     }
 

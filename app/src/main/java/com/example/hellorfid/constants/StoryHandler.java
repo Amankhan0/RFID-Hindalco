@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.example.hellorfid.activities.ActionActivity;
 import com.example.hellorfid.activities.HandheldTerminalActivity;
+import com.example.hellorfid.activities.LoadProductAcordingToOrdersActivity;
 import com.example.hellorfid.activities.MultiActionActivity;
 import com.example.hellorfid.activities.PendingOpsActivity;
 import com.example.hellorfid.session.SessionManager;
@@ -125,6 +126,82 @@ public class StoryHandler {
         return "";
 
     }
+
+
+    public static String orderStory(SessionManager sessionManager, Context context,String supportData,String type) throws JSONException {
+        try {
+            JSONArray jsonArray=  new JSONArray();
+            JSONObject story1 = StoryHandler.storyJsonObj("1",Constants.LOCATION,Constants.LOCATION,false,"SCAN","NO_DATA","","1");
+            JSONObject story2 = StoryHandler.storyJsonObj("2",Constants.INVENTORY,Constants.INVENTORY,false,"SCAN","NO_DATA",sessionManager.getProductData().toString(),sessionManager.getProductData().getString("quantity"));
+            JSONObject story3 = StoryHandler.storyJsonObj("3",Constants.UPDATE,Constants.UPDATE,false,"UPDATE","NO_DATA","","0");
+            jsonArray.put(story1);
+            jsonArray.put(story2);
+            jsonArray.put(story3);
+            JSONObject finalarr = StoryHandler.storyJson("Start scanner for "+sessionManager.getOptionSelected()+" Order",sessionManager.getOptionSelected(),jsonArray);
+            JSONArray jsonArray1=  new JSONArray();
+            jsonArray1.put(finalarr);
+            System.out.println("finalarr.toString()"+jsonArray1.toString());
+            sessionManager.setStory(jsonArray1.toString());
+            System.out.println("finalarr.toString()"+jsonArray1.toString());
+            Intent intent = new Intent(context, MultiActionActivity.class);
+            context.startActivity(intent);
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
+
+
+    public static void cycleCountStory(SessionManager sessionManager, Context context,String supportData,String type) throws JSONException {
+        try {
+            JSONArray jsonArray=  new JSONArray();
+            JSONObject story1 = StoryHandler.storyJsonObj("1",Constants.LOCATION,Constants.LOCATION,false,"SCAN","NO_DATA","","1");
+            JSONObject story2 = StoryHandler.storyJsonObj("2",Constants.INVENTORY,Constants.INVENTORY,false,"SCAN","NO_DATA","NA","1000");
+            JSONObject story3 = StoryHandler.storyJsonObj("3",Constants.UPDATE,Constants.UPDATE,false,"UPDATE","NO_DATA","","0");
+            jsonArray.put(story1);
+            jsonArray.put(story2);
+            jsonArray.put(story3);
+            JSONObject finalarr = StoryHandler.storyJson(Constants.CYCLE_COUNT, Constants.CYCLE_COUNT,jsonArray);
+            JSONArray jsonArray1=  new JSONArray();
+            jsonArray1.put(finalarr);
+            System.out.println("finalarr.toString()"+jsonArray1.toString());
+            sessionManager.setStory(jsonArray1.toString());
+            System.out.println("finalarr.toString()"+jsonArray1.toString());
+            Intent intent = new Intent(context, MultiActionActivity.class);
+            context.startActivity(intent);
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static void inventoryMoveStory(SessionManager sessionManager, Context context,String supportData,String type) throws JSONException {
+        try {
+            JSONArray jsonArray=  new JSONArray();
+            JSONObject story1 = StoryHandler.storyJsonObj("1",Constants.LOCATION,Constants.LOCATION,false,"SCAN","NO_DATA","","1");
+            JSONObject story2 = StoryHandler.storyJsonObj("2",Constants.INVENTORY,Constants.INVENTORY,false,"SCAN","NO_DATA","NA","1000");
+            JSONObject story3 = StoryHandler.storyJsonObj("3",Constants.UPDATE,Constants.UPDATE,false,"UPDATE","NO_DATA","","0");
+            jsonArray.put(story1);
+            jsonArray.put(story2);
+            jsonArray.put(story3);
+            JSONObject finalarr = StoryHandler.storyJson(Constants.MOVE+" "+Constants.INVENTORY, Constants.MOVE,jsonArray);
+            JSONArray jsonArray1=  new JSONArray();
+            jsonArray1.put(finalarr);
+            System.out.println("finalarr.toString()"+jsonArray1.toString());
+            sessionManager.setStory(jsonArray1.toString());
+            System.out.println("finalarr.toString()"+jsonArray1.toString());
+            Intent intent = new Intent(context, MultiActionActivity.class);
+            context.startActivity(intent);
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 
 
 

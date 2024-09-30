@@ -1,5 +1,6 @@
 package com.example.hellorfid.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,18 +11,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hellorfid.R;
 import com.example.hellorfid.constants.Constants;
+import com.example.hellorfid.constants.StoryHandler;
 import com.example.hellorfid.session.SessionManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HandheldTerminalActivity extends AppCompatActivity {
 
-    private Button orderButton,inboundorderButton, buttonReplace, buttonHold,buttonUnHold, buttonConsume, buttonMapping;
+    private Button inventoryMove,cycleCount,orderButton,inboundorderButton, buttonReplace, buttonHold,buttonUnHold, buttonConsume, buttonMapping;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.handheldterminal);
 
         SessionManager sessionManager = new SessionManager(this);
+
 
 
 
@@ -38,9 +46,21 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         buttonHold = findViewById(R.id.buttonHold);
         buttonUnHold = findViewById(R.id.unHold);
         buttonMapping = findViewById(R.id.buttonMapping);
+        cycleCount= findViewById(R.id.cycleCount);
+        inventoryMove = findViewById(R.id.inventoryMove);
 
 
-
+        inventoryMove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    sessionManager.setOptionSelected(Constants.MOVE+"_"+Constants.INVENTORY);
+                    StoryHandler.inventoryMoveStory(sessionManager,HandheldTerminalActivity.this,"NA",Constants.MOVE);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,10 +71,24 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             }
         });
 
+        cycleCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    sessionManager.setOptionSelected(Constants.CYCLE_COUNT);
+                    StoryHandler.cycleCountStory(sessionManager,HandheldTerminalActivity.this,"NA",Constants.CYCLE_COUNT);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
         buttonMapping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Handle Receiving button click
+//                sessionManager.setOptionSelected(Constants.MAPPING);
                 startActivity(new Intent(HandheldTerminalActivity.this, Mapping.class));
             }
         });
@@ -71,9 +105,33 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         buttonHold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle Receiving button click
-                sessionManager.setOptionSelected(Constants.HOLD);
-                startActivity(new Intent(HandheldTerminalActivity.this, WhichProductLocationOrZone.class));
+
+                try {
+                    StoryHandler.holdInventory(sessionManager,HandheldTerminalActivity.this,"NA",Constants.HOLD);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+//                try {
+//                    JSONArray jsonArray=  new JSONArray();
+//                    JSONObject story1 = StoryHandler.storyJsonObj("1",Constants.LOCATION,Constants.LOCATION,false,"SCAN","NO_DATA","","1");
+////                    JSONObject story2 = StoryHandler.storyJsonObj("2",Constants.INVENTORY,false,"SCAN","NO_DATA");
+//                    JSONObject story3 = StoryHandler.storyJsonObj("3",Constants.UPDATE,Constants.UPDATE,false,"UPDATE","NO_DATA","","0");
+//                    jsonArray.put(story1);
+////                    jsonArray.put(story2);
+//                    jsonArray.put(story3);
+//                    JSONObject finalarr = StoryHandler.storyJson("Hold Location","Hold Location",jsonArray);
+//                    JSONArray jsonArray1=  new JSONArray();
+//                    jsonArray1.put(finalarr);
+//                    System.out.println("finalarr.toString()"+jsonArray1.toString());
+//                    sessionManager.setStory(jsonArray1.toString());
+//                    System.out.println("finalarr.toString()"+jsonArray1.toString());
+//                    Intent intent = new Intent(HandheldTerminalActivity.this, MultiActionActivity.class);
+//                    startActivity(intent);
+
+//                } catch (JSONException e) {
+//                    throw new RuntimeException(e);
+//                }
             }
         });
 
@@ -81,8 +139,14 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         buttonUnHold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                try {
+                    StoryHandler.holdInventory(sessionManager,HandheldTerminalActivity.this,"NA",Constants.UNHOLD);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
                 // Handle Receiving button click
-                startActivity(new Intent(HandheldTerminalActivity.this, UnHoldActivity.class));
+//                startActivity(new Intent(HandheldTerminalActivity.this, UnHoldActivity.class));
             }
         });
 
@@ -90,9 +154,16 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle Receiving button click
-                sessionManager.clearReplaceScan();
-                sessionManager.clearSecondReplaceScan();
-                startActivity(new Intent(HandheldTerminalActivity.this, ReplaceMainActivity.class));
+
+                try {
+                    StoryHandler.replace(sessionManager,HandheldTerminalActivity.this,"NA",Constants.INVENTORY);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+//                sessionManager.clearReplaceScan();
+//                sessionManager.clearSecondReplaceScan();
+//                startActivity(new Intent(HandheldTerminalActivity.this, ReplaceMainActivity.class));
             }
         });
 

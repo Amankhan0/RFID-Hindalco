@@ -27,10 +27,13 @@ public class SessionManager {
     private static final String OPTION_SELECTED = "OPTION_SELECTED";
     private static final String PRODUCT_DATA = "PRODUCT_DATA";
     private static final String LOCATION_DATA = "LOCATION_DATA";
+    private static final String STORY = "STORY";
+    private static final String CASE_EXCUTOR = "CASE_EXCUTOR";
 
     private static final String CHECK_TAG_ON = "CHECK_TAG_ON";
     private static final String QTY = "QTY";
     private static final String SET_SCAN_COUNT = "SET_SCAN_COUNT";
+    private static final String PENDING_OPS = "PENDING_OPS";
 
 
     private static final String BatchData = "BatchData";
@@ -45,6 +48,24 @@ public class SessionManager {
         editor = sharedPreferences.edit();
     }
 
+    public void setPendingOps(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(PENDING_OPS, token);
+        editor.apply();
+    }
+
+
+    public void setCaseExcutor(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(CASE_EXCUTOR, token);
+        editor.apply();
+    }
+
+    public void setStory(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(STORY, token);
+        editor.apply();
+    }
 
     public void setLocationData(String token) {
         System.out.println("Check Request 6 "+ token);
@@ -134,6 +155,13 @@ public class SessionManager {
         return sharedPreferences.getString(SET_SCAN_COUNT, null);
     }
 
+
+    // Get saved token
+    public String getCaseExcutor() {
+        return sharedPreferences.getString(CASE_EXCUTOR, null);
+    }
+
+
     // Get saved token
     public JSONObject getOrderData() throws JSONException {
         String fec = sharedPreferences.getString(ORDER_DATA, null);
@@ -182,6 +210,12 @@ public class SessionManager {
     // Get saved token
     public String getBuildingId() {
         return sharedPreferences.getString(buildingId, null);
+    }
+
+
+    // Get saved token
+    public String getPendingOps() {
+        return sharedPreferences.getString(PENDING_OPS, null);
     }
 
     // clear building
@@ -244,6 +278,12 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void clearPendingOps() {
+        editor.remove(STORY);
+        editor.remove(PENDING_OPS);
+        editor.apply();
+    }
+
 
     // Save payload
     public void setPayload(String payload) {
@@ -265,6 +305,12 @@ public class SessionManager {
     // Get saved role
     public String getRole() {
         return sharedPreferences.getString(KEY_ROLE, null);
+    }
+
+
+    // Get saved role
+    public String getStory() {
+        return sharedPreferences.getString(STORY, null);
     }
 
     // Clear session

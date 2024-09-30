@@ -106,9 +106,7 @@ public class WhichProductLocationOrZone extends AppCompatActivity {
         sessionManager.setCheckTagOn(Constants.LOCATION);
         sessionManager.setSetScanCount("1");
         Intent intent = new Intent(WhichProductLocationOrZone.this, MainActivity.class);
-        intent.putExtra("mode", "scanLocation");
-        intent.putExtra("totalInventory", 1);
-        startActivityForResult(intent, REQUEST_CODE_SCAN_LOCATION);
+        startActivity(intent);
     }
 
     private void navigateBack() {

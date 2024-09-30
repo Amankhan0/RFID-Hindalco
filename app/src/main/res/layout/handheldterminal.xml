@@ -1,117 +1,238 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:background="@color/white"-->
+<!--    tools:context=".reader.MainActivity">-->
+
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--        android:id="@+id/toolbar"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="30pt"-->
+<!--        android:background="@color/white"-->
+<!--        android:elevation="4dp"-->
+<!--        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent">-->
+
+<!--        <TextView-->
+<!--        android:layout_width="15pt"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text=""-->
+<!--        android:gravity="center"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textAlignment="center" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="100pt"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Handheld Terminal"-->
+<!--            android:gravity="center"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textAlignment="center" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/profile"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/profile" />-->
+
+<!--    </androidx.appcompat.widget.Toolbar>-->
+
+<!--    &lt;!&ndash; Buttons grid &ndash;&gt;-->
+<!--    <GridLayout-->
+<!--        android:id="@+id/gridLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10pt"-->
+<!--        android:layout_marginLeft="5pt"-->
+<!--        android:columnCount="2"-->
+<!--        android:rowCount="2"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/toolbar"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent">-->
+
+<!--        &lt;!&ndash; Add Bag &ndash;&gt;-->
+<!--&lt;!&ndash;        <Button&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/buttonAddBag"&ndash;&gt;-->
+<!--&lt;!&ndash;            style="@style/TerminalButtonStyle"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:text="Add batch" />&ndash;&gt;-->
+
+<!--        &lt;!&ndash; Receiving button &ndash;&gt;-->
+<!--&lt;!&ndash;        <Button&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/buttonReceiving"&ndash;&gt;-->
+<!--&lt;!&ndash;            style="@style/TerminalButtonStyle"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:text="Receiving" />&ndash;&gt;-->
+
+<!--        &lt;!&ndash; Picking button &ndash;&gt;-->
+<!--&lt;!&ndash;        <Button&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/buttonPicking"&ndash;&gt;-->
+<!--&lt;!&ndash;            style="@style/TerminalButtonStyle"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:text="Picking" />&ndash;&gt;-->
+
+<!--        <Button-->
+<!--            android:id="@+id/ordersButton"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Outbound Orders" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/inBoundOrder"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Inbound Orders" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/buttonHold"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Hold" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/unHold"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Un Hold" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/buttonReplace"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Replace" />-->
+
+
+<!--        <Button-->
+<!--            android:id="@+id/buttonConsume"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Consume" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/buttonMapping"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Mapping" />-->
+<!--        <Button-->
+<!--            android:id="@+id/cycleCount"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Cycle Count" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/inventoryMove"-->
+<!--            style="@style/TerminalButtonStyle"-->
+<!--            android:text="Move" />-->
+
+<!--    </GridLayout>-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     tools:context=".reader.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="30pt"
-        android:background="@color/white"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-        android:layout_width="15pt"
-        android:textColor="@color/black"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textAlignment="center" />
-
-        <TextView
-            android:layout_width="100pt"
-            android:textColor="@color/black"
-            android:layout_height="wrap_content"
-            android:text="Handheld Terminal"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textAlignment="center" />
-
-        <ImageView
-            android:id="@+id/profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/profile" />
-
-    </androidx.appcompat.widget.Toolbar>
-
-    <!-- Buttons grid -->
-    <GridLayout
-        android:id="@+id/gridLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10pt"
-        android:layout_marginLeft="5pt"
-        android:columnCount="2"
-        android:rowCount="2"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <!-- Add Bag -->
-<!--        <Button-->
-<!--            android:id="@+id/buttonAddBag"-->
-<!--            style="@style/TerminalButtonStyle"-->
-<!--            android:text="Add batch" />-->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="30pt"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Receiving button -->
-<!--        <Button-->
-<!--            android:id="@+id/buttonReceiving"-->
-<!--            style="@style/TerminalButtonStyle"-->
-<!--            android:text="Receiving" />-->
+            <TextView
+                android:layout_width="15pt"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text=""
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textAlignment="center" />
 
-        <!-- Picking button -->
-<!--        <Button-->
-<!--            android:id="@+id/buttonPicking"-->
-<!--            style="@style/TerminalButtonStyle"-->
-<!--            android:text="Picking" />-->
+            <TextView
+                android:layout_width="100pt"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="Handheld Terminal"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textAlignment="center" />
 
-        <Button
-            android:id="@+id/ordersButton"
-            style="@style/TerminalButtonStyle"
-            android:text="Outbound Orders" />
+            <ImageView
+                android:id="@+id/profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/profile" />
 
-        <Button
-            android:id="@+id/inBoundOrder"
-            style="@style/TerminalButtonStyle"
-            android:text="Inbound Orders" />
+        </androidx.appcompat.widget.Toolbar>
 
-        <Button
-            android:id="@+id/buttonHold"
-            style="@style/TerminalButtonStyle"
-            android:text="Hold" />
+        <!-- Buttons grid -->
+        <GridLayout
+            android:id="@+id/gridLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10pt"
+            android:layout_marginLeft="5pt"
+            android:columnCount="2"
+            android:rowCount="2"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/unHold"
-            style="@style/TerminalButtonStyle"
-            android:text="Un Hold" />
+            <Button
+                android:id="@+id/ordersButton"
+                style="@style/TerminalButtonStyle"
+                android:text="Outbound Orders" />
 
-        <Button
-            android:id="@+id/buttonReplace"
-            style="@style/TerminalButtonStyle"
-            android:text="Replace" />
+            <Button
+                android:id="@+id/inBoundOrder"
+                style="@style/TerminalButtonStyle"
+                android:text="Inbound Orders" />
 
+            <Button
+                android:id="@+id/buttonHold"
+                style="@style/TerminalButtonStyle"
+                android:text="Hold" />
 
-        <Button
-            android:id="@+id/buttonConsume"
-            style="@style/TerminalButtonStyle"
-            android:text="Consume" />
+            <Button
+                android:id="@+id/unHold"
+                style="@style/TerminalButtonStyle"
+                android:text="Un Hold" />
 
-        <Button
-            android:id="@+id/buttonMapping"
-            style="@style/TerminalButtonStyle"
-            android:text="Mapping" />
+            <Button
+                android:id="@+id/buttonReplace"
+                style="@style/TerminalButtonStyle"
+                android:text="Replace" />
 
+            <Button
+                android:id="@+id/buttonConsume"
+                style="@style/TerminalButtonStyle"
+                android:text="Consume" />
 
+            <Button
+                android:id="@+id/buttonMapping"
+                style="@style/TerminalButtonStyle"
+                android:text="Mapping" />
 
-    </GridLayout>
+            <Button
+                android:id="@+id/cycleCount"
+                style="@style/TerminalButtonStyle"
+                android:text="Cycle Count" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/inventoryMove"
+                style="@style/TerminalButtonStyle"
+                android:text="Move" />
+
+        </GridLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

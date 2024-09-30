@@ -27,9 +27,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hellorfid.activities.ActionActivity;
 import com.example.hellorfid.activities.AddBatchFormActivity;
 import com.example.hellorfid.activities.BatchActivity;
 import com.example.hellorfid.activities.HandheldTerminalActivity;
+import com.example.hellorfid.activities.MultiActionActivity;
 import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.constants.Helper;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
@@ -73,10 +75,12 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
     private static RFIDReader reader;
     private static final String TAG = "DEMO";
     private TextView tagTextView;
-//    private SessionManagerBag sessionManagerBag;
+    private   String stroyId;
+    private boolean isError = false;
+    //    private SessionManagerBag sessionManagerBag;
     private SessionManager sessionManager;
 
-    private int totalInventoryToScan;
+    private int totalInventoryToScan = 0;
     private ApiCallBackWithToken apiCallBackWithToken;
     private Button resetButton;
     public static Button submitButton;
@@ -98,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
         setContentView(R.layout.activity_main);
 
         apiCallBackWithToken = new ApiCallBackWithToken(this);
-
         actionName = findViewById(R.id.actionName);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -106,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 //        sessionManagerBag = new SessionManagerBag(this);
         sessionManager = new SessionManager(this);
         actionName.setText("Scanning for "+sessionManager.getCheckTagOn());
-
+        startExecutor();
+        initializeRecyclerView();
         tagListArr = new ArrayList<>();
 
         if (mediaPlayer == null) {
@@ -132,13 +136,14 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
         tagTextView = findViewById(R.id.totalScan1);
 
-        totalInventoryToScan =  parseInt(sessionManager.getSetScanCount());
+        totalInventoryToScan =  parseInt(sessionManager.getSetScanCount()==null?"0":sessionManager.getSetScanCount());
 
         Log.d(TAG, "Total tags to scan initialized to: " + totalInventoryToScan);
 
         resetButton = findViewById(R.id.submitButton1);
         submitButton = findViewById(R.id.submitButton);
         scannedTagIds = new HashSet<>();
+        submitButton.setEnabled(false);
 
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,20 +156,13 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
             @Override
             public void onClick(View view) {
 
-
-                System.out.println("new" +
-                        " array list---"+tagListArr.toString());
-
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("result_key", tagListArr.toString());
-                setResult(RESULT_OK, resultIntent);
-                Log.d("SubmitButton", "About to call finish()");
-                finish();
-                Log.d("SubmitButton", "finish() called");
+                saveDataUsingId();
+                Log.d(TAG, "savedData: " + sessionManager.getCaseExcutor());
+                startExecutor();
+                resetButton.performClick();
 
             }
         });
-        initializeRecyclerView();
 
         // SDK
         if (readers == null) {
@@ -233,6 +231,8 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
         tagList.clear();
         tagListArr.clear();
         tagAdapter.notifyDataSetChanged();
+        isError = false;
+        submitButton.setEnabled(false);
         updateTagCountDisplay();
         updateSubmitButtonState();
 
@@ -321,13 +321,15 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                         tagList.add(new Tag(tagId, isOverLimit, "WRONG_BUILDING"));
                         tagAdapter.notifyItemInserted(tagList.size() - 1);
                         updateTagCountDisplay();
-                        updateSubmitButtonState();
+                        submitButton.setEnabled(false);
+                        isError = true;
                     }
                 }else {
                     tagList.add(new Tag(tagId, isOverLimit, "Wrong ops "+obj.getString("tagType")));
                     tagAdapter.notifyItemInserted(tagList.size() - 1);
                     updateTagCountDisplay();
-                    updateSubmitButtonState();
+                    submitButton.setEnabled(false);
+                    isError = true;
                 }
             } else {
                 System.out.println("response json tag 6 tag not in db");
@@ -336,15 +338,19 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
         }else{
 
-            if(!sessionManager.getCheckTagOn().equals(Constants.INVENTORY)){
-                submitButton.setEnabled(false);
-            }else {
-                submitButton.setEnabled(true);
 
+            if(!isError){
+                submitButton.setEnabled(true);
             }
 
+
+//            if(!sessionManager.getCheckTagOn().equals(Constants.INVENTORY)){
+//                submitButton.setEnabled(false);
+//            }else {
+//            }
+
             JSONObject tagJson = Helper.TagJson();
-            tagJson.put("tagType","New Tags");
+            tagJson.put("tagType",Constants.NEW_TAG);
             tagJson.put("rfidTag",tagId);
             tagListArr.add(tagJson.toString());
             tagList.add(new Tag(tagId, isOverLimit,tagJson.getString("tagType")));
@@ -473,6 +479,67 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                     return null;
                 }
             }.execute();
+        }
+    }
+
+    private void startExecutor() {
+        try {
+            JSONArray storyArray = new JSONArray(sessionManager.getCaseExcutor());
+            for (int i = 0; i < storyArray.length(); i++) {
+                JSONObject action = storyArray.getJSONObject(i);
+                String actionType = action.getString("actionType");
+                boolean isExcuted = action.getBoolean("isExcuted");
+                if (!isExcuted) {
+                    Log.d(TAG, "Action already executed: " + action);
+                    action.put("isExcuted", true);
+                    stroyId = action.getString("id");
+                    sessionManager.setCheckTagOn(action.getString("caseName"));
+                    totalInventoryToScan = parseInt(action.getString("scanQty"));
+                    sessionManager.setSetScanCount(action.getString("scanQty"));
+                    actionName.setText(action.getString("actionName"));
+
+                    sessionManager.setCaseExcutor(storyArray.toString());
+
+                    handleCase(actionType,action,storyArray);
+                    break;
+                }
+                Log.d(TAG, "Final action triggered: " + action);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void saveDataUsingId (){
+        try {
+            JSONArray storyArray = new JSONArray(sessionManager.getCaseExcutor());
+            for (int i = 0; i < storyArray.length(); i++) {
+                JSONObject action = storyArray.getJSONObject(i);
+                String id = action.getString("id");
+                if (stroyId.equals(id)) {
+                    Log.d(TAG, "Action already executed: " + action);
+                    action.put("isExcuted", true);
+                    action.put("data", tagListArr.toString());
+                    sessionManager.setCaseExcutor(storyArray.toString());
+                    break;
+                }
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleCase(String actionType,JSONObject item,JSONArray jsonArray) throws JSONException {
+        switch (actionType) {
+            case Constants.UPDATE:
+                startActivity(new Intent(MainActivity.this, ActionActivity.class));
+                break;
+            default:
+                Log.w(TAG, "Unknown action type: " + actionType);
+                break;
         }
     }
 }

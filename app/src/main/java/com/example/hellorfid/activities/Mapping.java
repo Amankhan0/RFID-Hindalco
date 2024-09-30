@@ -280,6 +280,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hellorfid.R;
 import com.example.hellorfid.constants.Constants;
+import com.example.hellorfid.constants.StoryHandler;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.reader.MainActivity;
 import com.example.hellorfid.session.SessionManager;
@@ -374,6 +375,7 @@ public class Mapping extends AppCompatActivity {
                 if (!selectedOption.equals("Choose an option")) {
                     Toast.makeText(Mapping.this, "Selected: " + selectedOption, Toast.LENGTH_SHORT).show();
                     currentEndpoint = getEndpointForOption(selectedOption);
+                    sessionManager.setOptionSelected(selectedOption.toUpperCase());
                     if (currentEndpoint != null) {
                         try {
                             hitApi(currentEndpoint);
@@ -433,12 +435,23 @@ public class Mapping extends AppCompatActivity {
         itemListView.setAdapter(adapter);
         itemListView.setOnItemClickListener((parent, view, position, id) -> {
             selectedItemInfo = itemData.get(position);
-            System.out.println("Selected item data: " + selectedItemInfo.toString());
+            try {
+                StoryHandler.mappingVehicle(sessionManager,this,selectedItemInfo.toString(),sessionManager.getOptionSelected());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
 
-            selectedEndpointInfo = getEndpointInfo(currentEndpoint);
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("totalInventory", 1);
-            startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
+
+//            System.out.println("Selected item data: " + selectedItemInfo.toString());
+//            selectedEndpointInfo = getEndpointInfo(currentEndpoint);
+//            Intent intent = new Intent(this, MainActivity.class);
+//            intent.putExtra("totalInventory", 1);
+//            startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
+
+
+
+
+
         });
     }
 

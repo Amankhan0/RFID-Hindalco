@@ -16,6 +16,7 @@ import androidx.cardview.widget.CardView;
 import com.example.hellorfid.R;
 import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.constants.Helper;
+import com.example.hellorfid.constants.StoryHandler;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.model.CommanModel;
 import com.example.hellorfid.reader.MainActivity;
@@ -139,23 +140,14 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
 
                     try {
                         sessionManager.setProductData(sessionManager.getOrderData().getJSONArray("productIds").get(index).toString());
-                    Intent intent = new Intent(LoadProductAcordingToOrdersActivity.this, WhichProductLocationOrZone.class);
-                    intent.putExtra("orderData", orderData);
-                    intent.putExtra("selectedProdutIndex", String.valueOf(index) );
-                    intent.putExtra("quantity", String.valueOf(quantity));
-                    startActivity(intent);
+
+                        StoryHandler.orderStory(sessionManager,LoadProductAcordingToOrdersActivity.this,"NA",Constants.INBOUND_ORDER);
+
 
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
 
-
-
-
-//                    productIndex = index;
-//                    Intent intent = new Intent(LoadProductAcordingToOrdersActivity.this, MainActivity.class);
-//                    intent.putExtra("totalInventory", quantity);
-//                    startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
                 }
             });
         }

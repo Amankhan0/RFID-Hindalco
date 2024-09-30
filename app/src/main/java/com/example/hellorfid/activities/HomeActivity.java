@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.constants.Helper;
+import com.example.hellorfid.constants.StoryHandler;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.R;
 import com.example.hellorfid.session.SessionManager;
@@ -52,7 +53,11 @@ public class HomeActivity extends AppCompatActivity {
         loadingText = findViewById(R.id.loadingText);
 
         SessionManager sessionManager = new SessionManager(this);
-
+        try {
+            StoryHandler.checkPendingOps(sessionManager,this);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
 
         Helper.setUserDetails(sessionManager);
 

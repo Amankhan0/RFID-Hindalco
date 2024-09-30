@@ -232,6 +232,11 @@
                 style="@style/TerminalButtonStyle"
                 android:text="Move" />
 
+            <Button
+                android:id="@+id/generalStatusChange"
+                style="@style/TerminalButtonStyle"
+                android:text="General Status Change" />
+
         </GridLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

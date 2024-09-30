@@ -15,6 +15,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.GeneralStatusChangeActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.PendingOpsActivity"
             android:exported="false" />
         <activity

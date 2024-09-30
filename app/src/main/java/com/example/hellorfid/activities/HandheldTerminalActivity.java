@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 public class HandheldTerminalActivity extends AppCompatActivity {
 
-    private Button inventoryMove,cycleCount,orderButton,inboundorderButton, buttonReplace, buttonHold,buttonUnHold, buttonConsume, buttonMapping;
+    private Button inventoryMove,cycleCount,orderButton,inboundorderButton, buttonReplace, buttonHold,buttonUnHold, buttonConsume, buttonMapping, generalStatusChange;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -48,7 +48,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         buttonMapping = findViewById(R.id.buttonMapping);
         cycleCount= findViewById(R.id.cycleCount);
         inventoryMove = findViewById(R.id.inventoryMove);
-
+        generalStatusChange = findViewById(R.id.generalStatusChange);
 
         inventoryMove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +171,14 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HandheldTerminalActivity.this, ConsumeActivity.class));
+            }
+        });
+
+        generalStatusChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HandheldTerminalActivity.this, GeneralStatusChangeActivity.class));
+//                StoryHandler.generalStatusChangeStory(sessionManager, HandheldTerminalActivity.this, "NA", Constants.OPERATION_STATUS_CHANGE);
             }
         });
 

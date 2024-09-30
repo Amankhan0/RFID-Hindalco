@@ -18,6 +18,8 @@ public class Constants {
     public final static String updateOrder = "order/api/updateOrder";
     public final static String updateBulkTags = "iot/api/updateBulkTags";
     public final static String addBulkCycleCount = "iot/api/addBulkCycleCount";
+    public final static String searchGeneral = "helper/api/searchGeneral";
+
 
 
 //    public final static String searchRfidTag = "iot/api/searchRfidTag";
@@ -51,6 +53,7 @@ public class Constants {
     public static final String INVENTORY = "INVENTORY";
     public static final String CYCLE_COUNT = "CYCLE_COUNT";
     public static final String MOVE = "MOVE";
+    public static final String OPERATION_STATUS_CHANGE = "OPERATION_STATUS_CHANGE";
 
 
     public static String EXIT_ACTION = "EXIT";

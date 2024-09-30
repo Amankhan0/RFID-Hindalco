@@ -266,6 +266,8 @@ public class CaseExecutorHandler {
             System.out.println("RESSS inventoryArr------>>>>>>> "+inventoryArr.get(i));
         }
 
+        System.out.println("Final inventoryArr" + inventoryArr.toString());
+
         JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateBulkTags,inventoryArr);
         if(res1.getInt("status") == 200) {
             System.out.println("RESSS tag updated------>>>>>>> "+res1);
@@ -322,7 +324,7 @@ public class CaseExecutorHandler {
 
         System.out.println("RESSSS Inventory move location---->"+location);
         System.out.println("RESSSS Inventory move inventoryArr---->"+inventoryArr);
-        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateBulkTags,inventoryArr);
+        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateLocation,inventoryArr);
         if(res1.getInt("status") == 200) {
             System.out.println("RESSS tag updated------>>>>>>> "+res1);
             sessionManager.clearPendingOps();
@@ -330,6 +332,27 @@ public class CaseExecutorHandler {
         return new JSONObject();
     }
 
+
+    public static JSONObject generalStatusChange (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager,String status) throws JSONException, InterruptedException {
+        System.out.println("RESSSS Inventory move---->"+story);
+
+//        JSONObject inventoryObj = jsonArray.getJSONObject(1);
+//        String inventoryObjString = inventoryObj.getString("data");
+//        JSONArray inventoryArr = new JSONArray(inventoryObjString);
+//
+//        for (int i = 0; i < inventoryArr.length(); i++) {
+//            inventoryArr.getJSONObject(i).put("locationIds",location.getString("locationIds"));
+//        }
+//
+//        System.out.println("RESSSS Inventory move location---->"+location);
+//        System.out.println("RESSSS Inventory move inventoryArr---->"+inventoryArr);
+////        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateLocation,inventoryArr);
+////        if(res1.getInt("status") == 200) {
+////            System.out.println("RESSS tag updated------>>>>>>> "+res1);
+////            sessionManager.clearPendingOps();
+////        }
+        return new JSONObject();
+    }
 
 
 }

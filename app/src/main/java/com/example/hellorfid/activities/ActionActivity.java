@@ -3,6 +3,7 @@ package com.example.hellorfid.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class ActionActivity extends AppCompatActivity {
 
     ApiCallBackWithToken apiCallBackWithToken;
     SessionManager sessionManager;
+    TextView tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +37,8 @@ public class ActionActivity extends AppCompatActivity {
         System.out.println("result---->>>"+sessionManager.getStory());
         apiCallBackWithToken = new ApiCallBackWithToken(this);
         sessionManager.setPendingOps("true");
-
-
+        tv = findViewById(R.id.activityTextView);
+//        tv.setText("Executing Case");
         try {
             CaseExecute();
         } catch (JSONException e) {
@@ -92,6 +94,11 @@ public class ActionActivity extends AppCompatActivity {
             case Constants.MOVE:
                 JSONObject res10 = CaseExecutorHandler.moveInventoryToLocation(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager,Constants.ACTIVE);
                 System.out.println("result---->>> Move ");
+                break;
+
+            case Constants.OPERATION_STATUS_CHANGE:
+                JSONObject res11 = CaseExecutorHandler.inventoryStatusUpdate(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager,sessionManager.getOptionSelected());
+                System.out.println("OPERATION_STATUS_CHANGE called");
                 break;
             default:
                 break;

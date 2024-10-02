@@ -19,7 +19,8 @@ public class Constants {
     public final static String updateBulkTags = "iot/api/updateBulkTags";
     public final static String addBulkCycleCount = "iot/api/addBulkCycleCount";
     public final static String searchGeneral = "helper/api/searchGeneral";
-
+    public static final String DISPATCHED = "DISPATCHED";
+    public static String searchRole = "user/api/searchRole";
 
 
 //    public final static String searchRfidTag = "iot/api/searchRfidTag";
@@ -54,6 +55,8 @@ public class Constants {
     public static final String CYCLE_COUNT = "CYCLE_COUNT";
     public static final String MOVE = "MOVE";
     public static final String OPERATION_STATUS_CHANGE = "OPERATION_STATUS_CHANGE";
+    public static final String INBOUND = "INBOUND";
+    public static final String OUTBOUND = "OUTBOUND";
 
 
     public static String EXIT_ACTION = "EXIT";
@@ -110,7 +113,6 @@ public class Constants {
     public static String OUTBOUND_ORDER= "OUTBOUND";
     public static String INBOUND_ORDER= "INBOUND";
     public static String HOLD_LOCATION= "HOLD_LOCATION";
-
 
 
 

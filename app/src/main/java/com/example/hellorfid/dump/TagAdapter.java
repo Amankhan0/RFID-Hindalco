@@ -58,6 +58,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
             }
         }else {
             holder.scanningFor.setBackgroundColor(Color.parseColor("#9e0005"));
+
             holder.tagNumber.setTextColor(context.getResources().getColor(R.color.red));
             holder.lotNumber.setTextColor(context.getResources().getColor(R.color.red));
         }

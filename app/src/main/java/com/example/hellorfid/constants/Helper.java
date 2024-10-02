@@ -313,7 +313,9 @@ public class Helper {
         JSONObject decodedToken = null;
         try {
             decodedToken = JwtDecoder.decoded(sessionManager.getToken());
+            System.out.println("decodedToken-- "+decodedToken);
             String userId = decodedToken.getString("userId");
+
             sessionManager.setUserId(userId);// Assuming 'sub' claim contains the user ID
             System.out.println("userId"+userId);
         } catch (Exception e) {

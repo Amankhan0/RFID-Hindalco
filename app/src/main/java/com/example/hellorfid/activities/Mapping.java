@@ -436,7 +436,7 @@ public class Mapping extends AppCompatActivity {
         itemListView.setOnItemClickListener((parent, view, position, id) -> {
             selectedItemInfo = itemData.get(position);
             try {
-                StoryHandler.mappingVehicle(sessionManager,this,selectedItemInfo.toString(),sessionManager.getOptionSelected());
+                StoryHandler.mappingVehicle(sessionManager,this,selectedItemInfo.toString(),sessionManager.getOptionSelected(), "lbalblallbaallab");
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -459,8 +459,12 @@ public class Mapping extends AppCompatActivity {
         JSONObject requestBody = new JSONObject();
         requestBody.put("page", "1");
         requestBody.put("limit", "20");
-        requestBody.put("search", new JSONObject());
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("buildingIds",sessionManager.getBuildingId());
+        requestBody.put("search",endPoint.equals(Constants.searchVehicle)?new JSONObject():jsonObject);
 
+
+//        System.out.println("requestBody   "+Constants.searchVehicle+"   "+endPoint +requestBody);
         apiCallBackWithToken.Api(endPoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
             @Override
             public JSONObject onSuccess(JSONObject responseJson) {

@@ -99,9 +99,11 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         apiCallBackWithToken = new ApiCallBackWithToken(this);
+
         actionName = findViewById(R.id.actionName);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -209,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
         updateTagCountDisplay();
         updateSubmitButtonState();
+        System.out.println("sessionManager.getStory(); mmactivity from main activity"+sessionManager.getStory());
 
     }
 
@@ -311,8 +314,10 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
             if (res.has("content") && res.getJSONArray("content").length() > 0) {
                 tagListArr.add(res.getJSONArray("content").get(0).toString());
                 JSONObject obj = res.getJSONArray("content").getJSONObject(0);
+                String opreationType = obj.getString("opreationStatus");
                 if(sessionManager.getCheckTagOn().equals(obj.getString("tagType"))) {
-                    if(sessionManager.getBuildingId().equals(obj.getString("currentLocation"))) {
+
+                    if(sessionManager.getBuildingId().equals(opreationType.equals(Constants.DISPATCHED)?obj.getString("dispatchTo"):obj.getString("currentLocation"))) {
                         tagList.add(new Tag(tagId, isOverLimit, obj.getString("tagType")));
                         tagAdapter.notifyItemInserted(tagList.size() - 1);
                         updateTagCountDisplay();

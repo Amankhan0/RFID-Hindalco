@@ -287,6 +287,7 @@ public class SessionManager {
 
     // Save payload
     public void setPayload(String payload) {
+        System.out.println("saved------->>>>>>" + payload);
         editor.putString(KEY_PAYLOAD, payload);
         editor.apply();
     }
@@ -303,8 +304,29 @@ public class SessionManager {
     }
 
     // Get saved role
-    public String getRole() {
-        return sharedPreferences.getString(KEY_ROLE, null);
+    public String getRole(String value) throws JSONException {
+        String data = sharedPreferences.getString(KEY_ROLE, null);
+        if(data!=null){
+            JSONObject jsonObject = new JSONObject(data);
+            JSONArray content = jsonObject.getJSONArray("content");
+            JSONArray permission = content.getJSONObject(0).getJSONArray("permission");
+            System.out.println("permission---->"+permission);
+            for(int i=0;i<permission.length();i++){
+                if(permission.getJSONObject(i).get("value").equals("Handheld Manager")){
+                    JSONArray child = permission.getJSONObject(i).getJSONArray("child");
+                    for (int j=0;j<child.length();j++){
+                        if(child.getJSONObject(j).get("value").equals(value)){
+                            return child.getJSONObject(j).getJSONArray("permission").getJSONObject(0).getString("read");
+                        }
+                    }
+                    System.out.println("permission---->"+permission.getJSONObject(i));
+
+                }
+            }
+
+
+        }
+        return null;
     }
 
 

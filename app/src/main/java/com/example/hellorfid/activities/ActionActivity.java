@@ -59,9 +59,13 @@ public class ActionActivity extends AppCompatActivity {
                 JSONObject res1 = CaseExecutorHandler.unHoldUsingLocationTag(sessionManager.getCaseExcutor(),apiCallBackWithToken);
                 System.out.println("result---->>> excuted case "+res1);
                 break;
-            case "INBOUND":
-                JSONObject res2 = CaseExecutorHandler.outboundOrder(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
+            case Constants.INBOUND:
+                JSONObject res2 = CaseExecutorHandler.order(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
                 System.out.println("result---->>> excuted case "+res2);
+                break;
+            case Constants.OUTBOUND:
+                JSONObject res12 = CaseExecutorHandler.order(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
+                System.out.println("result---->>> excuted case "+res12);
                 break;
             case Constants.VEHICLE:
                 JSONObject res3 = CaseExecutorHandler.vehicleMap(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
@@ -98,6 +102,7 @@ public class ActionActivity extends AppCompatActivity {
 
             case Constants.OPERATION_STATUS_CHANGE:
                 JSONObject res11 = CaseExecutorHandler.inventoryStatusUpdate(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager,sessionManager.getOptionSelected());
+                tv.setText(res11.toString());
                 System.out.println("OPERATION_STATUS_CHANGE called");
                 break;
             default:

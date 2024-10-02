@@ -111,6 +111,8 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
         JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
                 "_id",order.getId(),"orderStatus",Constants.ORDER_PICKING);
         System.out.println("updated order--->" + res);
+
+
         if(res.getInt("status")==200) {
             sessionManager.setOrderData(res.getString("data").toString());
             Intent intent = new Intent(this, LoadProductAcordingToOrdersActivity.class);
@@ -122,11 +124,36 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
         try {
 
             JSONObject s = new JSONObject();
-            String[] status = {"ORDER_INITIATED", "ORDER_PICKING"};
-            s.put("orderStatus",new JSONArray(status));
-            s.put("orderType", sessionManager.getOptionSelected());
+            if(sessionManager.getOptionSelected().equals(Constants.INBOUND)){
+                s.put("dispatchTo", sessionManager.getBuildingId());
+
+            }else {
+                JSONArray orArr = new JSONArray();
+                JSONObject q1 = new JSONObject();
+                q1.put("dispatchFrom", sessionManager.getBuildingId());
+                JSONObject q2 = new JSONObject();
+                JSONObject notEq = new JSONObject();
+                notEq.put("$ne", sessionManager.getBuildingId());
+                q1.put("dispatchTo", notEq);
+
+                orArr.put(q1);
+//                s.put("$or",orArr);
+                s = q1;
+                System.out.println("<<---s--->" + s);
+
+            }
+
             JSONObject requestBody = Helper.getSearchJson(1,20,s);
             JSONObject res = Helper.commanHitApi(apiCallBackWithToken,Constants.searchOrders,requestBody);
+            System.out.println("<<---res--->" + res);
+            if (res == null ) {
+                runOnUiThread(() -> {
+                    hideLoader();
+                    Toast.makeText(OrderActivity.this, "No order found", Toast.LENGTH_SHORT).show();
+                });
+                return;
+            }
+
             parseAndDisplayOrder(res);
             hideLoader();
         } catch (JSONException e) {

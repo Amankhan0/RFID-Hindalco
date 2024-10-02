@@ -126,20 +126,22 @@ public class LoginActivity extends AppCompatActivity implements ApiCallBack.ApiC
             String payload = getJson(parts[1]);
 
             Log.d(TAG, "JWT Payload: " + payload);
-
-            JSONObject claims = new JSONObject(payload);
-            String sub = claims.optString("sub", "N/A");
-            String roleId = claims.optJSONObject("roleId").optString("roleName", "N/A");
-
-            Log.d(TAG, "Subject: " + sub);
-            Log.d(TAG, "Role: " + roleId);
-
-            // Store payload and role in session
             sessionManager.setPayload(payload);
-            sessionManager.setRole(roleId);
 
-            final String welcomeMessage = "Welcome, " + sub;
-            showToast(welcomeMessage);
+
+//            JSONObject claims = new JSONObject(payload);
+//            String sub = claims.optString("sub", "N/A");
+//            String roleId = claims.optJSONObject("roleId").optString("roleName", "N/A");
+//
+//            Log.d(TAG, "Subject: " + sub);
+//            Log.d(TAG, "Role: " + roleId);
+//
+//            // Store payload and role in session
+//            sessionManager.setPayload(payload);
+//            sessionManager.setRole(roleId);
+
+//            final String welcomeMessage = "Welcome, " + sub;
+//            showToast(welcomeMessage);
 
         } catch (Exception e) {
             Log.e(TAG, "Error decoding JWT", e);

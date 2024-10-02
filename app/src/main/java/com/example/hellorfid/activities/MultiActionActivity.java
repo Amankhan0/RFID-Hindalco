@@ -3,6 +3,7 @@ package com.example.hellorfid.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class MultiActionActivity extends AppCompatActivity {
     TextView actionName;
     SessionManager sessionManager;
     GridLayout gridLayout;
+    TextView stepsTextView;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -37,10 +39,46 @@ public class MultiActionActivity extends AppCompatActivity {
         actionName = findViewById(R.id.actionName);
         gridLayout = findViewById(R.id.gridLayout);
         actionName.setText(sessionManager.getOptionSelected());
+        stepsTextView = findViewById(R.id.stepsTextView);
+        System.out.println("sessionManager.getStory(); mmactivity"+sessionManager.getStory());
 
         createDynamicButtons();
+        displaySteps();
+
     }
 
+    private void displaySteps() {
+        String jsonStr = sessionManager.getStory();
+        StringBuilder stepsBuilder = new StringBuilder();
+
+        try {
+            JSONArray operationsArray = new JSONArray(jsonStr);
+            for (int i = 0; i < operationsArray.length(); i++) {
+                JSONObject operation = operationsArray.getJSONObject(i);
+                String operationName = operation.optString("name", "Unnamed Operation");
+                JSONArray storyArray = operation.getJSONArray("story");
+
+                // Add operation name
+                stepsBuilder.append("<h6>").append(operationName).append("</h6>");
+
+                for (int j = 0; j < storyArray.length(); j++) {
+                    JSONObject action = storyArray.getJSONObject(j);
+                    String description = action.optString("description", "No description");
+                    stepsBuilder.append("<b>Step ").append(j + 1).append(":</b> ").append(description).append("<br><br>");
+                }
+
+                // Add extra space between operations
+                if (i < operationsArray.length() - 1) {
+                    stepsBuilder.append("<br><br>");
+                }
+            }
+
+            stepsTextView.setText(Html.fromHtml(stepsBuilder.toString(), Html.FROM_HTML_MODE_COMPACT));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            stepsTextView.setText("Error parsing steps");
+        }
+    }
     private void createDynamicButtons() {
         String jsonStr = sessionManager.getStory();
         Log.d(TAG, "Final action triggered: " + jsonStr);

@@ -45,7 +45,7 @@ public class CaseExecutorHandler {
     }
 
 
-    public static JSONObject outboundOrder (String story, ApiCallBackWithToken apiCallBackWithToken, SessionManager sessionManager) throws JSONException, InterruptedException {
+    public static JSONObject order (String story, ApiCallBackWithToken apiCallBackWithToken, SessionManager sessionManager) throws JSONException, InterruptedException {
         JSONArray jsonArray = new JSONArray(story);
         JSONObject locationObjH = jsonArray.getJSONObject(0);
         JSONObject inventoryObjH = jsonArray.getJSONObject(1);
@@ -55,7 +55,8 @@ public class CaseExecutorHandler {
         JSONObject location = arrLocData.getJSONObject(0);
 
         JSONArray resData = new JSONArray(inventoryData);
-        
+        JSONArray resData1 = new JSONArray(inventoryData);
+
         for (int i = 0; i < resData.length(); i++) {
 
             resData.getJSONObject(i).put("tagType",Constants.INVENTORY);
@@ -66,7 +67,7 @@ public class CaseExecutorHandler {
             resData.getJSONObject(i).put("orderId",sessionManager.getOrderData().getString("_id"));
             resData.getJSONObject(i).put("dispatchTo",sessionManager.getOrderData().getString("dispatchTo"));
             resData.getJSONObject(i).put("dispatchFrom",sessionManager.getOrderData().getString("dispatchFrom"));
-            resData.getJSONObject(i).put("orderStatus",sessionManager.getOptionSelected().equals(Constants.OUTBOUND_ORDER)?Constants.ORDER_PICKED:Constants.ORDER_RECEIVED);
+            resData.getJSONObject(i).put("opreationStatus",sessionManager.getOptionSelected().equals(Constants.OUTBOUND)?Constants.ORDER_PICKED:Constants.ORDER_RECEIVED);
             resData.getJSONObject(i).put("dispatchTo",sessionManager.getOrderData().getString("dispatchTo"));
             resData.getJSONObject(i).put("movementStatus",Constants.IN_BUILDING);
             resData.getJSONObject(i).put("status",Constants.EMPTY);
@@ -75,13 +76,28 @@ public class CaseExecutorHandler {
             resData.getJSONObject(i).put("orderId",sessionManager.getOrderData().getString("_id"));
             resData.getJSONObject(i).put("createdBy",sessionManager.getUserId());
             resData.getJSONObject(i).put("updatedBy",sessionManager.getUserId());
-            
-            resData.getJSONObject(i).put("opreationStatus",Constants.ACTIVE);
+
+            resData1.getJSONObject(i).put("opreationStatus",Constants.ACTIVE);
         }
 
         System.out.println("resData "+resData.toString());
+        JSONObject orderData = sessionManager.getOrderData();
+        orderData.put("orderStatus",sessionManager.getOptionSelected().equals(Constants.OUTBOUND)?Constants.ORDER_PICKED:Constants.ORDER_RECEIVED);
+        System.out.println("order Data"+ orderData.toString());
+        orderData.remove("productIds");
+        orderData.remove("vehicleIds");
+
+        JSONObject res2 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateOrder,orderData);
         JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags,resData);
-        return res1;
+        System.out.println("oerder upadtede"+res2);
+        if(res2!=null && res2.getInt("status") == 200) {
+            if(res1.getInt("status") == 200) {
+                System.out.println("RESSS tag updated------>>>>>>> "+res1);
+                JSONObject res3 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags,resData1);
+                sessionManager.clearPendingOps();
+            }
+        }
+        return new JSONObject();
     }
 
 
@@ -161,7 +177,7 @@ public class CaseExecutorHandler {
             supportDataObj.remove("createdAt");
             supportDataObj.remove("updatedAt");
             supportDataObj.remove("siteIds");
-            JSONObject upadate = Helper.commanHitApi(apiCallBackWithToken,Constants.updateVehicle,supportDataObj);
+            JSONObject upadate = Helper.commanHitApi(apiCallBackWithToken,Constants.updateZone,supportDataObj);
             System.out.println("RESSS tag supportDataObj------>>>>>>> "+supportDataObj);
             if(res1.getInt("status") == 200) {
                 System.out.println("RESSS tag updated------>>>>>>> "+upadate);
@@ -209,7 +225,9 @@ public class CaseExecutorHandler {
             supportDataObj.remove("createdAt");
             supportDataObj.remove("updatedAt");
             supportDataObj.remove("siteIds");
-            JSONObject upadate = Helper.commanHitApi(apiCallBackWithToken,Constants.updateVehicle,supportDataObj);
+            supportDataObj.remove("usedBy");
+
+            JSONObject upadate = Helper.commanHitApi(apiCallBackWithToken,Constants.updateLocation,supportDataObj);
             System.out.println("RESSS tag supportDataObj------>>>>>>> "+supportDataObj);
             if(res1.getInt("status") == 200) {
                 System.out.println("RESSS tag updated------>>>>>>> "+upadate);
@@ -273,7 +291,7 @@ public class CaseExecutorHandler {
             System.out.println("RESSS tag updated------>>>>>>> "+res1);
             sessionManager.clearPendingOps();
         }
-        return new JSONObject();
+        return res1;
     }
 
 
@@ -324,11 +342,11 @@ public class CaseExecutorHandler {
 
         System.out.println("RESSSS Inventory move location---->"+location);
         System.out.println("RESSSS Inventory move inventoryArr---->"+inventoryArr);
-        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateLocation,inventoryArr);
-        if(res1.getInt("status") == 200) {
-            System.out.println("RESSS tag updated------>>>>>>> "+res1);
-            sessionManager.clearPendingOps();
-        }
+//        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateLocation,inventoryArr);
+//        if(res1.getInt("status") == 200) {
+//            System.out.println("RESSS tag updated------>>>>>>> "+res1);
+//            sessionManager.clearPendingOps();
+//        }
         return new JSONObject();
     }
 

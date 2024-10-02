@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     private List<HomeModel> buildingModels;
     private ProgressBar progressBar;
     private TextView loadingText;
-
+private SessionManager sessionManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
         buildingModels = new ArrayList<>();
         buildingAdapter = new HomeAdapter(this, buildingModels);
         buildingList.setAdapter(buildingAdapter);
-
+        sessionManager = new SessionManager(this);
         // Loader Views
         progressBar = findViewById(R.id.progressBar);
         loadingText = findViewById(R.id.loadingText);
@@ -101,11 +101,27 @@ public class HomeActivity extends AppCompatActivity {
     private void hitApiAndLogResult() {
         try {
             JSONObject requestBody = new JSONObject();
-            requestBody.put("page", "1");
-            requestBody.put("limit", "5");
-            requestBody.put("search", new JSONObject());
+
+            // Set page and limit (as integers, not strings)
+            int page = 1;
+            int limit = 10;
+            requestBody.put("page", page);
+            requestBody.put("limit", limit);
+
+            JSONObject search = new JSONObject();
+            String userId = sessionManager.getUserId();
+            JSONArray userIdsArray = new JSONArray();
+            userIdsArray.put(userId);
+            search.put("userIds", new JSONObject().put("$in", userIdsArray));
+            requestBody.put("search", search);
+
+            System.out.println("User ID from SessionManger: " + userId);
+            System.out.println("Search JSON: " + search);
+            System.out.println("Request Body JSON: " + requestBody);
 
             String apiEndpoint = Constants.searchBuilding;
+
+
 
             apiCallBackWithToken.Api(apiEndpoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
                 @Override

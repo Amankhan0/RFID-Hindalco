@@ -1,52 +1,72 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:layout_margin="4dp"
+    android:background="@drawable/tag_item_background">
 
     <TextView
         android:id="@+id/tagNumber1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
         android:text=""
-        android:textSize="10sp" />
+        android:textSize="14sp"
+        android:textColor="@color/tag_text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/lotNumber1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"/>
 
     <TextView
-        android:background="@color/green"
         android:id="@+id/lotNumber1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
         android:text=""
-        android:textFontWeight="700"
+        android:textSize="12sp"
+        android:textStyle="bold"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="10sp" />
+        android:textColor="@android:color/white"
+        android:background="@drawable/lot_number_background"
+        android:padding="3dp"
+        app:layout_constraintStart_toEndOf="@id/tagNumber1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/scanningFor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"/>
+
     <TextView
-        android:background="@color/green"
         android:id="@+id/scanningFor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
         android:text=""
-        android:textFontWeight="700"
+        android:textSize="12sp"
+        android:textStyle="bold"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="10sp" />
+        android:textColor="@android:color/white"
+        android:background="@drawable/scanning_for_background"
+        android:padding="3dp"
+        app:layout_constraintStart_toEndOf="@id/lotNumber1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/deleteIcon1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"/>
 
     <ImageView
         android:id="@+id/deleteIcon1"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="16dp"
-        android:paddingHorizontal="18dp"
-        android:paddingVertical="3dp"
-        android:src="@drawable/deleteicon" />
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/deleteicon"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Delete tag"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-<!--    <ImageView-->
-<!--        android:id="@+id/nextIcon1"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:src="@drawable/nexticon" />-->
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

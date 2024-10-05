@@ -103,8 +103,7 @@ public class InboundOrderActivity extends AppCompatActivity implements OrderAdap
         System.out.println("order" + order);
         System.out.println("Order clicked: " + order.getId());
         commanModel.setOrderStatus(Constants.ORDER_RECEIVING);
-        JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,
-                "_id", commanModel.getOrderId(), "orderStatus", Constants.ORDER_RECEIVING);
+        JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,new JSONObject());
 
         System.out.println("Inbound updated order--->" + res);
 

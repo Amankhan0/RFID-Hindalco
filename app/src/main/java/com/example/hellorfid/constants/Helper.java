@@ -94,11 +94,8 @@ public class Helper {
 //    }
 //
 
-    public static JSONObject commanUpdate(ApiCallBackWithToken apiCallBackWithToken, String URL,
-                                          String whereKey, String whereValue, String andKey, String andValue) throws JSONException, InterruptedException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(whereKey, whereValue);
-        jsonObject.put(andKey, andValue);
+    public static JSONObject commanUpdate(ApiCallBackWithToken apiCallBackWithToken, String URL,JSONObject jsonObject) throws JSONException, InterruptedException {
+
         return internalHit(apiCallBackWithToken, URL, jsonObject);
     }
 
@@ -302,6 +299,49 @@ public class Helper {
     }
 
 
+    public static JSONObject lookingForCheck(JSONArray jsonArray,JSONArray compare,JSONArray err,JSONObject object) throws JSONException {
+        boolean isCheck = true;
+        JSONArray reponse = new JSONArray();
+        JSONObject outJson = new JSONObject();
+        System.out.println("JSON-----CHEK"+jsonArray.toString());
+        for (int i = 0; i < jsonArray.length(); i++) {
+
+            for(int n=0;n<compare.length();n++){
+
+                System.out.println("loop check type "+jsonArray.getString(i));
+                System.out.println("loop check checkKey "+compare.getString(i));
+                System.out.println("loop check error "+err.getString(i));
+                System.out.println("loop check actualData "+object.getString(compare.getString(i)));
+                System.out.println("loop check ");
+                System.out.println("loop check  *****************************************");
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("check",jsonArray.getString(i).equals(object.getString(compare.getString(n))));
+                jsonObject.put("error",err.getString(n));
+                jsonObject.put("checkingTo",compare.getString(n));
+                jsonObject.put("compareValue",jsonArray.getString(i));
+                jsonObject.put("checkingWith",object.getString(compare.getString(n)));
+                jsonObject.put("tag",object.getString("rfidTag"));
+                System.out.println("object check"+jsonObject);
+                reponse.put(jsonObject);
+            }
+
+        }
+        try {
+            for (int i = 0; i < reponse.length(); i++) {
+                if (!reponse.getJSONObject(i).getBoolean("check")){
+                    return reponse.getJSONObject(i);
+                }
+            }
+            JSONObject allOK = new JSONObject();
+            allOK.put("check",true);
+            return allOK;
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     public static void setDataInSession(SessionManager sessionManager,String jsonString){
         System.out.println("Check Request 5.1 "+jsonString);
@@ -368,6 +408,9 @@ public class Helper {
         }
         return null;
     }
+
+
+
 
     }
 

@@ -151,6 +151,7 @@ private SessionManager sessionManager;
 
     private void parseAndDisplayBuildings(JSONObject responseJson) {
         try {
+            System.out.println("responseJson---&&&&&"+responseJson);
             JSONArray arr = responseJson.getJSONArray("content");
             buildingModels.clear();
             for (int i = 0; i < arr.length(); i++) {
@@ -158,7 +159,10 @@ private SessionManager sessionManager;
                 String id = buildingJson.getString("_id");
                 String name = buildingJson.getString("buildingName");
                 String address = buildingJson.getString("buildingNo");
-                buildingModels.add(new HomeModel(id, name, address));
+                System.out.println("buildingJson.getBoolean(\"canAddNewTags\")"+buildingJson.getBoolean("canAddNewTags"));
+                boolean canAddNewTags = buildingJson.getBoolean("canAddNewTags");
+
+                buildingModels.add(new HomeModel(id, name, address,canAddNewTags));
             }
             runOnUiThread(() -> buildingAdapter.notifyDataSetChanged());
         } catch (JSONException e) {

@@ -29,11 +29,13 @@ public class SessionManager {
     private static final String LOCATION_DATA = "LOCATION_DATA";
     private static final String STORY = "STORY";
     private static final String CASE_EXCUTOR = "CASE_EXCUTOR";
+    private static final String SCREEN_TYPE = "SCREEN_TYPE";
 
     private static final String CHECK_TAG_ON = "CHECK_TAG_ON";
     private static final String QTY = "QTY";
     private static final String SET_SCAN_COUNT = "SET_SCAN_COUNT";
     private static final String PENDING_OPS = "PENDING_OPS";
+    private static final String IS_NEW_TAGS_ALLOWED_TO_BUILDING = "IS_NEW_TAGS_ALLOWED_TO_BUILDING";
 
 
     private static final String BatchData = "BatchData";
@@ -47,6 +49,24 @@ public class SessionManager {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
+
+    public void setScreenType(String token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putString(SCREEN_TYPE, token);
+        editor.apply();
+    }
+
+    public void setNewTagsAllowed(boolean token) {
+        System.out.println("Check Request 6 "+ token);
+        editor.putBoolean(IS_NEW_TAGS_ALLOWED_TO_BUILDING, token);
+        editor.apply();
+    }
+
+    // Get saved token
+    public boolean getNewTagsAllowed() {
+        return sharedPreferences.getBoolean(IS_NEW_TAGS_ALLOWED_TO_BUILDING, false);
+    }
+
 
     public void setPendingOps(String token) {
         System.out.println("Check Request 6 "+ token);
@@ -179,6 +199,11 @@ public class SessionManager {
     // Get saved token
     public String getReplaceSecondScan() {
         return sharedPreferences.getString(replaceScanSecond, null);
+    }
+
+    // Get saved token
+    public String getScreenType() {
+        return sharedPreferences.getString(SCREEN_TYPE, null);
     }
 
     // Get saved token

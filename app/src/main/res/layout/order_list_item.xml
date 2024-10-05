@@ -1,40 +1,95 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:id="@+id/mainCard"
-    android:background="#FFFFFF">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        android:layout_marginBottom="16dp">
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/idTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Order ID: 12345"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+<!--        <TextView-->
+<!--            android:id="@+id/orderDateTimeTextView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Order Date: 2023-05-01 14:30:00"-->
+<!--            android:textColor="#757575"-->
+<!--            android:layout_marginBottom="8dp"/>-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/saleTypeTextView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/saletype"
-                android:text="Sale Type"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:layout_weight="1"
+                android:text="Sale Type: Retail"
+                android:textColor="#1976D2"/>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:id="@+id/ordertype"
+                android:id="@+id/orderTypeTextView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Order Type"
+                android:layout_weight="1"
+                android:text="Order Type: Online"
+                android:textColor="#388E3C"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/orderStatusTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Status: Processing"
+                android:textColor="#FFA000"/>
+
+            <TextView
+                android:id="@+id/qtyTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Quantity: 5"
                 android:textColor="#757575"/>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/batchIDTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Batch ID: BAT123456"
+            android:textColor="#757575"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/movementStatusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Movement Status: In Transit"
+            android:textColor="#757575"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

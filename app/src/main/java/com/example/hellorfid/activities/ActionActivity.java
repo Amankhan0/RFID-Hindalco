@@ -52,8 +52,8 @@ public class ActionActivity extends AppCompatActivity {
         JSONObject jsonObject = new JSONObject(sessionManager.getStory());
         switch (jsonObject.getString("caseName")) {
             case "Hold Location":
-                JSONObject res = CaseExecutorHandler.holdUsingLocationTag(sessionManager.getCaseExcutor(),apiCallBackWithToken);
-                System.out.println("result---->>> excuted case "+res);
+          //      JSONObject res = CaseExecutorHandler.holdUsingLocationTag(sessionManager.getCaseExcutor(),apiCallBackWithToken);
+                System.out.println("result---->>> excuted case "+jsonObject.toString());
                 break;
             case "Unhold Location":
                 JSONObject res1 = CaseExecutorHandler.unHoldUsingLocationTag(sessionManager.getCaseExcutor(),apiCallBackWithToken);
@@ -77,7 +77,7 @@ public class ActionActivity extends AppCompatActivity {
                 break;
             case Constants.LOCATION:
                 JSONObject res5 = CaseExecutorHandler.locationCase(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
-                System.out.println("result---->>> excuted case "+res5);
+                System.out.println("result---->>> excuted case location "+res5);
                 break;
             case Constants.REPLACE:
                 JSONObject res6 = CaseExecutorHandler.replcaeCase(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
@@ -103,6 +103,11 @@ public class ActionActivity extends AppCompatActivity {
             case Constants.OPERATION_STATUS_CHANGE:
                 JSONObject res11 = CaseExecutorHandler.inventoryStatusUpdate(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager,sessionManager.getOptionSelected());
                 tv.setText(res11.toString());
+                System.out.println("OPERATION_STATUS_CHANGE called");
+                break;
+            case Constants.RECHECK:
+                JSONObject res13 = CaseExecutorHandler.reCheckOrder(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager,sessionManager.getOptionSelected());
+                tv.setText(res13.toString());
                 System.out.println("OPERATION_STATUS_CHANGE called");
                 break;
             default:

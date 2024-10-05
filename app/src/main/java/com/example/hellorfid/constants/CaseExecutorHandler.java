@@ -1,5 +1,7 @@
 package com.example.hellorfid.constants;
 
+import static java.lang.Integer.parseInt;
+
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.session.SessionManager;
 
@@ -77,17 +79,39 @@ public class CaseExecutorHandler {
             resData.getJSONObject(i).put("createdBy",sessionManager.getUserId());
             resData.getJSONObject(i).put("updatedBy",sessionManager.getUserId());
 
+            resData1.getJSONObject(i).put("tagType",Constants.INVENTORY);
+            resData1.getJSONObject(i).put("currentLocation",sessionManager.getBuildingId());
+            resData1.getJSONObject(i).put("locationIds",location.getString("locationIds"));
+            resData1.getJSONObject(i).put("zoneIds",location.getString("zoneIds"));
+            resData1.getJSONObject(i).put("buildingId",sessionManager.getBuildingId());
+            resData1.getJSONObject(i).put("orderId",sessionManager.getOrderData().getString("_id"));
+            resData1.getJSONObject(i).put("dispatchTo",sessionManager.getOrderData().getString("dispatchTo"));
+            resData1.getJSONObject(i).put("dispatchFrom",sessionManager.getOrderData().getString("dispatchFrom"));
+            resData1.getJSONObject(i).put("dispatchTo",sessionManager.getOrderData().getString("dispatchTo"));
+            resData1.getJSONObject(i).put("movementStatus",Constants.IN_BUILDING);
+            resData1.getJSONObject(i).put("status",Constants.EMPTY);
+            resData1.getJSONObject(i).put("batchNumber",sessionManager.getOrderData().has("batchNumber")?sessionManager.getOrderData().getString("batchNumber"):"NA");
+            resData1.getJSONObject(i).put("product_id",sessionManager.getProductData().getJSONObject("productId").getString("_id"));
+            resData1.getJSONObject(i).put("orderId",sessionManager.getOrderData().getString("_id"));
+            resData1.getJSONObject(i).put("createdBy",sessionManager.getUserId());
+            resData1.getJSONObject(i).put("updatedBy",sessionManager.getUserId());
             resData1.getJSONObject(i).put("opreationStatus",Constants.ACTIVE);
         }
 
         System.out.println("resData "+resData.toString());
         JSONObject orderData = sessionManager.getOrderData();
-        orderData.put("orderStatus",sessionManager.getOptionSelected().equals(Constants.OUTBOUND)?Constants.ORDER_PICKED:Constants.ORDER_RECEIVED);
+        int pCount = parseInt(sessionManager.getProductData().getString("quantity"));
+        int actualCount = resData.length();
+        orderData.put("orderStatus",sessionManager.getOptionSelected().equals(Constants.OUTBOUND)?pCount==actualCount?Constants.ORDER_PICKED:Constants.ORDER_PICKED_PARTIALLY:
+                pCount==actualCount?Constants.ORDER_RECEIVED:
+              Constants.ORDER_RECEIVED_PARTIALLY);
+
+
         System.out.println("order Data"+ orderData.toString());
         orderData.remove("productIds");
         orderData.remove("vehicleIds");
 
-        JSONObject res2 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateOrder,orderData);
+        JSONObject res2 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateOrderComplete,orderData);
         JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags,resData);
         System.out.println("oerder upadtede"+res2);
         if(res2!=null && res2.getInt("status") == 200) {
@@ -316,7 +340,7 @@ public class CaseExecutorHandler {
         System.out.println("RESSS inventoryArr------>>>>>>> "+inventoryArr.toString());
 
         JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkCycleCount,inventoryArr);
-        if(res1.getInt("status") == 200) {
+        if(res1!=null && res1.getInt("status") == 200) {
             System.out.println("RESSS tag updated------>>>>>>> "+res1);
             sessionManager.clearPendingOps();
         }
@@ -370,6 +394,22 @@ public class CaseExecutorHandler {
 ////            sessionManager.clearPendingOps();
 ////        }
         return new JSONObject();
+    }
+
+    public static JSONObject reCheckOrder(String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager,String status) throws JSONException, InterruptedException {
+
+        System.out.println("story------>>>>>>> "+story);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("orderId", sessionManager.getOrderData().getString("_id"));
+        jsonObject.put("orderStatus", Constants.RECHECKED);
+        jsonObject.put("operationStatus", Constants.RECHECKED);
+        JSONObject res1 = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
+        if(res1!=null && res1.getInt("status") == 200) {
+            System.out.println("RESSS tag updated------>>>>>>> "+res1);
+            sessionManager.clearPendingOps();
+        }
+        return res1;
     }
 
 

@@ -14,6 +14,7 @@ import com.example.hellorfid.R;
 import com.example.hellorfid.adapter.OrderAdapter;
 import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.constants.Helper;
+import com.example.hellorfid.constants.StoryHandler;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.model.CommanModel;
 import com.example.hellorfid.model.OrderModel;
@@ -108,15 +109,38 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
     @Override
     public void onOrderClick(OrderModel order) throws JSONException, InterruptedException {
 
-        JSONObject res = Helper.commanUpdate(apiCallBackWithToken,Constants.updateOrder,
-                "_id",order.getId(),"orderStatus",Constants.ORDER_PICKING);
-        System.out.println("updated order--->" + res);
+        if(sessionManager.getOptionSelected().equals(Constants.RECHECK)){
 
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("orderId", order.getId());
+            jsonObject.put("orderStatus", Constants.RECHECKING);
+            jsonObject.put("operationStatus", Constants.RECHECKING);
 
-        if(res.getInt("status")==200) {
-            sessionManager.setOrderData(res.getString("data").toString());
-            Intent intent = new Intent(this, LoadProductAcordingToOrdersActivity.class);
-            startActivity(intent);
+            JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
+
+            System.out.println("updated order------->" +res);
+            if(res!=null && res.has("data")){
+                sessionManager.setOrderData(res.getString("data").toString());
+                StoryHandler.orderRecheck(sessionManager, OrderActivity.this, res.getString("data").toString(), Constants.RECHECK);
+                Intent intent = new Intent(this, MultiActionActivity.class);
+                startActivity(intent);
+            }else {
+                Toast.makeText(OrderActivity.this, "Error in updating order", Toast.LENGTH_SHORT).show();
+            }
+
+        }else {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("orderId", order.getId());
+            jsonObject.put("orderStatus", sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING);
+            jsonObject.put("operationStatus",  sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING);
+            JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
+
+            System.out.println("updated order--->" + res);
+            if (res.getInt("status") == 200) {
+                sessionManager.setOrderData(res.getString("data").toString());
+                    Intent intent = new Intent(this, LoadProductAcordingToOrdersActivity.class);
+                    startActivity(intent);
+            }
         }
     }
 
@@ -133,6 +157,11 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
                 q1.put("dispatchFrom", sessionManager.getBuildingId());
                 JSONObject q2 = new JSONObject();
                 JSONObject notEq = new JSONObject();
+                if(sessionManager.getOptionSelected().equals(Constants.RECHECK)){
+                    q1.put("saleType", "external");
+                    q1.put("orderStatus", Constants.DISPATCHED);
+
+                }
                 notEq.put("$ne", sessionManager.getBuildingId());
                 q1.put("dispatchTo", notEq);
 
@@ -177,6 +206,7 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
                 order.setId(orderJson.optString("_id"));
                 order.setOrderDateTime(orderJson.optString("orderDateTime"));
                 order.setExpectedArrival(orderJson.optString("expectedArrival"));
+                System.out.println("orderJson.optString(\"saleType\")" +orderJson.optString("saleType"));
                 order.setSaleType(orderJson.optString("saleType"));
                 order.setOrderType(orderJson.optString("orderType"));
                 order.setOrderStatus(orderJson.optString("orderStatus"));

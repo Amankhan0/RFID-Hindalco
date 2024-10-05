@@ -15,11 +15,22 @@ public class Constants {
 
     public final static String updateBatch = "iot/api/updateBatch";
     public final static String searchBuilding = "plant/api/searchBuilding";
-    public final static String updateOrder = "order/api/updateOrder";
+    public final static String updateOrder = "order/api/changeOrderStatus";
+    public final static String updateOrderComplete = "order/api/updateOrder";
+
     public final static String updateBulkTags = "iot/api/updateBulkTags";
     public final static String addBulkCycleCount = "iot/api/addBulkCycleCount";
     public final static String searchGeneral = "helper/api/searchGeneral";
     public static final String DISPATCHED = "DISPATCHED";
+    public static final String RECHECK = "RECHECK";
+    public static final String RECHECKED = "RECHECKED";
+    public static final String RECHECKING = "RECHECKING";
+    public static final String RECHECK_FAILED = "RECHECK_FAILED";
+
+    public static final String ONE = "ONE";
+    public static final String TWO = "TWO";
+    public static final String ORDER_PICKED_PARTIALLY = "ORDER_PICKED_PARTIALLY";
+    public static final Object ORDER_RECEIVED_PARTIALLY = "ORDER_RECEIVED_PARTIALLY";
     public static String searchRole = "user/api/searchRole";
 
 

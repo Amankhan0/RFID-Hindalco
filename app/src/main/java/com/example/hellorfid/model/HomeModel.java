@@ -9,6 +9,7 @@ public class HomeModel {
     private String buildingNo;
     private String unitName;
     private String unitId;
+    private boolean canAddNewTags;
     private boolean addEmptyBag;
     private String status;
     private String createdBy;
@@ -44,11 +45,12 @@ public class HomeModel {
         this.tagIds = tagIds;
     }
 
-    public HomeModel(String id, String buildingName, String buildingNo) {
+    public HomeModel(String id, String buildingName, String buildingNo,boolean canAddNewTags) {
         this.id = id;
         this.buildingName = buildingName;
         this.buildingNo = buildingNo;
         this.unitName = unitName;
+        this.canAddNewTags = canAddNewTags;
 
     }
 
@@ -58,7 +60,7 @@ public class HomeModel {
     public String getBuildingNo() { return buildingNo; }
     public String getUnitName() { return unitName; }
     public String getUnitId() { return unitId; }
-    public boolean isAddEmptyBag() { return addEmptyBag; }
+    public boolean getCanAddNewTags() { return canAddNewTags; }
     public String getStatus() { return status; }
     public String getCreatedBy() { return createdBy; }
     public String getUpdatedBy() { return updatedBy; }
@@ -76,7 +78,7 @@ public class HomeModel {
     public void setBuildingNo(String buildingNo) { this.buildingNo = buildingNo; }
     public void setUnitName(String unitName) { this.unitName = unitName; }
     public void setUnitId(String unitId) { this.unitId = unitId; }
-    public void setAddEmptyBag(boolean addEmptyBag) { this.addEmptyBag = addEmptyBag; }
+    public void setAddEmptyBag(boolean canAddNewTags) { this.canAddNewTags = canAddNewTags; }
     public void setStatus(String status) { this.status = status; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
     public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }

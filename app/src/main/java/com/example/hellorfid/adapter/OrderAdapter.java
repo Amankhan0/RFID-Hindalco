@@ -15,7 +15,9 @@ import com.example.hellorfid.model.OrderModel;
 
 import org.json.JSONException;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -74,25 +76,44 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-//            idTextView = itemView.findViewById(R.id.idTextView);
+            idTextView = itemView.findViewById(R.id.idTextView);
 //            orderDateTimeTextView = itemView.findViewById(R.id.orderDateTimeTextView);
-            saleTypeTextView = itemView.findViewById(R.id.saletype);
-            orderTypeTextView = itemView.findViewById(R.id.ordertype);
-//            orderStatusTextView = itemView.findViewById(R.id.orderStatusTextView);
-//            qtyTextView = itemView.findViewById(R.id.qtyTextView);
-//            batchIDTextView = itemView.findViewById(R.id.batchIDTextView);
-//            movementStatusTextView = itemView.findViewById(R.id.movementStatusTextView);
+            saleTypeTextView = itemView.findViewById(R.id.saleTypeTextView);
+            orderTypeTextView = itemView.findViewById(R.id.orderTypeTextView);
+            orderStatusTextView = itemView.findViewById(R.id.orderStatusTextView);
+            qtyTextView = itemView.findViewById(R.id.qtyTextView);
+            batchIDTextView = itemView.findViewById(R.id.batchIDTextView);
+            movementStatusTextView = itemView.findViewById(R.id.movementStatusTextView);
         }
 
         void bind(OrderModel order) {
-            if (idTextView != null) idTextView.setText("ID: " + order.getId());
-            if (orderDateTimeTextView != null) orderDateTimeTextView.setText("Order Date: " + (order.getOrderDateTime() != null ? dateFormat.format(order.getOrderDateTime()) : "N/A"));
-            if (saleTypeTextView != null) saleTypeTextView.setText("Sale Type: " + order.getSaleType());
-            if (orderTypeTextView != null) orderTypeTextView.setText("Order Type: " + order.getOrderType());
-            if (orderStatusTextView != null) orderStatusTextView.setText("Order Status: " + order.getOrderStatus());
-            if (qtyTextView != null) qtyTextView.setText("Quantity: " + order.getQty());
-            if (batchIDTextView != null) batchIDTextView.setText("Batch ID: " + order.getBatchNumber());
-            if (movementStatusTextView != null) movementStatusTextView.setText("Movement Status: " + order.getMovementStatus());
+            idTextView.setText("Order ID: " + order.getId());
+
+//            String formattedDate = "N/A";
+//            Object orderDateTime = order.getOrderDateTime();
+//            if (orderDateTime != null) {
+//                if (orderDateTime instanceof Date) {
+//                    formattedDate = dateFormat.format((Date) orderDateTime);
+//                } else if (orderDateTime instanceof Long) {
+//                    formattedDate = dateFormat.format(new Date((Long) orderDateTime));
+//                } else if (orderDateTime instanceof String) {
+//                    try {
+//                        Date parsedDate = dateFormat.parse((String) orderDateTime);
+//                        formattedDate = dateFormat.format(parsedDate);
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                        formattedDate = (String) orderDateTime; // Use the string as-is if parsing fails
+//                    }
+//                }
+//            }
+
+
+            saleTypeTextView.setText("Sale Type: " + order.getSaleType());
+            orderTypeTextView.setText("Order Type: " + order.getOrderType());
+            orderStatusTextView.setText("Status: " + order.getOrderStatus());
+//            qtyTextView.setText("Quantity: " + order.getQty());
+            batchIDTextView.setText("Batch ID: " + order.getBatchNumber());
+            movementStatusTextView.setText("Movement Status: " + order.getMovementStatus());
         }
     }
 

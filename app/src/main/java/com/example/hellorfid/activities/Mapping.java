@@ -375,7 +375,7 @@ public class Mapping extends AppCompatActivity {
                 if (!selectedOption.equals("Choose an option")) {
                     Toast.makeText(Mapping.this, "Selected: " + selectedOption, Toast.LENGTH_SHORT).show();
                     currentEndpoint = getEndpointForOption(selectedOption);
-                    sessionManager.setOptionSelected(selectedOption.toUpperCase());
+                    sessionManager.setCheckTagOn(selectedOption.toUpperCase());
                     if (currentEndpoint != null) {
                         try {
                             hitApi(currentEndpoint);

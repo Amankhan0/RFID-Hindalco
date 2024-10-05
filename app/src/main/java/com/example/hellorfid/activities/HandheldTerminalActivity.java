@@ -66,6 +66,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         List<ButtonInfo> buttonInfoList = new ArrayList<>();
 
         buttonInfoList.add(new ButtonInfo("Outbond Orders", v -> {
+            sessionManager.setScreenType(Constants.TWO);
             sessionManager.setOptionSelected(Constants.OUTBOUND_ORDER);
             startActivity(new Intent(HandheldTerminalActivity.this, OrderActivity.class));
         }));
@@ -76,6 +77,8 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
         buttonInfoList.add(new ButtonInfo("Hold", v -> {
             try {
+                sessionManager.setScreenType(Constants.TWO);
+
                 StoryHandler.holdInventory(sessionManager, HandheldTerminalActivity.this, "NA", Constants.HOLD);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -83,6 +86,8 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
         buttonInfoList.add(new ButtonInfo("Un Hold", v -> {
             try {
+                sessionManager.setScreenType(Constants.TWO);
+
                 StoryHandler.holdInventory(sessionManager, HandheldTerminalActivity.this, "NA", Constants.UNHOLD);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -90,15 +95,23 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
         buttonInfoList.add(new ButtonInfo("Replace", v -> {
             try {
+                sessionManager.setScreenType(Constants.TWO);
+
                 StoryHandler.replace(sessionManager, HandheldTerminalActivity.this, "NA", Constants.INVENTORY);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }));
         buttonInfoList.add(new ButtonInfo("Consume", v -> startActivity(new Intent(HandheldTerminalActivity.this, ConsumeActivity.class))));
-        buttonInfoList.add(new ButtonInfo("Mapping", v -> startActivity(new Intent(HandheldTerminalActivity.this, Mapping.class))));
+        buttonInfoList.add(new ButtonInfo("Mapping", v -> {
+                    sessionManager.setOptionSelected(Constants.MAPPING);
+                    startActivity(new Intent(HandheldTerminalActivity.this, Mapping.class));
+                }
+        ));
         buttonInfoList.add(new ButtonInfo("Cycle Count", v -> {
             try {
+                sessionManager.setScreenType(Constants.TWO);
+
                 sessionManager.setOptionSelected(Constants.CYCLE_COUNT);
                 StoryHandler.cycleCountStory(sessionManager, HandheldTerminalActivity.this, "NA", Constants.CYCLE_COUNT);
             } catch (JSONException e) {
@@ -107,6 +120,8 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
         buttonInfoList.add(new ButtonInfo("Move", v -> {
             try {
+                sessionManager.setScreenType(Constants.TWO);
+
                 sessionManager.setOptionSelected(Constants.MOVE + "_" + Constants.INVENTORY);
                 StoryHandler.inventoryMoveStory(sessionManager, HandheldTerminalActivity.this, "NA", Constants.MOVE);
             } catch (JSONException e) {
@@ -114,7 +129,13 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             }
         }));
         buttonInfoList.add(new ButtonInfo("General Status Change", v -> startActivity(new Intent(HandheldTerminalActivity.this, GeneralStatusChangeActivity.class))));
-        buttonInfoList.add(new ButtonInfo("Recheck Order", v -> startActivity(new Intent(HandheldTerminalActivity.this, OrderActivity.class))));
+        buttonInfoList.add(new ButtonInfo("Recheck Order", v -> {
+            sessionManager.setScreenType(Constants.ONE);
+            sessionManager.setOptionSelected(Constants.RECHECK);
+            startActivity(new Intent(HandheldTerminalActivity.this, OrderActivity.class));
+        }
+
+        ));
 
 
         int addedButtons = 0;

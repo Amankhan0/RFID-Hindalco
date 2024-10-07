@@ -77,7 +77,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
         buttonInfoList.add(new ButtonInfo("Hold", v -> {
             try {
-                sessionManager.setScreenType(Constants.TWO);
+                sessionManager.setOptionSelected(Constants.HOLD);
 
                 StoryHandler.holdInventory(sessionManager, HandheldTerminalActivity.this, "NA", Constants.HOLD);
             } catch (JSONException e) {
@@ -86,7 +86,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
         buttonInfoList.add(new ButtonInfo("Un Hold", v -> {
             try {
-                sessionManager.setScreenType(Constants.TWO);
+                sessionManager.setOptionSelected(Constants.UNHOLD);
 
                 StoryHandler.holdInventory(sessionManager, HandheldTerminalActivity.this, "NA", Constants.UNHOLD);
             } catch (JSONException e) {
@@ -95,8 +95,8 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
         buttonInfoList.add(new ButtonInfo("Replace", v -> {
             try {
-                sessionManager.setScreenType(Constants.TWO);
 
+                sessionManager.setOptionSelected(Constants.REPLACE);
                 StoryHandler.replace(sessionManager, HandheldTerminalActivity.this, "NA", Constants.INVENTORY);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -122,13 +122,22 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             try {
                 sessionManager.setScreenType(Constants.TWO);
 
-                sessionManager.setOptionSelected(Constants.MOVE + "_" + Constants.INVENTORY);
+                sessionManager.setOptionSelected(Constants.MOVE);
                 StoryHandler.inventoryMoveStory(sessionManager, HandheldTerminalActivity.this, "NA", Constants.MOVE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }));
-        buttonInfoList.add(new ButtonInfo("General Status Change", v -> startActivity(new Intent(HandheldTerminalActivity.this, GeneralStatusChangeActivity.class))));
+
+        buttonInfoList.add(new ButtonInfo("General Status Change", v -> {
+
+
+                sessionManager.setOptionSelected(Constants.OPERATION_STATUS_CHANGE);
+                startActivity(new Intent(HandheldTerminalActivity.this, GeneralStatusChangeActivity.class))  ;          }
+
+
+        ));
+
         buttonInfoList.add(new ButtonInfo("Recheck Order", v -> {
             sessionManager.setScreenType(Constants.ONE);
             sessionManager.setOptionSelected(Constants.RECHECK);

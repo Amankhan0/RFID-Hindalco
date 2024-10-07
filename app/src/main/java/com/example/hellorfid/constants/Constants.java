@@ -123,7 +123,7 @@ public class Constants {
 
     public static String OUTBOUND_ORDER= "OUTBOUND";
     public static String INBOUND_ORDER= "INBOUND";
-    public static String HOLD_LOCATION= "HOLD_LOCATION";
+    public static final String HOLD_LOCATION= "HOLD_LOCATION";
 
 
 

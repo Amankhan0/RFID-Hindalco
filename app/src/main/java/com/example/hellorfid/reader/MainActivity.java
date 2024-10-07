@@ -377,7 +377,99 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                     }
 
                     //INBOUND END
+                }else if(sessionManager.getOptionSelected().equals(Constants.HOLD) || sessionManager.getOptionSelected().equals(Constants.UNHOLD)){
+                    //INBOUND START
+                    if(sessionManager.getCheckTagOn().equals(Constants.LOCATION)) {
+                        if(sessionManager.getBuildingId().equals(obj.getString("currentLocation")) && obj.getString("tagType").equals(Constants.LOCATION)) {
+                            addSuccessTag(tagId, isOverLimit, obj);
+                            tagCheckBtnEnable(obj,1);
+                        }else {
+                            obj.put("tagType",Constants.LOCATION.equals(obj.getString("tagType"))?"BLD_ERR":obj.getString("tagType"));
+                            addErrorTag(tagId, isOverLimit, obj);
+                        }
+                    }else if(sessionManager.getCheckTagOn().equals(Constants.INVENTORY)) {
+                        if(sessionManager.getBuildingId().equals(obj.getString("currentLocation")) && obj.getString("tagType").equals(Constants.INVENTORY)) {
+                            submitButton.setEnabled(true);
+                            addSuccessTag(tagId, isOverLimit, obj);
+                        }else {
+                            obj.put("tagType",Constants.INVENTORY.equals(obj.getString("tagType"))?"BLD_ERR":obj.getString("tagType"));
+                            addErrorTag(tagId, isOverLimit, obj);
+                        }
+                    }
+
+                    //INBOUND END
+                }else if(sessionManager.getOptionSelected().equals(Constants.MOVE)){
+                    //INBOUND START
+                    if(sessionManager.getCheckTagOn().equals(Constants.LOCATION)) {
+                        if(sessionManager.getBuildingId().equals(obj.getString("currentLocation")) && obj.getString("tagType").equals(Constants.LOCATION)) {
+                            addSuccessTag(tagId, isOverLimit, obj);
+                            tagCheckBtnEnable(obj,1);
+                        }else {
+                            obj.put("tagType",Constants.LOCATION.equals(obj.getString("tagType"))?"BLD_ERR":obj.getString("tagType"));
+                            addErrorTag(tagId, isOverLimit, obj);
+                        }
+                    }else if(sessionManager.getCheckTagOn().equals(Constants.INVENTORY) ) {
+                        JSONArray storyArray = new JSONArray(sessionManager.getCaseExcutor());
+                        JSONObject action = storyArray.getJSONObject(0);
+                        String data = action.getString("data");
+                        JSONArray dataArray = new JSONArray(data);
+                        JSONObject dataObj = dataArray.getJSONObject(0);
+                        System.out.println("data hcek------->>>"+dataObj.getString("locationIds"));
+
+                         String currentLocationId =  sessionManager.getCaseExcutor();
+                         if(!dataObj.getString("locationIds").equals(obj.getString("locationIds"))) {
+                             if (sessionManager.getBuildingId().equals(obj.getString("currentLocation")) && obj.getString("tagType").equals(Constants.INVENTORY)) {
+                                 submitButton.setEnabled(true);
+                                 addSuccessTag(tagId, isOverLimit, obj);
+                             } else {
+                                 obj.put("tagType", Constants.INVENTORY.equals(obj.getString("tagType")) ? "BLD_ERR" : obj.getString("tagType"));
+                                 addErrorTag(tagId, isOverLimit, obj);
+                             }
+                         }else {
+                             obj.put("tagType", Constants.INVENTORY.equals(obj.getString("tagType")) ? "SM_LOC_ERR" : obj.getString("tagType"));
+                             addErrorTag(tagId, isOverLimit, obj);
+                         }
+                    }
+
+                    //INBOUND END
+                }else if(sessionManager.getOptionSelected().equals(Constants.REPLACE)){
+                        sessionManager.setCheckTagOn(actionName.getText().toString());
+
+                    if(actionName.getText().equals("REPLACE FROM")){
+                        //INBOUND START
+                        if (sessionManager.getBuildingId().equals(obj.getString("currentLocation")))
+                        {
+                            if (!obj.getString("tagType").equals(Constants.NEW_TAG)) {
+                                addSuccessTag(tagId, isOverLimit, obj);
+                                tagCheckBtnEnable(obj, 1);
+                            } else {
+
+                                addErrorTag(tagId, isOverLimit, obj);
+                            }
+                        }else {
+                            obj.put("tagType", "BLD_ERR");
+                            addErrorTag(tagId, isOverLimit, obj);
+                        }
+                    }
+
+
+                    //INBOUND END
+                }else if(sessionManager.getOptionSelected().equals(Constants.OPERATION_STATUS_CHANGE) ){
+                    //INBOUND START
+                    System.out.println("check opreaton"+sessionManager.getOptionSelected());
+
+                        if(sessionManager.getBuildingId().equals(obj.getString("currentLocation")) && obj.getString("tagType").equals(Constants.INVENTORY)) {
+                            submitButton.setEnabled(true);
+                            addSuccessTag(tagId, isOverLimit, obj);
+                        }else {
+                            obj.put("tagType",Constants.INVENTORY.equals(obj.getString("tagType"))?"BLD_ERR":obj.getString("tagType"));
+                            addErrorTag(tagId, isOverLimit, obj);
+                        }
+
+
+                    //INBOUND END
                 }else {
+                    System.out.println("check opreaton"+sessionManager.getOptionSelected());
                     addErrorTag(tagId, isOverLimit, obj);
                 }
             }
@@ -416,6 +508,15 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                     System.out.println("check----new tag fail CHeck#####");
                     addErrorTag(tagId, isOverLimit, tagJson);
                 }
+            }else if(sessionManager.getOptionSelected().equals(Constants.REPLACE)){
+                if(actionName.getText().equals("REPLACE TO")){
+                    sessionManager.setCheckTagOn(actionName.getText().toString());
+                    addSuccessTag(tagId, isOverLimit, tagJson);
+                    tagCheckBtnEnable(tagJson,1);
+                }else {
+                    addErrorTag(tagId, isOverLimit, tagJson);
+                }
+
             }else {
                 System.out.println("check Mapping error---->>>"+sessionManager.getOptionSelected());
 
@@ -591,7 +692,9 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
                     action.put("isExcuted", true);
                     stroyId = action.getString("id");
-                    sessionManager.setCheckTagOn(action.getString("caseName"));
+                    if(!action.getString("caseName").equals(Constants.UPDATE)){
+                        sessionManager.setCheckTagOn(action.getString("caseName"));
+                    }
                     totalInventoryToScan = parseInt(action.getString("scanQty"));
                     sessionManager.setSetScanCount(action.getString("scanQty"));
                     actionName.setText(action.getString("actionName"));

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 public class CaseExecutorHandler {
 
-    public static JSONObject holdUsingLocationTag (String story, ApiCallBackWithToken apiCallBackWithToken) throws JSONException, InterruptedException {
+    public static JSONObject holdUsingLocationTag (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
             JSONArray jsonArray = new JSONArray(story);
             JSONObject jsonObject = jsonArray.getJSONObject(0);
             String data = jsonObject.getString("data");
@@ -25,11 +25,15 @@ public class CaseExecutorHandler {
                 resData.getJSONObject(i).put("opreationStatus",Constants.HOLD);
             }
            JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateBulkTags,resData);
+            if(res1.getInt("status") == 200) {
+    //            System.out.println("RESSS tag updated------>>>>>>> "+upadate);
+                sessionManager.clearPendingOps();
+            }
             return res1;
     }
 
 
-    public static JSONObject unHoldUsingLocationTag (String story, ApiCallBackWithToken apiCallBackWithToken) throws JSONException, InterruptedException {
+    public static JSONObject unHoldUsingLocationTag (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
         JSONArray jsonArray = new JSONArray(story);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
         String data = jsonObject.getString("data");
@@ -43,6 +47,10 @@ public class CaseExecutorHandler {
             resData.getJSONObject(i).put("opreationStatus",Constants.ACTIVE);
         }
         JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateBulkTags,resData);
+        if(res1.getInt("status") == 200) {
+            //            System.out.println("RESSS tag updated------>>>>>>> "+upadate);
+            sessionManager.clearPendingOps();
+        }
         return res1;
     }
 
@@ -366,11 +374,11 @@ public class CaseExecutorHandler {
 
         System.out.println("RESSSS Inventory move location---->"+location);
         System.out.println("RESSSS Inventory move inventoryArr---->"+inventoryArr);
-//        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateLocation,inventoryArr);
-//        if(res1.getInt("status") == 200) {
-//            System.out.println("RESSS tag updated------>>>>>>> "+res1);
-//            sessionManager.clearPendingOps();
-//        }
+        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateBulkTags,inventoryArr);
+        if(res1.getInt("status") == 200) {
+            System.out.println("RESSS tag updated------>>>>>>> "+res1);
+            sessionManager.clearPendingOps();
+        }
         return new JSONObject();
     }
 

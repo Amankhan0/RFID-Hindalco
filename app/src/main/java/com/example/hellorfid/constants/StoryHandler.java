@@ -112,7 +112,7 @@ public class StoryHandler {
             inventoryCaseArr.put(story3);
             inventoryCaseArr.put(story4);
 
-            JSONObject finalarr = StoryHandler.storyJson(type +" "+ Constants.LOCATION,Constants.LOCATION,jsonArray);
+            JSONObject finalarr = StoryHandler.storyJson(type +" "+ Constants.LOCATION,type,jsonArray);
             JSONObject finalarr1 = StoryHandler.storyJson(type +" "+ Constants.INVENTORY,type+"_"+Constants.INVENTORY,inventoryCaseArr);
 
             JSONArray jsonArray1=  new JSONArray();
@@ -212,7 +212,7 @@ public class StoryHandler {
     public static void inventoryMoveStory(SessionManager sessionManager, Context context,String supportData,String type) throws JSONException {
         try {
             JSONArray jsonArray=  new JSONArray();
-            JSONObject story1 = StoryHandler.storyJsonObj("1",Constants.LOCATION,Constants.LOCATION,false,"SCAN","NO_DATA","","1", "desc",new JSONArray(),new JSONArray());
+            JSONObject story1 = StoryHandler.storyJsonObj("1","TO "+Constants.LOCATION,Constants.LOCATION,false,"SCAN","NO_DATA","","1", "desc",new JSONArray(),new JSONArray());
             JSONObject story2 = StoryHandler.storyJsonObj("2",Constants.INVENTORY,Constants.INVENTORY,false,"SCAN","NO_DATA","NA","1000", "desc",new JSONArray(),new JSONArray());
             JSONObject story3 = StoryHandler.storyJsonObj("3",Constants.UPDATE,Constants.UPDATE,false,"UPDATE","NO_DATA","","0", "desc",new JSONArray(),new JSONArray());
             jsonArray.put(story1);
@@ -236,7 +236,7 @@ public class StoryHandler {
     public static void generalStatusChangeStory(SessionManager sessionManager, Context context,String supportData, String type){
         try {
             JSONArray jsonArray=  new JSONArray();
-            JSONObject story1= StoryHandler.storyJsonObj("1",Constants.INVENTORY,Constants.INVENTORY,false,"SCAN","NO_DATA","NA","1000", "First step is to scan the inventory",new JSONArray(),new JSONArray());
+            JSONObject story1= StoryHandler.storyJsonObj("1",Constants.INVENTORY,type,false,"SCAN","NO_DATA","NA","1000", "First step is to scan the inventory",new JSONArray(),new JSONArray());
             JSONObject story2 = StoryHandler.storyJsonObj("2",Constants.UPDATE,Constants.UPDATE,false,"UPDATE","NO_DATA","","0", "click on the update button to update the status",new JSONArray(),new JSONArray());
             jsonArray.put(story1);
             jsonArray.put(story2);
@@ -246,7 +246,7 @@ public class StoryHandler {
 
             System.out.println("finalarr.toString()"+jsonArray1.toString());
             sessionManager.setStory(jsonArray1.toString());
-            sessionManager.setOptionSelected(type);
+            sessionManager.setCheckTagOn(type);
             System.out.println("finalarr.toString()"+jsonArray1.toString());
             Intent intent = new Intent(context, MultiActionActivity.class);
             context.startActivity(intent);

@@ -52,6 +52,7 @@ public class GeneralStatusChangeActivity extends AppCompatActivity {
 
             String selectedItem = statusOptions.get(position);
             System.out.println("Selected: "+ selectedItem);
+            sessionManager.setOptionSelected(Constants.OPERATION_STATUS_CHANGE);
 
             StoryHandler.generalStatusChangeStory(sessionManager, this, "NA",selectedItem );
             Toast.makeText(GeneralStatusChangeActivity.this, "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();

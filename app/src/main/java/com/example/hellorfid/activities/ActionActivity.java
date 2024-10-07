@@ -51,12 +51,12 @@ public class ActionActivity extends AppCompatActivity {
     public void CaseExecute() throws JSONException, InterruptedException {
         JSONObject jsonObject = new JSONObject(sessionManager.getStory());
         switch (jsonObject.getString("caseName")) {
-            case "Hold Location":
-          //      JSONObject res = CaseExecutorHandler.holdUsingLocationTag(sessionManager.getCaseExcutor(),apiCallBackWithToken);
+            case Constants.HOLD:
+                JSONObject res = CaseExecutorHandler.holdUsingLocationTag(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
                 System.out.println("result---->>> excuted case "+jsonObject.toString());
                 break;
-            case "Unhold Location":
-                JSONObject res1 = CaseExecutorHandler.unHoldUsingLocationTag(sessionManager.getCaseExcutor(),apiCallBackWithToken);
+            case Constants.UNHOLD:
+                JSONObject res1 = CaseExecutorHandler.unHoldUsingLocationTag(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
                 System.out.println("result---->>> excuted case "+res1);
                 break;
             case Constants.INBOUND:
@@ -101,7 +101,7 @@ public class ActionActivity extends AppCompatActivity {
                 break;
 
             case Constants.OPERATION_STATUS_CHANGE:
-                JSONObject res11 = CaseExecutorHandler.inventoryStatusUpdate(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager,sessionManager.getOptionSelected());
+                JSONObject res11 = CaseExecutorHandler.inventoryStatusUpdate(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager,sessionManager.getCheckTagOn());
                 tv.setText(res11.toString());
                 System.out.println("OPERATION_STATUS_CHANGE called");
                 break;

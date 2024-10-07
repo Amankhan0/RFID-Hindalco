@@ -66,7 +66,10 @@ public class CaseExecutorHandler {
 
         JSONArray resData = new JSONArray(inventoryData);
         JSONArray resData1 = new JSONArray(inventoryData);
-
+        int pCount = parseInt(sessionManager.getProductData().getString("quantity"));
+        int actualCount = resData.length();
+        String orderStatus =sessionManager.getOptionSelected().equals(Constants.OUTBOUND)?pCount==actualCount?Constants.ORDER_PICKED:Constants.ORDER_PICKED_PARTIALLY:
+                pCount==actualCount?Constants.ORDER_RECEIVED:Constants.ORDER_RECEIVED_PARTIALLY;
         for (int i = 0; i < resData.length(); i++) {
 
             resData.getJSONObject(i).put("tagType",Constants.INVENTORY);
@@ -77,7 +80,7 @@ public class CaseExecutorHandler {
             resData.getJSONObject(i).put("orderId",sessionManager.getOrderData().getString("_id"));
             resData.getJSONObject(i).put("dispatchTo",sessionManager.getOrderData().getString("dispatchTo"));
             resData.getJSONObject(i).put("dispatchFrom",sessionManager.getOrderData().getString("dispatchFrom"));
-            resData.getJSONObject(i).put("opreationStatus",sessionManager.getOptionSelected().equals(Constants.OUTBOUND)?Constants.ORDER_PICKED:Constants.ORDER_RECEIVED);
+            resData.getJSONObject(i).put("opreationStatus",orderStatus);
             resData.getJSONObject(i).put("dispatchTo",sessionManager.getOrderData().getString("dispatchTo"));
             resData.getJSONObject(i).put("movementStatus",Constants.IN_BUILDING);
             resData.getJSONObject(i).put("status",Constants.EMPTY);
@@ -108,11 +111,8 @@ public class CaseExecutorHandler {
 
         System.out.println("resData "+resData.toString());
         JSONObject orderData = sessionManager.getOrderData();
-        int pCount = parseInt(sessionManager.getProductData().getString("quantity"));
-        int actualCount = resData.length();
-        orderData.put("orderStatus",sessionManager.getOptionSelected().equals(Constants.OUTBOUND)?pCount==actualCount?Constants.ORDER_PICKED:Constants.ORDER_PICKED_PARTIALLY:
-                pCount==actualCount?Constants.ORDER_RECEIVED:
-              Constants.ORDER_RECEIVED_PARTIALLY);
+
+        orderData.put("orderStatus",orderStatus);
 
 
         System.out.println("order Data"+ orderData.toString());

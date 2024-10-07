@@ -411,6 +411,11 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                 if(tagJson.getString("tagType").equals(Constants.NEW_TAG)) {
                     System.out.println("check----new tag run CHeck#####");
                     addSuccessTag(tagId, isOverLimit, tagJson);
+                    if(successTagList.size()==1){
+                        submitButton.setEnabled(true);
+                    }else {
+                        submitButton.setEnabled(false);
+                    }
 
                 }else {
                     System.out.println("check----new tag fail CHeck#####");

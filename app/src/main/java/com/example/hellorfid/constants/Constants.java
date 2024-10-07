@@ -30,7 +30,7 @@ public class Constants {
     public static final String ONE = "ONE";
     public static final String TWO = "TWO";
     public static final String ORDER_PICKED_PARTIALLY = "ORDER_PICKED_PARTIALLY";
-    public static final Object ORDER_RECEIVED_PARTIALLY = "ORDER_RECEIVED_PARTIALLY";
+    public static final String ORDER_RECEIVED_PARTIALLY = "ORDER_RECEIVED_PARTIALLY";
     public static String searchRole = "user/api/searchRole";
 
 

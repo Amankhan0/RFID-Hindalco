@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,71 +19,79 @@
             android:id="@+id/idTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Order ID: 12345"
-            android:textSize="14sp"
+            android:text="Order ID:"
+            android:textSize="13sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:textColor="@color/hindalcoRed"
+            android:layout_marginBottom="6dp"/>
 
-<!--        <TextView-->
-<!--            android:id="@+id/orderDateTimeTextView"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Order Date: 2023-05-01 14:30:00"-->
-<!--            android:textColor="#757575"-->
-<!--            android:layout_marginBottom="8dp"/>-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/hindalcoRed"
+            android:layout_marginBottom="8dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="8dp">
-
-            <TextView
-                android:id="@+id/saleTypeTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Sale Type: Retail"
-                android:textColor="#1976D2"/>
 
             <TextView
                 android:id="@+id/orderTypeTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Order Type: Online"
-                android:textColor="#388E3C"/>
+                android:text="Order Type:"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"/>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:background="@color/hindalcoRed"-->
+<!--            />-->
+
+        <TextView
+            android:id="@+id/saleTypeTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:text="Sale ID: BAT123456"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp"/>
 
-            <TextView
-                android:id="@+id/orderStatusTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Status: Processing"
-                android:textColor="#FFA000"/>
+<!--        <TextView-->
+<!--            android:id="@+id/saleTypeTextView"-->
+<!--            android:layout_width="1dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="Sale Type: Retail"-->
+<!--            android:textColor="@android:color/black" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/orderStatusTextView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Status: Processing"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:layout_marginBottom="8dp"/>-->
 
-            <TextView
-                android:id="@+id/qtyTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Quantity: 5"
-                android:textColor="#757575"/>
-        </LinearLayout>
-
+        <TextView
+            android:id="@+id/orderStatusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status: Processing"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp"/>
         <TextView
             android:id="@+id/batchIDTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Batch ID: BAT123456"
-            android:textColor="#757575"
+            android:textColor="@android:color/black"
             android:layout_marginBottom="8dp"/>
 
         <TextView
@@ -90,6 +99,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Movement Status: In Transit"
-            android:textColor="#757575"/>
+            android:textColor="@android:color/black"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

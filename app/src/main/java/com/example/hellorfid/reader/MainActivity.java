@@ -122,12 +122,16 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                         jsonObject.put("orderStatus", Constants.RECHECK_FAILED);
                         jsonObject.put("operationStatus", Constants.RECHECK_FAILED);
                         JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
-
+                        if (res != null) {
+                            Toast.makeText(getApplicationContext(), "Order Recheck Failed clicked", Toast.LENGTH_SHORT).show();
+                        }
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+
+
 //                    try {
 ////                        saveDataUsingId();
 ////                        startExecutor();

@@ -70,6 +70,7 @@ public class CaseExecutorHandler {
         int actualCount = resData.length();
         String orderStatus =sessionManager.getOptionSelected().equals(Constants.OUTBOUND)?pCount==actualCount?Constants.ORDER_PICKED:Constants.ORDER_PICKED_PARTIALLY:
                 pCount==actualCount?Constants.ORDER_RECEIVED:Constants.ORDER_RECEIVED_PARTIALLY;
+
         for (int i = 0; i < resData.length(); i++) {
 
             resData.getJSONObject(i).put("tagType",Constants.INVENTORY);
@@ -370,6 +371,8 @@ public class CaseExecutorHandler {
 
         for (int i = 0; i < inventoryArr.length(); i++) {
             inventoryArr.getJSONObject(i).put("locationIds",location.getString("locationIds"));
+            inventoryArr.getJSONObject(i).put("zoneIds",location.getString("zoneIds"));
+
         }
 
         System.out.println("RESSSS Inventory move location---->"+location);

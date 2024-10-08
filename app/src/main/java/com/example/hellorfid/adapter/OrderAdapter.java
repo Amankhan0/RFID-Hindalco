@@ -20,14 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
 
     private Context context;
     private List<OrderModel> orderList;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     private OnOrderClickListener onOrderClickListener;
-    private ApiCallBackWithToken apiCallBackWithToken;
 
     public interface OnOrderClickListener {
         void onOrderClick(OrderModel order) throws JSONException, InterruptedException;
@@ -54,11 +51,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.itemView.setOnClickListener(v -> {
             if (onOrderClickListener != null) {
                 try {
-//                    Helper.commanHitApi(apiCallBackWithToken, Constants.addBulkTags, );
                     onOrderClickListener.onOrderClick(order);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
+                } catch (JSONException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -71,47 +65,24 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView idTextView, orderDateTimeTextView, saleTypeTextView, orderTypeTextView,
-                orderStatusTextView, qtyTextView, batchIDTextView, movementStatusTextView;
+        TextView idTextView, orderTypeTextView, saleTypeTextView,
+                orderStatusTextView, batchIDTextView, movementStatusTextView;
 
         OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             idTextView = itemView.findViewById(R.id.idTextView);
-//            orderDateTimeTextView = itemView.findViewById(R.id.orderDateTimeTextView);
-            saleTypeTextView = itemView.findViewById(R.id.saleTypeTextView);
             orderTypeTextView = itemView.findViewById(R.id.orderTypeTextView);
+            saleTypeTextView = itemView.findViewById(R.id.saleTypeTextView);
             orderStatusTextView = itemView.findViewById(R.id.orderStatusTextView);
-            qtyTextView = itemView.findViewById(R.id.qtyTextView);
             batchIDTextView = itemView.findViewById(R.id.batchIDTextView);
             movementStatusTextView = itemView.findViewById(R.id.movementStatusTextView);
         }
 
         void bind(OrderModel order) {
             idTextView.setText("Order ID: " + order.getId());
-
-//            String formattedDate = "N/A";
-//            Object orderDateTime = order.getOrderDateTime();
-//            if (orderDateTime != null) {
-//                if (orderDateTime instanceof Date) {
-//                    formattedDate = dateFormat.format((Date) orderDateTime);
-//                } else if (orderDateTime instanceof Long) {
-//                    formattedDate = dateFormat.format(new Date((Long) orderDateTime));
-//                } else if (orderDateTime instanceof String) {
-//                    try {
-//                        Date parsedDate = dateFormat.parse((String) orderDateTime);
-//                        formattedDate = dateFormat.format(parsedDate);
-//                    } catch (ParseException e) {
-//                        e.printStackTrace();
-//                        formattedDate = (String) orderDateTime; // Use the string as-is if parsing fails
-//                    }
-//                }
-//            }
-
-
-            saleTypeTextView.setText("Sale Type: " + order.getSaleType());
             orderTypeTextView.setText("Order Type: " + order.getOrderType());
+            saleTypeTextView.setText("Sale Type: " + order.getSaleType());
             orderStatusTextView.setText("Status: " + order.getOrderStatus());
-//            qtyTextView.setText("Quantity: " + order.getQty());
             batchIDTextView.setText("Batch ID: " + order.getBatchNumber());
             movementStatusTextView.setText("Movement Status: " + order.getMovementStatus());
         }

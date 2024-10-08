@@ -207,4 +207,5 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             this.onClickListener = onClickListener;
         }
     }
+
 }

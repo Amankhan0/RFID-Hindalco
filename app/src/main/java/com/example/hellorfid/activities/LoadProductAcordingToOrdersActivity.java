@@ -49,7 +49,7 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
 
-
+        System.out.println("bkaklos;dfjkalsdjjasjdk");
         ImageView allScreenBackBtn = findViewById(R.id.allScreenBackBtn);
         allScreenBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +86,7 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
             showNoDataMessage();
             return;
         }
-
+        System.out.println("productIds ==="+productIds);
         for (int i = 0; i < productIds.length(); i++) {
             JSONObject productData = productIds.getJSONObject(i);
             View productCard = createProductCard(i, productData);
@@ -105,25 +105,33 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
         JSONObject productId = productData.getJSONObject("productId");
         final int quantity = productData.getInt("quantity");
         final String productName = productId.getString("productName");
+        String productID = productId.getString("_id");
+// String grade = productData.getString("grade");
 
-        // Check product status and update the background color if it's "ORDER_PICKED"
-        String productStatus = productData.optString("status", "ORDER_INITIATED"); // Default to "ORDER_INITIATED" if status is missing
+        String grade = productId.getString("grade");
+
+        String productStatus = productId.optString("status");
         if ("ORDER_PICKED".equals(productStatus)) {
-            cardView.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light)); // Set background to green
+            cardView.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
         } else {
-            cardView.setBackgroundColor(getResources().getColor(android.R.color.white)); // Default background to white
+            cardView.setBackgroundColor(getResources().getColor(android.R.color.white));
         }
 
         TextView productNameTextView = cardView.findViewById(R.id.productNameTextView);
         TextView quantityTextView = cardView.findViewById(R.id.quantityTextView);
-        TextView statusTextView = cardView.findViewById(R.id.status);
+        TextView statusTextView = cardView.findViewById(R.id.statusTextView);
+        TextView productIdTextView = cardView.findViewById(R.id.productIdTextView);
+TextView gradeTextView = cardView.findViewById(R.id.gradeTextView);
 
         productNameTextView.setText("Product Name: " + productName);
         quantityTextView.setText("Quantity: " + quantity);
         statusTextView.setText("Status: " + productStatus);
+        productIdTextView.setText("Product ID: " + productID);
+        gradeTextView.setText("Grade: " + grade);
+
+
 
         if(!"ORDER_PICKED".equals(productStatus)){
-
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -147,11 +155,9 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
-
                 }
             });
         }
         return cardView;
     }
-
 }

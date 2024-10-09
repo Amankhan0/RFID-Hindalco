@@ -130,7 +130,7 @@ public class CaseExecutorHandler {
                 sessionManager.clearPendingOps();
             }
         }
-        return new JSONObject();
+        return res2;
     }
 
 

@@ -46,10 +46,6 @@ public class GeneralStatusChangeActivity extends AppCompatActivity {
         fetchGeneralStatusOptions();
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
-
-
-
-
             String selectedItem = statusOptions.get(position);
             System.out.println("Selected: "+ selectedItem);
             sessionManager.setOptionSelected(Constants.OPERATION_STATUS_CHANGE);

@@ -79,26 +79,22 @@ public class MultiActionActivity extends AppCompatActivity {
             stepsTextView.setText("Error parsing steps");
         }
     }
+
+
     private void createDynamicButtons() {
         String jsonStr = sessionManager.getStory();
         Log.d(TAG, "Final action triggered: " + jsonStr);
 
         try {
             JSONArray jsonArray = new JSONArray(jsonStr);
+            int addedButtons = 0;
+
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String buttonName = jsonObject.getString("name");
                 JSONArray storyArray = jsonObject.getJSONArray("story");
 
-                Button dynamicButton = new Button(this);
-                dynamicButton.setText(buttonName);
-                dynamicButton.setLayoutParams(new GridLayout.LayoutParams());
-                dynamicButton.setTextColor(getResources().getColor(android.R.color.white));
-                dynamicButton.setBackgroundResource(R.drawable.button_background); // Assuming you have this drawable
-
-                gridLayout.addView(dynamicButton);
-
-                dynamicButton.setOnClickListener(new View.OnClickListener() {
+                Button dynamicButton = createButton(buttonName, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         sessionManager.setStory(jsonObject.toString());
@@ -106,11 +102,49 @@ public class MultiActionActivity extends AppCompatActivity {
                         handleButtonClick();
                     }
                 });
+
+                gridLayout.addView(dynamicButton);
+                addedButtons++;
+            }
+
+            // Add placeholder buttons to complete the grid if necessary
+            while (addedButtons % 2 != 0) {
+                Button placeholderButton = createPlaceholderButton();
+                gridLayout.addView(placeholderButton);
+                addedButtons++;
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private Button createButton(String text, View.OnClickListener onClickListener) {
+        Button button = new Button(this);
+        button.setText(text);
+        button.setOnClickListener(onClickListener);
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.width = 0;
+        params.height = 100;
+        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+        params.setMargins(8, 8, 8, 8);
+        button.setLayoutParams(params);
+        button.setBackgroundResource(R.drawable.button_background);
+        button.setTextColor(getResources().getColor(R.color.white));
+        button.setPadding(20, 20, 20, 20);
+        return button;
+    }
+
+    private Button createPlaceholderButton() {
+        Button button = new Button(this);
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.width = 0;
+        params.height = GridLayout.LayoutParams.WRAP_CONTENT;
+        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+        params.setMargins(8, 8, 8, 8);
+        button.setLayoutParams(params);
+        button.setVisibility(View.INVISIBLE);
+        return button;
     }
 
     private void handleButtonClick() {

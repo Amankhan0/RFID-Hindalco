@@ -3,6 +3,8 @@ package com.example.hellorfid.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -32,6 +34,19 @@ public class ActionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_action);
+
+        Button homeButton = findViewById(R.id.homeButton);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActionActivity.this, HandheldTerminalActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
+
         sessionManager = new SessionManager(this);
         System.out.println("result---->>>"+sessionManager.getCaseExcutor());
         System.out.println("result---->>>"+sessionManager.getStory());
@@ -39,13 +54,13 @@ public class ActionActivity extends AppCompatActivity {
         sessionManager.setPendingOps("true");
         tv = findViewById(R.id.activityTextView);
 //        tv.setText("Executing Case");
-        try {
-            CaseExecute();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            CaseExecute();
+//        } catch (JSONException e) {
+//            throw new RuntimeException(e);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
     }
     public void CaseExecute() throws JSONException, InterruptedException {
@@ -61,10 +76,12 @@ public class ActionActivity extends AppCompatActivity {
                 break;
             case Constants.INBOUND:
                 JSONObject res2 = CaseExecutorHandler.order(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
+                tv.setText(res2.toString());
                 System.out.println("result---->>> excuted case "+res2);
                 break;
             case Constants.OUTBOUND:
                 JSONObject res12 = CaseExecutorHandler.order(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
+//                tv.setText(res2.toString());
                 System.out.println("result---->>> excuted case "+res12);
                 break;
             case Constants.VEHICLE:

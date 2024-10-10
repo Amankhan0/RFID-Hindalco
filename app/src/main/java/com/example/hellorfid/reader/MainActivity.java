@@ -308,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                     if(sessionManager.getCheckTagOn().equals(Constants.LOCATION)) {
                         if(sessionManager.getBuildingId().equals(obj.getString("currentLocation")) && obj.getString("tagType").equals(Constants.LOCATION)) {
                             addSuccessTag(tagId, isOverLimit, obj);
-
                             tagCheckBtnEnable(obj,1);
                         }else {
                             obj.put("tagType",Constants.LOCATION.equals(obj.getString("tagType"))?"BLD_ERR":obj.getString("tagType"));

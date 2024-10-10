@@ -54,13 +54,13 @@ public class ActionActivity extends AppCompatActivity {
         sessionManager.setPendingOps("true");
         tv = findViewById(R.id.activityTextView);
 //        tv.setText("Executing Case");
-//        try {
-//            CaseExecute();
-//        } catch (JSONException e) {
-//            throw new RuntimeException(e);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            CaseExecute();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
     }
     public void CaseExecute() throws JSONException, InterruptedException {
@@ -76,7 +76,7 @@ public class ActionActivity extends AppCompatActivity {
                 break;
             case Constants.INBOUND:
                 JSONObject res2 = CaseExecutorHandler.order(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
-                tv.setText(res2.toString());
+//                tv.setText(res2.toString());
                 System.out.println("result---->>> excuted case "+res2);
                 break;
             case Constants.OUTBOUND:

@@ -44,21 +44,21 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
         android:text=""
-        android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@id/backButton1"
+        android:textSize="0sp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5" />
+
     <TextView
         android:id="@+id/totalScan1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:layout_marginStart="16dp"
         android:text="Success scan: 0"
         android:textSize="16sp"
@@ -73,7 +73,6 @@
         android:id="@+id/errorScan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:layout_marginStart="16dp"
         android:text="Error scan: 0"
         android:textSize="16sp"

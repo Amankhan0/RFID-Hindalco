@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,8 @@ import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.dump.Tag;
 import com.example.hellorfid.dump.TagAdapter;
 import com.example.hellorfid.session.SessionManager;
+import com.zebra.rfid.api3.POWER_EVENT;
+
 import com.zebra.rfid.api3.*;
 
 import org.json.JSONArray;
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
     private static ArrayList<ReaderDevice> availableRFIDReaderList;
     private static ReaderDevice readerDevice;
     private static RFIDReader reader;
-
+private POWER_EVENT power_event;
     private TextView successScanTextView;
     private TextView errorScanTextView;
     private String stroyId;
@@ -74,20 +77,47 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
     JSONArray keyCheck;
     String supportData;
     JSONArray errorCode;
+
+//    private static final int MIN_POWER = 0;
+//    private static final int MAX_POWER = 700; // Example max power, may vary by device
+//    private static final int POWER_STEP = 10;
+
+
+    private TextView currentPowerTextView;
+    private SeekBar rangeSeekBar;
+
+    private static final int MIN_POWER = 0;
+    private static final int MAX_POWER = 300;
+
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         keyCheck = new JSONArray();
         lookingFor = new JSONArray();
         errorCode = new JSONArray();
         sessionManager = new SessionManager(this);
 
-        setContentView(R.layout.activity_main);
+
+//        increaseRangeButton = findViewById(R.id.increaseRangeButton);
+//        decreaseRangeButton = findViewById(R.id.decreaseRangeButton);
+//        currentPowerTextView = findViewById(R.id.currentPowerTextView);
+
+        rangeSeekBar = findViewById(R.id.rangeSeekBar);
+//        currentPowerTextView = findViewById(R.id.currentPowerTextView);
+
+
+        setupRangeSeekBar();
+
 
         apiCallBackWithToken = new ApiCallBackWithToken(this);
 
         actionName = findViewById(R.id.actionName);
+
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         mediaPlayer = MediaPlayer.create(this, R.raw.invalid_tag);
@@ -101,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
 
         successScanTextView.setOnClickListener(v -> toggleTagView(true));
         errorScanTextView.setOnClickListener(v -> toggleTagView(false));
+
+
 
         totalInventoryToScan = parseInt(sessionManager.getSetScanCount() == null ? "0" : sessionManager.getSetScanCount());
 
@@ -149,6 +181,70 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
                 resetScannedTags();
             }
         });
+
+
+//        if (increaseRangeButton != null) {
+//            increaseRangeButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try {
+//                        increaseRange(reader);
+//                        updateCurrentPowerDisplay();
+//                    } catch (InvalidUsageException | OperationFailureException e) {
+//                        System.out.println("increase button Exception----->"+e);
+//                        Toast.makeText(MainActivity.this, "Failed to increase range", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+//        } else {
+//            Log.e("MainActivity", "increaseRangeButton is null");
+//        }
+
+//        if (decreaseRangeButton != null) {
+//            decreaseRangeButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try {
+//                        decreaseRange(reader);
+//                        updateCurrentPowerDisplay();
+//                        System.out.println("decreease button clicked ");
+//                    } catch (InvalidUsageException | OperationFailureException e) {
+//                        System.out.println("Exception----->"+e.getMessage());
+//                        Toast.makeText(MainActivity.this, "Failed to decrease range", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+//        } else {
+//            Log.e("MainActivity", "decreaseRangeButton is null");
+//        }
+
+
+//
+//        increaseRangeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    increaseRange(reader);
+//                    updateCurrentPowerDisplay();
+//                } catch (InvalidUsageException | OperationFailureException e) {
+//                    Toast.makeText(MainActivity.this, "Failed to increase range", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//
+//        decreaseRangeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    decreaseRange(reader);
+//                    updateCurrentPowerDisplay();
+//                } catch (InvalidUsageException | OperationFailureException e) {
+//                    Toast.makeText(MainActivity.this, "Failed to decrease range", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
+
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,6 +352,60 @@ public class MainActivity extends AppCompatActivity implements TagAdapter.OnTagD
             }
         }
     }
+
+
+    private void setupRangeSeekBar() {
+        rangeSeekBar.setMax(MAX_POWER - MIN_POWER);
+        rangeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Do nothing here
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Do nothing here
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                int currentPower = seekBar.getProgress() + MIN_POWER;
+                updateCurrentPowerDisplay(currentPower);
+                try {
+                    setPower(reader, currentPower);
+                } catch (InvalidUsageException | OperationFailureException e) {
+                    Toast.makeText(MainActivity.this, "Failed to set range", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void updateCurrentPowerDisplay(int power) {
+//        currentPowerTextView.setText("Current Power: " + power);
+        Toast.makeText(getApplicationContext(), "Current Power: " + power, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void setPower(RFIDReader reader, int power) throws InvalidUsageException, OperationFailureException {
+        Antennas.AntennaRfConfig rfConfig = reader.Config.Antennas.getAntennaRfConfig(1);
+        System.out.println("rfConfig" + rfConfig);
+        rfConfig.setTransmitPowerIndex(power);
+        reader.Config.Antennas.setAntennaRfConfig(1, rfConfig);
+    }
+
+    public static int getCurrentPower(RFIDReader reader) throws InvalidUsageException, OperationFailureException {
+        Antennas.AntennaRfConfig rfConfig = reader.Config.Antennas.getAntennaRfConfig(1);
+        return rfConfig.getTransmitPowerIndex();
+    }
+
+//    private void initializeRangeControl() {
+//        try {
+//            int currentPower = getCurrentPower(reader);
+//            rangeSeekBar.setProgress(currentPower - MIN_POWER);
+//            updateCurrentPowerDisplay(currentPower);
+//        } catch (InvalidUsageException | OperationFailureException e) {
+//            Toast.makeText(this, "Failed to get current power", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     @Override
     protected void onDestroy() {

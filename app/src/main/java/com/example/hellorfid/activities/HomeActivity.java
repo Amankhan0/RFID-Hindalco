@@ -127,6 +127,7 @@ private SessionManager sessionManager;
                 @Override
                 public JSONObject onSuccess(JSONObject responseJson) {
                     runOnUiThread(() -> {
+                        System.out.println("responseJson---"+responseJson);
                         parseAndDisplayBuildings(responseJson);
                         hideLoader();  // Hide the loader once data is loaded
                     });

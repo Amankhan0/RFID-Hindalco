@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.hellorfid.R;
 import com.example.hellorfid.adapter.OrderAdapter;
 import com.example.hellorfid.constants.Constants;
@@ -37,9 +41,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnOrderClickListener {
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private static final int REQUEST_CODE_MAIN_ACTIVITY = 1001;
     private static final Logger log = Logger.getLogger(OrderActivity.class);
@@ -51,11 +55,18 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
 
     private ProgressBar progressBar;
     private TextView loadingText;
-
+    private Button btnPrevious, btnNext;
+    private TextView tvPageNumber;
 
     CommanModel commanModel;
+
+    private int currentPage = 1;
+    private static final int PAGE_SIZE = 2;
+    private boolean isLastPage = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("OrderActivity.onCreate");
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order);
@@ -63,52 +74,87 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
         sessionManager = new SessionManager(this);
         apiCallBackWithToken = new ApiCallBackWithToken(this);
 
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this::refreshData);
+
+
         orderList = new ArrayList<>();
         orderAdapter = new OrderAdapter(this, orderList, this);
 
         recyclerView = findViewById(R.id.recyclerViewOrders);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(orderAdapter);
+
         progressBar = findViewById(R.id.progressBar);
         loadingText = findViewById(R.id.loadingText);
-
-
+        btnPrevious = findViewById(R.id.btnPrevious);
+        btnNext = findViewById(R.id.btnNext);
+        tvPageNumber = findViewById(R.id.tvPageNumber);
 
         ImageView allScreenBackBtn = findViewById(R.id.allScreenBackBtn);
-        allScreenBackBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(OrderActivity.this, HandheldTerminalActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-            }
+        allScreenBackBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(OrderActivity.this, HandheldTerminalActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         });
+
+        btnPrevious.setOnClickListener(v -> loadPreviousPage());
+        btnNext.setOnClickListener(v -> loadNextPage());
+
         showLoader();
         hitApiAndLogResult();
     }
 
+    private void loadPreviousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            showLoader();
+            hitApiAndLogResult();
+        }
+    }
+
+    private void loadNextPage() {
+        if (!isLastPage) {
+            currentPage++;
+            showLoader();
+            hitApiAndLogResult();
+        }
+    }
+
+    private void updatePaginationButtons() {
+//        btnPrevious.setEnabled(currentPage > 1);
+        btnPrevious.setVisibility(currentPage > 1 ? View.VISIBLE : View.GONE);
+        btnNext.setVisibility(isLastPage ? View.GONE : View.VISIBLE);
+//        btnNext.setEnabled(!isLastPage);
+        tvPageNumber.setText("Page " + currentPage);
+    }
+
     private void showLoader() {
-        runOnUiThread(() -> {
-            progressBar.setVisibility(View.VISIBLE);
-            loadingText.setVisibility(View.VISIBLE);
-            loadingText.setText("Loading...");
-            recyclerView.setVisibility(View.GONE);
-        });
+        progressBar.setVisibility(View.VISIBLE);
+        loadingText.setVisibility(View.VISIBLE);
+        loadingText.setText("Loading...");
+        recyclerView.setVisibility(View.GONE);
     }
 
     private void hideLoader() {
-        runOnUiThread(() -> {
-            progressBar.setVisibility(View.GONE);
-            loadingText.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        });
+        progressBar.setVisibility(View.GONE);
+        loadingText.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        updatePaginationButtons();
     }
+
+    private void refreshData() {
+//        currentPage = 1; // Reset to the first page when refreshing
+//        isLastPage = false;
+        orderList.clear();
+        orderAdapter.notifyDataSetChanged();
+        hitApiAndLogResult();
+    }
+
 
     @Override
     public void onOrderClick(OrderModel order) throws JSONException, InterruptedException {
-
         if(sessionManager.getOptionSelected().equals(Constants.RECHECK)){
 
             JSONObject jsonObject = new JSONObject();
@@ -143,55 +189,71 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
             }
         }
     }
-
     private void hitApiAndLogResult() {
         try {
-
             JSONObject s = new JSONObject();
             if(sessionManager.getOptionSelected().equals(Constants.INBOUND)){
                 s.put("dispatchTo", sessionManager.getBuildingId());
-
-            }else {
+            } else {
                 JSONArray orArr = new JSONArray();
                 JSONObject q1 = new JSONObject();
                 q1.put("dispatchFrom", sessionManager.getBuildingId());
-                JSONObject q2 = new JSONObject();
                 JSONObject notEq = new JSONObject();
                 if(sessionManager.getOptionSelected().equals(Constants.RECHECK)){
                     q1.put("saleType", "external");
                     q1.put("orderStatus", Constants.DISPATCHED);
-
                 }
                 notEq.put("$ne", sessionManager.getBuildingId());
                 q1.put("dispatchTo", notEq);
 
                 orArr.put(q1);
-//                s.put("$or",orArr);
                 s = q1;
                 System.out.println("<<---s--->" + s);
-
             }
 
-            JSONObject requestBody = Helper.getSearchJson(1,20,s);
+            // Modified to use currentPage and PAGE_SIZE
+            JSONObject requestBody = Helper.getSearchJson(currentPage, PAGE_SIZE, s);
             JSONObject res = Helper.commanHitApi(apiCallBackWithToken,Constants.searchOrders,requestBody);
             System.out.println("<<---res--->" + res);
             if (res == null ) {
+
+
                 runOnUiThread(() -> {
+                    runOnUiThread(() -> swipeRefreshLayout.setRefreshing(false));
                     hideLoader();
-                    Toast.makeText(OrderActivity.this, "No order found", Toast.LENGTH_SHORT).show();
+                    if (currentPage == 1) {
+
+                        btnNext.setVisibility(View.GONE);
+                        tvPageNumber.setVisibility(View.GONE);
+
+                        Toast.makeText(OrderActivity.this, "No order found", Toast.LENGTH_SHORT).show();
+                    }
                 });
                 return;
             }
 
+            Boolean lastPage = res.optBoolean("last");
+
+            if (lastPage) {
+                isLastPage = true;
+            }else {
+                isLastPage = false;
+            }
+
             parseAndDisplayOrder(res);
+            runOnUiThread(() -> swipeRefreshLayout.setRefreshing(false));
             hideLoader();
+
+
+
         } catch (JSONException e) {
             Log.e("TAG", "Error creating JSON request body", e);
+            runOnUiThread(() -> swipeRefreshLayout.setRefreshing(false));
+
             runOnUiThread(this::hideLoader);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private void parseAndDisplayOrder(JSONObject responseJson) {

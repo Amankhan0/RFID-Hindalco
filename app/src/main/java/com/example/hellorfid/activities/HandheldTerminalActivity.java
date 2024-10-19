@@ -93,6 +93,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }));
+
         buttonInfoList.add(new ButtonInfo("Replace", v -> {
             try {
 
@@ -102,6 +103,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }));
+
         buttonInfoList.add(new ButtonInfo("Consume", v -> startActivity(new Intent(HandheldTerminalActivity.this, ConsumeActivity.class))));
         buttonInfoList.add(new ButtonInfo("Mapping", v -> {
                     sessionManager.setOptionSelected(Constants.MAPPING);

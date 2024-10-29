@@ -25,6 +25,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -160,8 +162,15 @@ private SessionManager sessionManager;
                 String id = buildingJson.getString("_id");
                 String name = buildingJson.getString("buildingName");
                 String address = buildingJson.getString("buildingNo");
-                System.out.println("buildingJson.getBoolean(\"canAddNewTags\")"+buildingJson.getBoolean("canAddNewTags"));
-                boolean canAddNewTags = buildingJson.getBoolean("canAddNewTags");
+//                System.out.println("buildingJson.getBoolean(\"canAddNewTags\")"+buildingJson.getBoolean("canAddNewTags"));
+//
+                System.out.println("addEmptyBag------>>>>>>"+buildingJson.get("addEmptyBag"));
+                boolean canAddNewTags = false;
+
+                if(buildingJson.get("addEmptyBag")!=null){
+                    canAddNewTags = buildingJson.getBoolean("addEmptyBag");
+                }
+
 
                 buildingModels.add(new HomeModel(id, name, address,canAddNewTags));
             }

@@ -634,7 +634,9 @@ private POWER_EVENT power_event;
 //            JSONObject check = Helper.lookingForCheck(lookingFor, keyCheck,errorCode,tagJson);
 //            System.out.println("check----new tag CHeck#####"+check);
             if(sessionManager.getOptionSelected().equals(Constants.INBOUND)){
+
                 if(sessionManager.getNewTagsAllowed()){
+                    System.out.println("sessionManager.getNewTagsAllowed()-----" + sessionManager.getNewTagsAllowed());
                     if(tagJson.getString("tagType").equals(Constants.NEW_TAG) && sessionManager.getCheckTagOn().equals(Constants.INVENTORY)) {
                         System.out.println("check----new tag run CHeck#####");
 //                        tagCheckBtnEnable(tagJson,parseInt(sessionManager.getProductData().getString("quantity")));

@@ -14,6 +14,7 @@ import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.constants.Helper;
 import com.example.hellorfid.constants.StoryHandler;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
+import com.example.hellorfid.model.HomeModel;
 import com.example.hellorfid.session.SessionManager;
 
 import org.json.JSONException;
@@ -36,7 +37,6 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         ApiCallBackWithToken apiCallBackWithToken = new ApiCallBackWithToken(this);
 
         buttonContainer = findViewById(R.id.buttonContainer);
-
         try {
             JSONObject jsonObjectForRole = new JSONObject(sessionManager.getPayload());
             String roleId = jsonObjectForRole.getString("roleId");

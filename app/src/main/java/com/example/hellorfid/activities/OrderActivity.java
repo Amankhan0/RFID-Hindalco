@@ -61,7 +61,7 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
     CommanModel commanModel;
 
     private int currentPage = 1;
-    private static final int PAGE_SIZE = 2;
+    private static final int PAGE_SIZE = 5;
     private boolean isLastPage = false;
 
     @Override

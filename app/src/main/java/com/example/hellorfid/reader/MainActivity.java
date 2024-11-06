@@ -466,6 +466,7 @@ private POWER_EVENT power_event;
                     }else if(sessionManager.getCheckTagOn().equals(Constants.INVENTORY) && obj.getString("opreationStatus").equals(Constants.ACTIVE) ||
                             obj.getString("opreationStatus").equals(sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING)) {
                         String product_id = sessionManager.getProductData().getJSONObject("productId").getString("_id");
+
                         if(product_id.equals(obj.getString("product_id")) && obj.getString("tagType").equals(Constants.INVENTORY)) {
                             addSuccessTag(tagId, isOverLimit, obj);
                             if(successTagList.size()>0){

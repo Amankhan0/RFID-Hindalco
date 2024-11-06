@@ -179,6 +179,7 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
             jsonObject.put("orderId", order.getId());
             jsonObject.put("orderStatus", sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING);
             jsonObject.put("operationStatus",  sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING);
+            System.out.println("jsonObject +Order" + jsonObject);
             JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
 
             System.out.println("updated order--->" + res);

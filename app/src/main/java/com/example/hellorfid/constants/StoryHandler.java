@@ -128,7 +128,6 @@ public class StoryHandler {
             throw new RuntimeException(e);
         }
         return "";
-
     }
 
 

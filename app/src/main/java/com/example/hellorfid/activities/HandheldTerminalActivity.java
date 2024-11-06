@@ -65,7 +65,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
     private void addButtonsBasedOnRole() {
         List<ButtonInfo> buttonInfoList = new ArrayList<>();
 
-        buttonInfoList.add(new ButtonInfo("Outbond Orders", v -> {
+        buttonInfoList.add(new ButtonInfo("Outbound Orders", v -> {
             sessionManager.setScreenType(Constants.TWO);
             sessionManager.setOptionSelected(Constants.OUTBOUND_ORDER);
             startActivity(new Intent(HandheldTerminalActivity.this, OrderActivity.class));
@@ -77,6 +77,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
         buttonInfoList.add(new ButtonInfo("Hold", v -> {
             try {
+
                 sessionManager.setOptionSelected(Constants.HOLD);
 
                 StoryHandler.holdInventory(sessionManager, HandheldTerminalActivity.this, "NA", Constants.HOLD);
@@ -132,8 +133,6 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
 
         buttonInfoList.add(new ButtonInfo("General Status Change", v -> {
-
-
                 sessionManager.setOptionSelected(Constants.OPERATION_STATUS_CHANGE);
                 startActivity(new Intent(HandheldTerminalActivity.this, GeneralStatusChangeActivity.class))  ;          }
 

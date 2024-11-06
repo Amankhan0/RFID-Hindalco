@@ -65,6 +65,7 @@ public class ActionActivity extends AppCompatActivity {
     }
     public void CaseExecute() throws JSONException, InterruptedException {
         JSONObject jsonObject = new JSONObject(sessionManager.getStory());
+        System.out.println("jsonObject----->>>" +jsonObject.getString("caseName"));
         switch (jsonObject.getString("caseName")) {
             case Constants.HOLD:
                 JSONObject res = CaseExecutorHandler.holdUsingLocationTag(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
@@ -88,6 +89,16 @@ public class ActionActivity extends AppCompatActivity {
                 JSONObject res3 = CaseExecutorHandler.vehicleMap(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
                 System.out.println("result---->>> excuted case "+res3);
                 break;
+            case Constants.NOZZLE:
+                System.out.println("incside----");
+                JSONObject res19 = CaseExecutorHandler.nozzle(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
+                System.out.println("<<<---->>>>>>result---->>> excuted case "+res19);
+                break;
+            case Constants.WEIGHINGMACHINE:
+                System.out.println("incside---- weighing machine-----");
+                JSONObject res22 = CaseExecutorHandler.WeighingMachine(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
+                System.out.println("<<<---->>>>>>result---->>> excuted case "+res22);
+                break;
             case Constants.ZONE:
                 JSONObject res4 = CaseExecutorHandler.zoneCase(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
                 System.out.println("result---->>> excuted case "+res4);
@@ -102,7 +113,7 @@ public class ActionActivity extends AppCompatActivity {
                 break;
             case Constants.HOLD+"_"+Constants.INVENTORY :
                 JSONObject res7 = CaseExecutorHandler.inventoryStatusUpdate(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager,Constants.HOLD);
-                System.out.println("result---->>> excuted case hold ");
+                System.out.println("result---->>> excuted case hold");
                 break;
             case Constants.UNHOLD+"_"+Constants.INVENTORY :
                 JSONObject res8 = CaseExecutorHandler.inventoryStatusUpdate(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager,Constants.ACTIVE);

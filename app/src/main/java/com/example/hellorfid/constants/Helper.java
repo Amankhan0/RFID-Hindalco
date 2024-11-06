@@ -21,6 +21,8 @@ public class Helper {
 
     private static SessionManager sessionManager;
 
+
+
     public static String commanParser(String data, Boolean obj, CommanModel commanModel,Context context,JSONArray productIds) throws JSONException {
         if (sessionManager == null) {
             sessionManager = new SessionManager(context);

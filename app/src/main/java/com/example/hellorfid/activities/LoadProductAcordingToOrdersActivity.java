@@ -49,7 +49,6 @@ public class LoadProductAcordingToOrdersActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
 
-        System.out.println("bkaklos;dfjkalsdjjasjdk");
         ImageView allScreenBackBtn = findViewById(R.id.allScreenBackBtn);
         allScreenBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override

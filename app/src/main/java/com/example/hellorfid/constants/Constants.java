@@ -21,6 +21,8 @@ public class Constants {
     public final static String updateBulkTags = "iot/api/updateBulkTags";
     public final static String addBulkCycleCount = "iot/api/addBulkCycleCount";
     public final static String searchGeneral = "helper/api/searchGeneral";
+    public final static String searchDevice = "device/api/searchDevice";
+
     public static final String DISPATCHED = "DISPATCHED";
     public static final String RECHECK = "RECHECK";
     public static final String RECHECKED = "RECHECKED";
@@ -31,6 +33,10 @@ public class Constants {
     public static final String TWO = "TWO";
     public static final String ORDER_PICKED_PARTIALLY = "ORDER_PICKED_PARTIALLY";
     public static final String ORDER_RECEIVED_PARTIALLY = "ORDER_RECEIVED_PARTIALLY";
+    public static final String NOZZLE = "NOZZLE";
+    public static final String DEVICE = "DEVICE";
+    public static final String WEIGHINGMACHINE = "WEIGHING MACHINE";
+
     public static String searchRole = "user/api/searchRole";
 
 
@@ -52,6 +58,10 @@ public class Constants {
 
     public final static String searchLocation = "plant/api/searchLocation";
     public final static String updateLocation = "plant/api/updateLocation";
+    public final static String updateDevice = "device/api/updateDevice";
+    public final static String searchNozzle = "device/api/searchDeviceProfile";
+
+
     public static final String ACTIVE = "ACTIVE";
     public static final String UPDATE ="UPDATE" ;
     public static final String MAPPING = "MAPPING";
@@ -124,7 +134,5 @@ public class Constants {
     public static String OUTBOUND_ORDER= "OUTBOUND";
     public static String INBOUND_ORDER= "INBOUND";
     public static final String HOLD_LOCATION= "HOLD_LOCATION";
-
-
 
 }

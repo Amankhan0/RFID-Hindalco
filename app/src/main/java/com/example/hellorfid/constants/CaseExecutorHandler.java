@@ -137,7 +137,7 @@ public class CaseExecutorHandler {
 
     public static JSONObject vehicleMap (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
 
-        System.out.println("story------>>>>>>> "+story);
+        System.out.println("vehicleMap story------>>>>>>> "+story);
 
                 JSONArray jsonArray = new JSONArray(story);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -173,9 +173,98 @@ public class CaseExecutorHandler {
         return res1;
     }
 
+
+    public static JSONObject nozzle (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
+
+        System.out.println("nozzle story------>>>>>>> nozzle"+story);
+
+        JSONArray jsonArray = new JSONArray(story);
+        JSONObject jsonObject = jsonArray.getJSONObject(0);
+        String dataS = jsonObject.getString("data");
+        String supportDataS = jsonObject.getString("supportData");
+        JSONArray dataObj = new JSONArray(dataS);
+        JSONObject supportDataObj = new JSONObject(supportDataS);
+        System.out.println("RESSS dataObj------>>>>>>> "+dataObj);
+        System.out.println("RESSS supportDataObj------>>>>>>> Nozzle"+supportDataObj);
+
+        JSONObject tagData = dataObj.getJSONObject(0);
+        tagData.put("currentLocation",supportDataObj.getString("buildingIds"));
+        tagData.put("currentLocation",supportDataObj.getString("_id"));
+        tagData.put("buildingIds",supportDataObj.getString("buildingIds"));
+        tagData.put("tagType",Constants.NOZZLE);
+        tagData.put("readerId",supportDataObj.getString("deviceId"));
+        tagData.put("tagPlacement", supportDataObj.getString("buildingIds"));
+        tagData.put("tagInfo",supportDataObj.getString("value"));
+        tagData.put("opreationStatus",Constants.ACTIVE);
+        tagData.put("status",Constants.ACTIVE);
+        tagData.put("createdBy",sessionManager.getUserId());
+        tagData.put("updatedBy",sessionManager.getUserId());
+
+        System.out.println("<<-----RESSS tagData------>>>>>>> "+dataObj);
+
+//        System.out.println("inside the nozzle ---->>>>>");
+
+        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags,dataObj);
+
+        if(res1.getInt("status") == 200){
+            System.out.println("RESSS res------>>>>>>> "+res1);
+            supportDataObj.put("tagIds",res1.getJSONArray("data").getJSONObject(0).getString("_id"));
+            supportDataObj.remove("createdAt");
+            supportDataObj.remove("updatedAt");
+            supportDataObj.remove("siteIds");
+            JSONObject upadate = Helper.commanHitApi(apiCallBackWithToken,Constants.updateZone,supportDataObj);
+            System.out.println("RESSS tag supportDataObj------>>>>>>> "+supportDataObj);
+            if(res1.getInt("status") == 200) {
+                System.out.println("RESSS tag updated------>>>>>>> "+upadate);
+                sessionManager.clearPendingOps();
+            }
+        }
+        return new JSONObject();
+    }
+
+    public static JSONObject WeighingMachine (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
+
+        System.out.println("nozzle story------>>>>>>> nozzle"+story);
+
+        JSONArray jsonArray = new JSONArray(story);
+        JSONObject jsonObject = jsonArray.getJSONObject(0);
+        String dataS = jsonObject.getString("data");
+        String supportDataS = jsonObject.getString("supportData");
+        JSONArray dataObj = new JSONArray(dataS);
+        JSONObject supportDataObj = new JSONObject(supportDataS);
+        System.out.println("RESSS dataObj------>>>>>>> "+dataObj);
+        System.out.println("RESSS supportDataObj------>>>>>>> Nozzle"+supportDataObj);
+
+//        JSONObject tagData = dataObj.getJSONObject(0);
+//        tagData.put("currentLocation",supportDataObj.getString("buildingIds"));
+//        tagData.put("currentLocation",supportDataObj.getString("_id"));
+//        tagData.put("buildingIds",supportDataObj.getString("buildingIds"));
+//        tagData.put("tagType",Constants.NOZZLE);
+//        tagData.put("readerId",supportDataObj.getString("deviceId"));
+//        tagData.put("tagPlacement", supportDataObj.getString("buildingIds"));
+//        tagData.put("tagInfo",supportDataObj.getString("value"));
+//        tagData.put("opreationStatus",Constants.ACTIVE);
+//        tagData.put("status",Constants.ACTIVE);
+//        tagData.put("createdBy",sessionManager.getUserId());
+//        tagData.put("updatedBy",sessionManager.getUserId());
+
+        System.out.println("<<-----RESSS tagData------>>>>>>> "+dataObj);
+
+        System.out.println("inside the weigning machine ---->>>>>");
+
+        System.out.println("----dataObj----" + dataObj);
+
+//        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags,dataObj);
+
+        return new JSONObject();
+    }
+
+
+
+
     public static JSONObject zoneCase (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
 
-        System.out.println("story------>>>>>>> "+story);
+        System.out.println("Zone story------>>>>>>> "+story);
 
        JSONArray jsonArray = new JSONArray(story);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -223,7 +312,7 @@ public class CaseExecutorHandler {
 
     public static JSONObject locationCase (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
 
-        System.out.println("story------>>>>>>> "+story);
+        System.out.println("locationCase story------>>>>>>> "+story);
 
         JSONArray jsonArray = new JSONArray(story);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -273,7 +362,7 @@ public class CaseExecutorHandler {
 
     public static JSONObject replcaeCase (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
 
-        System.out.println("story------>>>>>>> "+story);
+        System.out.println("replcae Casestory------>>>>>>> "+story);
 
         JSONArray jsonArray = new JSONArray(story);
         JSONObject fromObj = jsonArray.getJSONObject(0);
@@ -304,7 +393,7 @@ public class CaseExecutorHandler {
 
     public static JSONObject inventoryStatusUpdate(String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager,String status) throws JSONException, InterruptedException {
 
-        System.out.println("story------>>>>>>> "+story);
+        System.out.println("inventoryStatusUpdate story------>>>>>>> "+story);
 
 //
         JSONArray jsonArray = new JSONArray(story);
@@ -330,7 +419,7 @@ public class CaseExecutorHandler {
 
     public static JSONObject cycleCount(String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager,String status) throws JSONException, InterruptedException {
 
-        System.out.println("story------>>>>>>> "+story);
+        System.out.println("cycleCount story------>>>>>>> "+story);
 
         JSONArray jsonArray = new JSONArray(story);
         JSONObject locationObj = jsonArray.getJSONObject(0);
@@ -409,7 +498,7 @@ public class CaseExecutorHandler {
 
     public static JSONObject reCheckOrder(String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager,String status) throws JSONException, InterruptedException {
 
-        System.out.println("story------>>>>>>> "+story);
+        System.out.println("reCheckOrder story------>>>>>>> "+story);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("orderId", sessionManager.getOrderData().getString("_id"));

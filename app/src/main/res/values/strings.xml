@@ -18,7 +18,8 @@
         <item>Choose an option</item>
         <item>Vehicle</item>
         <item>Zone</item>
-        <!--        <item>Nozzle</item>-->
+        <item>Nozzle</item>
+                <item>Weighing Machine</item>
         <item>Location</item>
         <!--        <item>Weighing Scale</item>-->
     </string-array>

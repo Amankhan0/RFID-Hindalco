@@ -206,57 +206,60 @@ public class CaseExecutorHandler {
 
         JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags,dataObj);
 
-        if(res1.getInt("status") == 200){
-            System.out.println("RESSS res------>>>>>>> "+res1);
-            supportDataObj.put("tagIds",res1.getJSONArray("data").getJSONObject(0).getString("_id"));
-            supportDataObj.remove("createdAt");
-            supportDataObj.remove("updatedAt");
-            supportDataObj.remove("siteIds");
-            JSONObject upadate = Helper.commanHitApi(apiCallBackWithToken,Constants.updateZone,supportDataObj);
-            System.out.println("RESSS tag supportDataObj------>>>>>>> "+supportDataObj);
-            if(res1.getInt("status") == 200) {
-                System.out.println("RESSS tag updated------>>>>>>> "+upadate);
-                sessionManager.clearPendingOps();
-            }
-        }
         return new JSONObject();
     }
 
-    public static JSONObject WeighingMachine (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
+    public static JSONObject WeighingMachine(String story, ApiCallBackWithToken apiCallBackWithToken, SessionManager sessionManager) throws JSONException, InterruptedException {
+        System.out.println("weighing machine story------>>>>>>> " + story);
 
-        System.out.println("nozzle story------>>>>>>> nozzle"+story);
-
+        // Parse the initial data
         JSONArray jsonArray = new JSONArray(story);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
-        String dataS = jsonObject.getString("data");
-        String supportDataS = jsonObject.getString("supportData");
-        JSONArray dataObj = new JSONArray(dataS);
-        JSONObject supportDataObj = new JSONObject(supportDataS);
-        System.out.println("RESSS dataObj------>>>>>>> "+dataObj);
-        System.out.println("RESSS supportDataObj------>>>>>>> Nozzle"+supportDataObj);
 
-//        JSONObject tagData = dataObj.getJSONObject(0);
-//        tagData.put("currentLocation",supportDataObj.getString("buildingIds"));
-//        tagData.put("currentLocation",supportDataObj.getString("_id"));
-//        tagData.put("buildingIds",supportDataObj.getString("buildingIds"));
-//        tagData.put("tagType",Constants.NOZZLE);
-//        tagData.put("readerId",supportDataObj.getString("deviceId"));
-//        tagData.put("tagPlacement", supportDataObj.getString("buildingIds"));
-//        tagData.put("tagInfo",supportDataObj.getString("value"));
-//        tagData.put("opreationStatus",Constants.ACTIVE);
-//        tagData.put("status",Constants.ACTIVE);
-//        tagData.put("createdBy",sessionManager.getUserId());
-//        tagData.put("updatedBy",sessionManager.getUserId());
+        // Get data and supportData directly since they're already JSON strings in your input
+        JSONArray dataObj = new JSONArray(jsonObject.getString("data"));
+        JSONObject supportDataObj = new JSONObject(jsonObject.getString("supportData"));
 
-        System.out.println("<<-----RESSS tagData------>>>>>>> "+dataObj);
+        System.out.println("RESSS dataObj------>>>>>>> " + dataObj);
+        System.out.println("RESSS supportDataObj------>>>>>>> WEIGHING MACHINE" + supportDataObj);
 
-        System.out.println("inside the weigning machine ---->>>>>");
+        // Get the first object from dataObj array
+        JSONObject tagData = dataObj.getJSONObject(0);
 
-        System.out.println("----dataObj----" + dataObj);
+        try {
+            // Update tagData with values from supportDataObj
+            // Note: We're using the actual field names from your supportDataObj
+            tagData.put("currentLocation", supportDataObj.getString("buildingIds"));
+            tagData.put("buildingId", supportDataObj.getString("buildingIds")); // Changed from buildingIds to match your data structure
+            tagData.put("buildingIds", supportDataObj.getString("buildingIds"));
+            tagData.put("tagType", "WEIGHING_SCALE"); // Assuming this is your Constants.WeigingScale value
+            tagData.put("readerId", supportDataObj.getString("_id")); // Using _id since deviceId wasn't in the supportData
+            tagData.put("tagPlacement", supportDataObj.getString("buildingIds"));
 
-//        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags,dataObj);
+            // For tagInfo, you might want to use a specific field from supportDataObj
+            // Currently there's no "value" field in supportDataObj, so you might want to use something else
+            tagData.put("tagInfo", supportDataObj.getString("deviceName")); // Changed to deviceName as an example
 
-        return new JSONObject();
+            tagData.put("operationStatus", "ACTIVE"); // Changed from opreationStatus to operationStatus and using string instead of constant
+            tagData.put("status", "ACTIVE");
+            tagData.put("createdBy", sessionManager.getUserId());
+            tagData.put("updatedBy", sessionManager.getUserId());
+
+            // Optional: Add any additional fields that might be useful
+            tagData.put("deviceType", supportDataObj.getString("deviceType"));
+            tagData.put("macAddress", supportDataObj.getString("macAddress"));
+            tagData.put("model", supportDataObj.getString("model"));
+
+            System.out.println("<<-----RESSS updated tagData------>>>>>>> " + dataObj);
+
+            JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken, Constants.addBulkTags, dataObj);
+
+            return new JSONObject();
+
+        } catch (JSONException e) {
+            System.err.println("Error processing weighing machine data: " + e.getMessage());
+            return new JSONObject().put("success", false).put("error", e.getMessage());
+        }
     }
 
 
@@ -324,9 +327,12 @@ public class CaseExecutorHandler {
         System.out.println("RESSS supportDataObj------>>>>>>> "+supportDataObj);
 
         JSONObject tagData = dataObj.getJSONObject(0);
+        if(!supportDataObj.getString("tagIds").equals("null")){
+            tagData.put("_id",supportDataObj.getString("tagIds"));
+        }
         tagData.put("currentLocation",supportDataObj.getJSONArray("buildingIds").get(0));
         tagData.put("locationIds",supportDataObj.getString("_id"));
-        tagData.put("zoneIds",supportDataObj.getJSONArray("zoneIds").get(0));
+        tagData.put("zoneIds",supportDataObj.getString("zoneIds"));
         tagData.put("buildingIds",supportDataObj.getJSONArray("buildingIds").get(0));
         tagData.put("tagType",Constants.LOCATION);
         tagData.put("tagPlacement",supportDataObj.getJSONArray("buildingIds").get(0));
@@ -336,7 +342,7 @@ public class CaseExecutorHandler {
         tagData.put("createdBy",sessionManager.getUserId());
         tagData.put("updatedBy",sessionManager.getUserId());
 
-        System.out.println("RESSS tagData------>>>>>>> "+dataObj);
+        System.out.println("RESSS tagData------>>>>>>> "+tagData);
 
 
         JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags,dataObj);
@@ -349,9 +355,10 @@ public class CaseExecutorHandler {
             supportDataObj.remove("siteIds");
             supportDataObj.remove("usedBy");
 
+
             JSONObject upadate = Helper.commanHitApi(apiCallBackWithToken,Constants.updateLocation,supportDataObj);
             System.out.println("RESSS tag supportDataObj------>>>>>>> "+supportDataObj);
-            if(res1.getInt("status") == 200) {
+            if(upadate!=null && upadate.getInt("status") == 200) {
                 System.out.println("RESSS tag updated------>>>>>>> "+upadate);
                 sessionManager.clearPendingOps();
             }
@@ -434,10 +441,13 @@ public class CaseExecutorHandler {
         for (int i = 0; i < inventoryArr.length(); i++) {
             inventoryArr.getJSONObject(i).put("cycleCountBy",Constants.LOCATION);
             inventoryArr.getJSONObject(i).put("cycleCountById",location.getString("locationIds"));
+            inventoryArr.getJSONObject(i).put("locationIds",location.getString("locationIds"));
+
         }
         System.out.println("RESSS inventoryArr------>>>>>>> "+inventoryArr.toString());
 
         JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkCycleCount,inventoryArr);
+        System.out.println("res1---->>>" + res1);
         if(res1!=null && res1.getInt("status") == 200) {
             System.out.println("RESSS tag updated------>>>>>>> "+res1);
             sessionManager.clearPendingOps();
@@ -511,6 +521,4 @@ public class CaseExecutorHandler {
         }
         return res1;
     }
-
-
 }

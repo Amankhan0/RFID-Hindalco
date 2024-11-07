@@ -7,11 +7,20 @@ public class Constants {
 //    public final static String url = "http://192.168.0.117:9090/";
 //    public final static String url = "http://192.168.0.117:9090/";
 
+//    public final static String versionCode = "mirza1";
+//    public final static String searchFile = "upload/api/searchFile";
+//    public final static String downloadAPK = "upload/api/download";
+
+    public static final String VERSION_CODE = "mirza1";
+    public static final String SEARCH_FILE_ENDPOINT = "upload/api/searchFile";
+    public static final String DOWNLOAD_FILE_ENDPOINT = "upload/api/download";
 
     public final static String url = "https://api.hindalco.headsupcorporation.com/";
 
     public final static String addBulkTags = "iot/api/addBulkTags";
     public final static String addTag = "iot/api/addTag";
+
+
 
     public final static String updateBatch = "iot/api/updateBatch";
     public final static String searchBuilding = "plant/api/searchBuilding";
@@ -34,6 +43,7 @@ public class Constants {
     public static final String ORDER_PICKED_PARTIALLY = "ORDER_PICKED_PARTIALLY";
     public static final String ORDER_RECEIVED_PARTIALLY = "ORDER_RECEIVED_PARTIALLY";
     public static final String NOZZLE = "NOZZLE";
+    public static final String WeigingScale = "WEIGHING_SCALE";
     public static final String DEVICE = "DEVICE";
     public static final String WEIGHINGMACHINE = "WEIGHING MACHINE";
 

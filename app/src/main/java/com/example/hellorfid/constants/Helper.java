@@ -223,7 +223,7 @@ public class Helper {
 
             @Override
             public void onFailure(Exception e) {
-                Log.e("TAG", "API call failed", e);
+                Log.e("TAG", "API call failed -->"+URL, e );
                 isComplete[0] = true;
             }
         });
@@ -253,7 +253,9 @@ public class Helper {
             @Override
             public void onFailure(Exception e) {
                 Log.e("TAG", "API call failed", e);
+//                Toast.makeText();
                 isComplete[0] = true;
+
             }
         });
 

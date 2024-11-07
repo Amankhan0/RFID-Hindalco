@@ -74,6 +74,7 @@ public class HomeAdapter extends BaseAdapter {
                     sessionManager.clearBuildingId();
                     if(sessionManager.getBuildingId() == null || sessionManager.getBuildingId().isEmpty()){
                         sessionManager.setBuildingId(buildingModel.getId());
+                        System.out.println("buildingModel.getCanAddNewTags()" + buildingModel.getCanAddNewTags()    );
                         sessionManager.setNewTagsAllowed(buildingModel.getCanAddNewTags());
                         System.out.println("clicked BBBBUUUUUU" + sessionManager.getNewTagsAllowed());
 

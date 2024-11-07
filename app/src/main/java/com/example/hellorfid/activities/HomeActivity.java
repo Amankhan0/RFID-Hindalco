@@ -38,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     private List<HomeModel> buildingModels;
     private ProgressBar progressBar;
     private TextView loadingText;
-private SessionManager sessionManager;
+    private SessionManager sessionManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,11 +164,11 @@ private SessionManager sessionManager;
                 String address = buildingJson.getString("buildingNo");
 //                System.out.println("buildingJson.getBoolean(\"canAddNewTags\")"+buildingJson.getBoolean("canAddNewTags"));
 //
-                System.out.println("addEmptyBag------>>>>>>"+buildingJson.get("addEmptyBag"));
+                System.out.println("canAddNewTags------>>>>>>"+buildingJson.get("canAddNewTags"));
                 boolean canAddNewTags = false;
 
-                if(buildingJson.get("addEmptyBag")!=null){
-                    canAddNewTags = buildingJson.getBoolean("addEmptyBag");
+                if(buildingJson.get("canAddNewTags")!=null){
+                    canAddNewTags = buildingJson.getBoolean("canAddNewTags");
                 }
 
 

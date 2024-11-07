@@ -26,7 +26,6 @@ import com.example.hellorfid.reader.MainActivity;
 import com.example.hellorfid.session.SessionManager;
 import com.example.hellorfid.utils.JwtDecoder;
 
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +38,6 @@ import java.util.List;
 public class Mapping extends AppCompatActivity {
 
     private static final int REQUEST_CODE_MAIN_ACTIVITY = 1001;
-    private static final Logger log = Logger.getLogger(Mapping.class);
     private Spinner spinnerOptions;
     private String tagId;
     private ApiCallBackWithToken apiCallBackWithToken;
@@ -188,11 +186,6 @@ public String BuildingId;
         itemListView.setOnItemClickListener((parent, view, position, id) -> {
             selectedItemInfo = itemData.get(position);
             System.out.println("Selected item data: " + selectedItemInfo.toString());
-            try {
-                selectedItemInfo.put("buildingIds", BuildingId);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
 
             System.out.println("<-----selectedItemInfo----->>>"+selectedItemInfo);
             System.out.println("---selectedOption----" + sessionManager.getOptionSelected());
@@ -208,11 +201,6 @@ public String BuildingId;
 //            Intent intent = new Intent(this, MainActivity.class);
 //            intent.putExtra("totalInventory", 1);
 //            startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
-
-
-
-
-
         });
     }
 
@@ -372,219 +360,33 @@ public String BuildingId;
         adapter.notifyDataSetChanged();
     }
 
-    private JSONObject generateRequestBody(String tagType, String itemInfo, String fieldName) throws JSONException {
-        JSONObject json = new JSONObject();
-        json.put("rfidTag", tagId); // Use the tagId received from MainActivity
-        json.put("tagInfo", new JSONObject(itemInfo).getString(fieldName));
-        json.put("tagType", tagType);
-        return json;
-    }
+//    private JSONObject generateRequestBody(String tagType, String itemInfo, String fieldName) throws JSONException {
+//        JSONObject json = new JSONObject();
+//        json.put("rfidTag", tagId); // Use the tagId received from MainActivity
+//        json.put("tagInfo", new JSONObject(itemInfo).getString(fieldName));
+//        json.put("tagType", tagType);
+//        return json;
+//    }
 
-    private void updateApiHit(String endPoint, JSONObject requestBody) {
+//    private void updateApiHit(String endPoint, JSONObject requestBody) {
+//
+//        System.out.println("requestBody"+requestBody);
+//
+//        apiCallBackWithToken.Api(endPoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
+//            @Override
+//            public JSONObject onSuccess(JSONObject responseJson) {
+//                runOnUiThread(() -> {
+//                    System.out.println("come------"+responseJson);
+//                });
+//                return responseJson;
+//            }
+//
+//            @Override
+//            public void onFailure(Exception e) {
+//                Log.e("Mapping", "API call failed", e);
+//                runOnUiThread(() -> Toast.makeText(Mapping.this, "Failed to load items", Toast.LENGTH_SHORT).show());
+//            }
+//        });
+//    }
 
-        System.out.println("requestBody"+requestBody);
-
-        apiCallBackWithToken.Api(endPoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
-            @Override
-            public JSONObject onSuccess(JSONObject responseJson) {
-                runOnUiThread(() -> {
-                    System.out.println("come------"+responseJson);
-                });
-                return responseJson;
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Log.e("Mapping", "API call failed", e);
-                runOnUiThread(() -> Toast.makeText(Mapping.this, "Failed to load items", Toast.LENGTH_SHORT).show());
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE_MAIN_ACTIVITY) {
-            if (resultCode == RESULT_OK) {
-                System.out.println("data-- -- -" + data);
-                String result = data.getStringExtra("result_key");
-
-                if (result != null && result.startsWith("[") && result.endsWith("]")) {
-                    tagId = result.substring(1, result.length() - 1);
-                    System.out.println("Extracted tagId: " + tagId);
-
-                    // Now execute the API call with the received tagId
-                    try {
-                        JSONObject body = generateRequestBody(selectedEndpointInfo.tagType, selectedItemInfo.toString(), selectedEndpointInfo.fieldName);
-
-                        System.out.println("selectedItemInfo.toString()"+selectedItemInfo.toString());
-                        System.out.println("body" + body);
-                        System.out.println("addTagJson"+Constants.addTagJson);
-                        JSONObject newBody = new JSONObject(Constants.addTagJson);
-                        System.out.println("jsonObject"+newBody);
-
-
-                            newBody.put("createdBy",userId);
-                        if(selectedEndpointInfo.tagType=="Vehicle"){
-                            newBody.put("tagPlacement", selectedItemInfo.get("_id"));
-                            newBody.put("rfidTag", body.get("rfidTag"));
-                            newBody.put("tagInfo", body.get("tagInfo"));
-                            newBody.put("tagType", body.get("tagType"));
-                            newBody.put("status", "Active");
-                        }else if(selectedEndpointInfo.tagType=="Zone"){
-
-                            JSONArray buildingIds = selectedItemInfo.getJSONArray("buildingIds");
-                            if (buildingIds.length() > 0) {
-                                newBody.put("currentLocation", buildingIds.get(0));
-                                newBody.put("buildingId", buildingIds.get(0));
-                            } else {
-                                System.out.println("---buildingIds--- No building IDs available");
-                            }
-                            newBody.put("operationStatus", "NA");
-                            newBody.put("tagPlacement", selectedItemInfo.get("_id"));
-                            newBody.put("rfidTag", body.get("rfidTag"));
-                            newBody.put("tagInfo", body.get("tagInfo"));
-                            newBody.put("tagType", body.get("tagType"));
-                            newBody.put("status", "Active");
-                        }
-                        else if(selectedEndpointInfo.tagType=="Location"){
-                            System.out.println("clickeddddd");
-                            JSONArray buildingIds = selectedItemInfo.getJSONArray("buildingIds");
-                            if (buildingIds.length() > 0) {
-                                newBody.put("currentLocation", buildingIds.get(0));
-                                newBody.put("buildingId", buildingIds.get(0));
-                            } else {
-                                System.out.println("---buildingIds--- No building IDs available");
-                            }
-                            newBody.put("tagPlacement", selectedItemInfo.get("_id"));
-                            newBody.put("rfidTag", body.get("rfidTag"));
-                            newBody.put("tagInfo", body.get("tagInfo"));
-                            newBody.put("tagType", body.get("tagType"));
-                            newBody.put("status", "Active");
-                        } else if (selectedEndpointInfo.tagType == "Nozzle") {
-
-                            JSONArray buildingIds = selectedItemInfo.getJSONArray("buildingIds");
-                            if (buildingIds.length() > 0) {
-                                newBody.put("currentLocation", buildingIds.get(0));
-                                newBody.put("buildingId", buildingIds.get(0));
-                            }
-                            newBody.put("tagPlacement", selectedItemInfo.get("_id"));
-                            newBody.put("rfidTag", body.get("rfidTag"));
-                            newBody.put("tagInfo", body.get("tagInfo"));
-                            newBody.put("tagType", body.get("tagType"));
-                            newBody.put("status", "Active");
-
-                            System.out.println("selectedEndpointInfo----"+ selectedEndpointInfo);
-                        }else if (selectedEndpointInfo.tagType == "WeighingMachine") {
-                            // Add handling for Weighing Machine
-                            JSONArray buildingIds = selectedItemInfo.getJSONArray("buildingIds");
-                            if (buildingIds.length() > 0) {
-                                newBody.put("currentLocation", buildingIds.get(0));
-                                newBody.put("buildingId", buildingIds.get(0));
-                            }
-                            newBody.put("tagPlacement", selectedItemInfo.get("_id"));
-                            newBody.put("rfidTag", body.get("rfidTag"));
-                            newBody.put("tagInfo", body.get("tagInfo"));
-                            newBody.put("tagType", body.get("tagType"));
-                            newBody.put("status", "Active");
-                        }
-
-
-                        System.out.println("updated newBody"+newBody);
-
-                        apiCallBackWithToken.Api(Constants.addTag, newBody, new ApiCallBackWithToken.ApiCallback() {
-                            @Override
-                            public JSONObject onSuccess(JSONObject responseJson) {
-
-                                try {
-                                    // Check if status is 201
-                                    int status = responseJson.getInt("status");
-                                    if (status == 201) {
-                                        // Extract the _id from responseJson
-                                        String newTagId = responseJson.getJSONObject("data").getString("_id");
-
-                                        // Create a new JSONObject for selectedItemInfo with only tagIds and _id
-                                        JSONObject updatedSelectedItemInfo = new JSONObject();
-                                        updatedSelectedItemInfo.put("tagIds", newTagId);
-                                        updatedSelectedItemInfo.put("_id", selectedItemInfo.getString("_id"));
-
-                                        System.out.println("Updated selectedItemInfo with new tagId: " + updatedSelectedItemInfo);
-                                        // Run on UI thread to show success message
-
-                                        System.out.println("selectedEndpointInfo.tagType"+selectedEndpointInfo.tagType);
-
-                                        if (selectedEndpointInfo.tagType == "Vehicle") {
-                                            updateApiHit(Constants.updateVehicle, updatedSelectedItemInfo);
-                                        } else if (selectedEndpointInfo.tagType == "Zone") {
-                                            updateApiHit(Constants.updateZone, updatedSelectedItemInfo);
-                                        } else if (selectedEndpointInfo.tagType == "Location") {
-                                            updateApiHit(Constants.updateLocation, updatedSelectedItemInfo);
-                                        } else if (selectedEndpointInfo.tagType == "WeighingMachine") {
-                                            updateApiHit(Constants.updateDevice, updatedSelectedItemInfo);
-                                        }
-
-
-                                        runOnUiThread(() -> {
-                                            Toast.makeText(Mapping.this, "Tag added successfully", Toast.LENGTH_SHORT).show();
-                                        });
-                                    } else {
-                                        // If status is not 201, show an error toast
-                                        runOnUiThread(() -> {
-                                            Toast.makeText(Mapping.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                                        });
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                    Log.e("Mapping", "Failed to parse responseJson", e);
-
-                                    // Show error toast in case of JSON parsing error
-                                    runOnUiThread(() -> {
-                                        Toast.makeText(Mapping.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                                    });
-                                }
-                                return responseJson;
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                Log.e("Mapping", "API call failed", e);
-                                runOnUiThread(() -> Toast.makeText(Mapping.this, "Failed to add tag", Toast.LENGTH_SHORT).show());
-                            }
-                        });
-                    } catch (JSONException e) {
-                        Log.e("Mapping", "Error generating request body", e);
-                        Toast.makeText(Mapping.this, "Error generating request body", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    System.out.println("Invalid tag ID format");
-                    Toast.makeText(Mapping.this, "Invalid tag ID format", Toast.LENGTH_SHORT).show();
-                }
-            } else if (resultCode == RESULT_CANCELED) {
-                System.out.println("result cancelled");
-                Toast.makeText(Mapping.this, "Tag reading cancelled", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-    private void processWeighingMachines(JSONArray content) throws JSONException {
-        for (int i = 0; i < content.length(); i++) {
-            JSONObject device = content.getJSONObject(i);
-            String deviceName = device.optString("deviceName", "Unknown Device");
-            String deviceUserIdentify = device.optString("deviceUserIdentify", "");
-            String model = device.optString("model", "");
-
-            StringBuilder displayName = new StringBuilder(deviceName);
-            if (!deviceUserIdentify.isEmpty()) {
-                displayName.append(" (").append(deviceUserIdentify).append(")");
-            }
-            if (!model.isEmpty()) {
-                displayName.append(" - ").append(model);
-            }
-
-            itemNames.add(displayName.toString());
-            itemData.add(device);
-        }
-    }
 }

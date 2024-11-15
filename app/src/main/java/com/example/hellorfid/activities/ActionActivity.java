@@ -36,14 +36,25 @@ public class ActionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_action);
 
         Button homeButton = findViewById(R.id.homeButton);
+//        homeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(ActionActivity.this, HandheldTerminalActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
+
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ActionActivity.this, HandheldTerminalActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }
         });
+
 
 
 
@@ -98,6 +109,11 @@ public class ActionActivity extends AppCompatActivity {
                 System.out.println("incside---- weighing machine-----");
                 JSONObject res22 = CaseExecutorHandler.WeighingMachine(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
                 System.out.println("<<<---->>>>>>result---->>> excuted case "+res22);
+                break;
+            case Constants.WeighingScale:
+                System.out.println("incside---- WeighingNozzleMapping-----");
+                JSONObject res32 = CaseExecutorHandler.WeighingNozzleMapping(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);
+                System.out.println("<<<---->>>>>>result---->>> excuted case "+res32);
                 break;
             case Constants.ZONE:
                 JSONObject res4 = CaseExecutorHandler.zoneCase(sessionManager.getCaseExcutor(),apiCallBackWithToken,sessionManager);

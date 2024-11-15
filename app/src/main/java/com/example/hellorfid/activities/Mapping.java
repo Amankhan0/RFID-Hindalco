@@ -26,6 +26,7 @@ import com.example.hellorfid.reader.MainActivity;
 import com.example.hellorfid.session.SessionManager;
 import com.example.hellorfid.utils.JwtDecoder;
 
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +39,7 @@ import java.util.List;
 public class Mapping extends AppCompatActivity {
 
     private static final int REQUEST_CODE_MAIN_ACTIVITY = 1001;
+    private static final Logger log = Logger.getLogger(Mapping.class);
     private Spinner spinnerOptions;
     private String tagId;
     private ApiCallBackWithToken apiCallBackWithToken;
@@ -187,7 +189,7 @@ public String BuildingId;
             selectedItemInfo = itemData.get(position);
             System.out.println("Selected item data: " + selectedItemInfo.toString());
 
-            System.out.println("<-----selectedItemInfo----->>>"+selectedItemInfo);
+
             System.out.println("---selectedOption----" + sessionManager.getOptionSelected());
             try {
                 StoryHandler.mappingVehicle(sessionManager,this,selectedItemInfo.toString(),sessionManager.getOptionSelected(), "lbalblallbaallab");
@@ -210,20 +212,29 @@ public String BuildingId;
         requestBody.put("limit", "100");
 
         JSONObject searchObject = new JSONObject();
+
+        System.out.println("searchObject-->>>"+requestBody);
         if (endPoint.equals(Constants.searchDevice)) {
             // Special handling for weighing machine search
 
             searchObject.put("deviceType", "weighing_scale");  // Keep the backend type as is
             requestBody.put("search", searchObject);
         } else if (endPoint.equals(Constants.searchNozzle)) {
-            requestBody.put("search", new JSONObject());
-            endPoint = "device/api/searchDeviceProfile";
+
+            JSONObject object = new JSONObject();
+            object.put("placement", sessionManager.getBuildingId());
+            object.put("capabilities.userEntry","BAGGING_MANUAL");
+            requestBody.put("search", object);
+            System.out.println("object--->>"+requestBody );
+
+//            endPoint = "device/api/searchDeviceProfile";
         } else {
             JSONObject buildingObject = new JSONObject();
             buildingObject.put("buildingIds", sessionManager.getBuildingId());
             requestBody.put("search", endPoint.equals(Constants.searchVehicle) ? new JSONObject() : buildingObject);
         }
 
+        System.out.println("sessionManager.getBuildingId()"+sessionManager.getBuildingId());
         System.out.println("requestBody ----  " + requestBody);
         System.out.println("endPoint ----  " + endPoint);
 
@@ -267,6 +278,7 @@ public String BuildingId;
         });
     }
     private void processNozzleDevices(JSONArray content) throws JSONException {
+        System.out.println("content--->>>" + content);
         for (int i = 0; i < content.length(); i++) {
             JSONObject device = content.getJSONObject(i);
 
@@ -287,10 +299,10 @@ public String BuildingId;
                         String value = capability.optString("value", "");
                         String userEntry = capability.optString("userEntry", "");
                         String deviceId = device.getString("deviceId");
-                        System.out.println("deviceID---"+ deviceId);
-                        // Check if this is an antenna
-                        if (name.startsWith("antennas.")) {
-                            System.out.println("Found antenna: " + name + " with value: " + value + " userEntry: " + userEntry);
+
+                        // Only process capabilities with userEntry = "BAGGING_MANUAL"
+                        if ("BAGGING_MANUAL".equals(userEntry)) {
+                            System.out.println("Found BAGGING_MANUAL antenna: " + name + " with value: " + value);
 
                             // Create a new JSONObject for the item
                             JSONObject antennaItem = new JSONObject();
@@ -299,8 +311,9 @@ public String BuildingId;
                             antennaItem.put("deviceId", deviceId);
                             antennaItem.put("value", value);
                             antennaItem.put("userEntry", userEntry);
-                            antennaItem.put("antennaNumber", name);
-                            antennaItem.put("deviceId", deviceId);
+//                            antennaItem.put("antennaNumber", name);
+
+                            System.out.println("antennaItem----"+antennaItem);
 
                             // Create display name: deviceName + value + userEntry
                             StringBuilder displayName = new StringBuilder(deviceName);
@@ -311,9 +324,7 @@ public String BuildingId;
                             }
 
                             // Add userEntry if it exists
-                            if (!userEntry.isEmpty()) {
-                                displayName.append(" (").append(userEntry).append(")");
-                            }
+                            displayName.append(" (BAGGING_MANUAL)");
 
                             itemNames.add(displayName.toString());
                             itemData.add(antennaItem);
@@ -322,14 +333,6 @@ public String BuildingId;
                     }
                 }
             }
-        }
-
-
-
-        // Log the final processed data
-        System.out.println("\nTotal processed items: " + itemNames.size());
-        for (int i = 0; i < itemNames.size(); i++) {
-            System.out.println("Item " + (i + 1) + ": " + itemNames.get(i));
         }
     }
 

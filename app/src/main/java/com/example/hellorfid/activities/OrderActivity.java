@@ -175,10 +175,17 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
             }
 
         }else {
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("orderId", order.getId());
-            jsonObject.put("orderStatus", sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING);
-            jsonObject.put("operationStatus",  sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING);
+            jsonObject.put("updatedOrderId", order.getId());
+//             jsonObject.put("orderStatus", sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING);
+//             jsonObject.put("operationStatus",  sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING);
+
+            jsonObject.put("orderStatus", order.getOrderStatus());
+            jsonObject.put("operationStatus",  order.getOrderStatus());
+
+
             System.out.println("jsonObject +Order" + jsonObject);
             JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
 
@@ -194,22 +201,11 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
         try {
             JSONObject s = new JSONObject();
             if(sessionManager.getOptionSelected().equals(Constants.INBOUND)){
-                s.put("dispatchTo", sessionManager.getBuildingId());
+                s.put("currentLocation", sessionManager.getBuildingId());
+                s.put("orderType",Constants.INBOUND);
             } else {
-                JSONArray orArr = new JSONArray();
-                JSONObject q1 = new JSONObject();
-                q1.put("dispatchFrom", sessionManager.getBuildingId());
-                JSONObject notEq = new JSONObject();
-                if(sessionManager.getOptionSelected().equals(Constants.RECHECK)){
-                    q1.put("saleType", "external");
-                    q1.put("orderStatus", Constants.DISPATCHED);
-                }
-                notEq.put("$ne", sessionManager.getBuildingId());
-                q1.put("dispatchTo", notEq);
-
-                orArr.put(q1);
-                s = q1;
-                System.out.println("<<---s--->" + s);
+                s.put("currentLocation", sessionManager.getBuildingId());
+                s.put("orderType",Constants.OUTBOUND);
             }
 
             // Modified to use currentPage and PAGE_SIZE

@@ -152,6 +152,7 @@ TextView gradeTextView = cardView.findViewById(R.id.gradeTextView);
 
 
                     } catch (JSONException e) {
+                        System.out.println("in catch-->>>>");
                         throw new RuntimeException(e);
                     }
                 }

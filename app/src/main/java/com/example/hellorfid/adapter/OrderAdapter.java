@@ -53,6 +53,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 try {
                     onOrderClickListener.onOrderClick(order);
                 } catch (JSONException | InterruptedException e) {
+                    System.out.println("order id--->><><<"+e);
                     throw new RuntimeException(e);
                 }
             }

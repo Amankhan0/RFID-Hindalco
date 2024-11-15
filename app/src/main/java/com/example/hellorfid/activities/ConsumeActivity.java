@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ConsumeActivity extends AppCompatActivity {
+public class    ConsumeActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_MAIN_ACTIVITY = 1001;
     public JSONArray tagArr;
@@ -32,12 +32,15 @@ public class ConsumeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_consume);
 
-        apiCallBackWithToken = new ApiCallBackWithToken(this);
+//        apiCallBackWithToken = new ApiCallBackWithToken(this);
 
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("totalInventory", 2);
-        intent.putExtra("apiUrl", Constants.addBulkTags);
-        startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
+//        Intent intent = new Intent(this, MainActivity.class);
+//        intent.putExtra("totalInventory", 2);
+//        intent.putExtra("apiUrl", Constants.addBulkTags);
+//        startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY);
+
+        System.out.println("blalbalalblalbal");
+
     }
 
     @Override

@@ -223,7 +223,8 @@ public class Helper {
 
             @Override
             public void onFailure(Exception e) {
-                Log.e("TAG", "API call failed -->"+URL, e );
+                System.out.println("API call failed -->>>>"+URL+ e);
+//                Log.e("TAG", "API call failed -->"+URL, e );
                 isComplete[0] = true;
             }
         });

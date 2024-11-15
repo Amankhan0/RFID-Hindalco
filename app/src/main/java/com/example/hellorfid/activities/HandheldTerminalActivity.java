@@ -45,6 +45,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             JSONObject s = Helper.getSearchJson(1, 1, searchObject);
 
             JSONObject resOfRoles = Helper.commanHitApi(apiCallBackWithToken, Constants.searchRole, s);
+            System.out.println("resOfRoles====>>>>"+resOfRoles);
             sessionManager.setRole(resOfRoles.toString());
 
             addButtonsBasedOnRole();
@@ -105,7 +106,12 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             }
         }));
 
-        buttonInfoList.add(new ButtonInfo("Consume", v -> startActivity(new Intent(HandheldTerminalActivity.this, ConsumeActivity.class))));
+        buttonInfoList.add(new ButtonInfo("Consume", v -> {
+            startActivity(new Intent(HandheldTerminalActivity.this, ConsumeActivity.class));
+        }
+        ));
+
+
         buttonInfoList.add(new ButtonInfo("Mapping", v -> {
                     sessionManager.setOptionSelected(Constants.MAPPING);
                     startActivity(new Intent(HandheldTerminalActivity.this, Mapping.class));
@@ -136,7 +142,6 @@ public class HandheldTerminalActivity extends AppCompatActivity {
                 sessionManager.setOptionSelected(Constants.OPERATION_STATUS_CHANGE);
                 startActivity(new Intent(HandheldTerminalActivity.this, GeneralStatusChangeActivity.class))  ;          }
 
-
         ));
 
         buttonInfoList.add(new ButtonInfo("Recheck Order", v -> {
@@ -145,6 +150,19 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             startActivity(new Intent(HandheldTerminalActivity.this, OrderActivity.class));
         }
 
+
+        ));
+
+        buttonInfoList.add(new ButtonInfo("Weighing Scale", v -> {
+
+            sessionManager.setOptionSelected(Constants.WeighingScale);
+            try {
+                StoryHandler.WeighingScale(sessionManager, HandheldTerminalActivity.this, "NA", Constants.INVENTORY);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
         ));
 
 
@@ -152,7 +170,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         for (ButtonInfo buttonInfo : buttonInfoList) {
             try {
                 String roleValue = sessionManager.getRole(buttonInfo.text);
-                System.out.println("key: " + buttonInfo.text + " result: " + roleValue);
+                System.out.println("key===>>>>: " + buttonInfo.text + " result: " + roleValue);
                 if (roleValue != null && roleValue.equals("true")) {
                     Button button = createButton(buttonInfo);
                     buttonContainer.addView(button);

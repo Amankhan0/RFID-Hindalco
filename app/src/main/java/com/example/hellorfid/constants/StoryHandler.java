@@ -1,5 +1,7 @@
 package com.example.hellorfid.constants;
 
+import static java.lang.Integer.parseInt;
+
 import android.content.Context;
 import android.content.Intent;
 
@@ -9,6 +11,7 @@ import com.example.hellorfid.activities.HandheldTerminalActivity;
 import com.example.hellorfid.activities.LoadProductAcordingToOrdersActivity;
 import com.example.hellorfid.activities.MultiActionActivity;
 import com.example.hellorfid.activities.PendingOpsActivity;
+import com.example.hellorfid.dump.ApiCallBackWithToken;
 import com.example.hellorfid.session.SessionManager;
 
 import org.json.JSONArray;
@@ -97,6 +100,28 @@ public class StoryHandler {
         return "Vehicle Mapped" + jsonArray1.toString();
     }
 
+    public static String WeighingScale(SessionManager sessionManager, Context context,String supportData,String type) throws JSONException {
+        System.out.println("mappingVehicle  "+type);
+        JSONArray jsonArray=  new JSONArray();
+        JSONObject story1 = StoryHandler.storyJsonObj("1","Weighing Scale",Constants.WeighingScale,false,"SCAN","NO_DATA",supportData,"1", "desc",new JSONArray(),new JSONArray());
+        JSONObject story2 = StoryHandler.storyJsonObj("2","Nozzle",Constants.NOZZLE,false,"SCAN","NO_DATA",supportData,"1", "desc",new JSONArray(),new JSONArray());
+        JSONObject story3 = StoryHandler.storyJsonObj("3",Constants.UPDATE,type,false,"UPDATE","NO_DATA","NA","0", "desc",new JSONArray(),new JSONArray());
+        jsonArray.put(story1);
+        jsonArray.put(story2);
+        jsonArray.put(story3);
+        JSONObject finalarr = StoryHandler.storyJson(Constants.WeighingScale,Constants.WeighingScale,jsonArray);
+        JSONArray jsonArray1=  new JSONArray();
+        jsonArray1.put(finalarr);
+        System.out.println("finalarr.toString()"+jsonArray1.toString());
+        sessionManager.setStory(jsonArray1.toString());
+        System.out.println("finalarr.toString()"+jsonArray1.toString());
+        sessionManager.setCheckTagOn(type);
+        Intent intent = new Intent(context, MultiActionActivity.class);
+        context.startActivity(intent);
+
+        return "Vehicle Mapped" + jsonArray1.toString();
+    }
+
     public static String holdInventory(SessionManager sessionManager, Context context,String supportData,String type) throws JSONException {
         try {
             JSONArray jsonArray=  new JSONArray();
@@ -133,12 +158,55 @@ public class StoryHandler {
 
     public static String orderStory(SessionManager sessionManager, Context context,String supportData,String type) throws JSONException {
         try {
+            JSONObject orderData = sessionManager.getOrderData();
+            ApiCallBackWithToken apiCallBackWithToken = new ApiCallBackWithToken(context);
+            JSONObject searchtag = new JSONObject();
+
+            searchtag.put("orderId", orderData.getString("_id"));
+
+            System.out.println("searchtag--->>>"+searchtag);
+            JSONObject searchJson = Helper.getSearchJson(1, 5, searchtag);
+            System.out.println("searchJson--->>>"+searchJson);
+
+
+//           String Quantity = sessionManager.getProductData().getString("quantity");
+
+
+//            JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.searchRfidTag,jsonObject);
+
+
+            int ToTalQuantity = parseInt(sessionManager.getProductData().getString("quantity"));
+            int finalQty = ToTalQuantity;
+            System.out.println("orderData.getString(\"orderStatus\")"+orderData.getString("orderStatus"));
+
+
+
+            if (orderData.getString("orderStatus").equals(Constants.ORDER_RECEIVED_PARTIALLY) || orderData.getString("orderStatus").equals(Constants.ORDER_PICKED_PARTIALLY)){
+                JSONObject searchRfidTagData = Helper.commanHitApi(apiCallBackWithToken, Constants.searchRfidTag, searchJson);
+                String Quantity = "";
+                System.out.println("searchRfidTagData--->><><>>"+searchRfidTagData);
+                if (searchRfidTagData != null){
+                    ToTalQuantity =  (ToTalQuantity - searchRfidTagData.getInt("totalElements"));
+                   JSONObject obj =  sessionManager.getProductData();
+                   obj.put("quantity",ToTalQuantity);
+                    sessionManager.setProductData(obj.toString());
+                    System.out.println("inside searchRfidTagData--->><><>>"+searchRfidTagData);
+                }
+            }
+
+
+
+
+            System.out.println("sessionManager.getOrderData()"+orderData);
+            System.out.println("quamtity++++" + ToTalQuantity);
+
             JSONArray jsonArray=  new JSONArray();
+
             JSONObject story1 = StoryHandler.storyJsonObj("1",Constants.LOCATION,Constants.LOCATION,false,"SCAN","NO_DATA",sessionManager.getProductData().toString(),"1", "desc",new JSONArray().put(Constants.LOCATION),new JSONArray().put("tagType"));
 
             JSONObject story2 = StoryHandler.storyJsonObj("2",Constants.INVENTORY,Constants.INVENTORY,false,"SCAN","NO_DATA",
                     sessionManager.getProductData().toString()
-                    ,sessionManager.getProductData().getString("quantity"), "desc"
+                    ,String.valueOf(ToTalQuantity), "desc"
                     ,new JSONArray(),new JSONArray());
 
             JSONObject story3 = StoryHandler.storyJsonObj("3",Constants.UPDATE,Constants.UPDATE,false,"UPDATE","NO_DATA","","0","desc",new JSONArray(),new JSONArray());
@@ -155,6 +223,9 @@ public class StoryHandler {
             context.startActivity(intent);
 
         } catch (JSONException e) {
+            System.out.println("in cathc---->><><");
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         return "";
@@ -186,6 +257,7 @@ public class StoryHandler {
 
     public static void cycleCountStory(SessionManager sessionManager, Context context,String supportData,String type) throws JSONException {
         try {
+
             JSONArray jsonArray=  new JSONArray();
             JSONObject story1 = StoryHandler.storyJsonObj("1",Constants.LOCATION,Constants.LOCATION,false,"SCAN","NO_DATA","","1","desc",new JSONArray(),new JSONArray());
             JSONObject story2 = StoryHandler.storyJsonObj("2",Constants.INVENTORY,Constants.INVENTORY,false,"SCAN","NO_DATA","NA","1000", "desc",new JSONArray(),new JSONArray());

@@ -54,8 +54,47 @@ public class CaseExecutorHandler {
         return res1;
     }
 
+    public static JSONObject WeighingNozzleMapping (String story, ApiCallBackWithToken apiCallBackWithToken,SessionManager sessionManager) throws JSONException, InterruptedException {
+        JSONArray jsonArray = new JSONArray(story);
+        System.out.println("WeighingNozzleMapping" + jsonArray);
+        String weighingScalceData = jsonArray.getJSONObject(0).getString("data");
+        String nozzelData = jsonArray.getJSONObject(1).getString("data");
+        JSONArray weData = new JSONArray(weighingScalceData);
+        JSONArray nzData = new JSONArray(nozzelData);
+
+
+        System.out.println("WeighingNozzleMapping  w" + weighingScalceData);
+        System.out.println("WeighingNozzleMapping  n" + nozzelData);
+        JSONObject deviceProfile = new JSONObject();
+        deviceProfile.put("deviceId",weData.getJSONObject(0).getString("readerId"));
+        JSONObject s = Helper.getSearchJson(1,1,deviceProfile);
+        System.out.println("WeighingNozzleMapping req w" + s);
+
+
+        JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.searchNozzle,s);
+        System.out.println("WeighingNozzleMapping res w" + res1);
+
+        if(res1!=null){
+            JSONObject resData = res1.getJSONArray("content").getJSONObject(0);
+            System.out.println("WeighingNozzleMapping req final res" + resData);
+
+            resData.put("mappingId",nzData.getJSONObject(0).getString("readerId"));
+            resData.put("mappingValue",nzData.getJSONObject(0).getString("tagInfo"));
+            System.out.println("WeighingNozzleMapping req Json res" + resData);
+
+            JSONObject res2 = Helper.commanHitApi(apiCallBackWithToken,Constants.updateDeviceProfile,resData);
+            System.out.println("WeighingNozzleMapping req final res" + res2);
+
+        }
+
+        return new JSONObject();
+    }
+
+
 
     public static JSONObject order (String story, ApiCallBackWithToken apiCallBackWithToken, SessionManager sessionManager) throws JSONException, InterruptedException {
+
+        System.out.println("Story log-->>"+story);
         JSONArray jsonArray = new JSONArray(story);
         JSONObject locationObjH = jsonArray.getJSONObject(0);
         JSONObject inventoryObjH = jsonArray.getJSONObject(1);
@@ -71,6 +110,8 @@ public class CaseExecutorHandler {
         String orderStatus =sessionManager.getOptionSelected().equals(Constants.OUTBOUND)?pCount==actualCount?Constants.ORDER_PICKED:Constants.ORDER_PICKED_PARTIALLY:
                 pCount==actualCount?Constants.ORDER_RECEIVED:Constants.ORDER_RECEIVED_PARTIALLY;
 
+        System.out.println("orderStatus ->>>>" + orderStatus);
+
         for (int i = 0; i < resData.length(); i++) {
 
             resData.getJSONObject(i).put("tagType",Constants.INVENTORY);
@@ -84,7 +125,7 @@ public class CaseExecutorHandler {
             resData.getJSONObject(i).put("opreationStatus",orderStatus);
             resData.getJSONObject(i).put("dispatchTo",sessionManager.getOrderData().getString("dispatchTo"));
             resData.getJSONObject(i).put("movementStatus",Constants.IN_BUILDING);
-            resData.getJSONObject(i).put("status",Constants.EMPTY);
+            // resData.getJSONObject(i).put("status",Constants.EMPTY);
             resData.getJSONObject(i).put("batchNumber",sessionManager.getOrderData().has("batchNumber")?sessionManager.getOrderData().getString("batchNumber"):"NA");
             resData.getJSONObject(i).put("product_id",sessionManager.getProductData().getJSONObject("productId").getString("_id"));
             resData.getJSONObject(i).put("orderId",sessionManager.getOrderData().getString("_id"));
@@ -107,10 +148,16 @@ public class CaseExecutorHandler {
             resData1.getJSONObject(i).put("orderId",sessionManager.getOrderData().getString("_id"));
             resData1.getJSONObject(i).put("createdBy",sessionManager.getUserId());
             resData1.getJSONObject(i).put("updatedBy",sessionManager.getUserId());
-            resData1.getJSONObject(i).put("opreationStatus",Constants.ACTIVE);
+            if (sessionManager.getOptionSelected().equals(Constants.INBOUND)) {
+                resData1.getJSONObject(i).put("opreationStatus", Constants.ACTIVE);
+            }else {
+                resData1.getJSONObject(i).put("opreationStatus",orderStatus);
+
+            }
+            //resData1.getJSONObject(i).put("opreationStatus",orderStatus); // we have changed this during testing
         }
 
-        System.out.println("resData "+resData.toString());
+        System.out.println("resData -----<<<>>>>"+resData.toString());
         JSONObject orderData = sessionManager.getOrderData();
 
         orderData.put("orderStatus",orderStatus);
@@ -130,7 +177,7 @@ public class CaseExecutorHandler {
                 sessionManager.clearPendingOps();
             }
         }
-        return res2;
+        return new JSONObject();
     }
 
 
@@ -188,12 +235,11 @@ public class CaseExecutorHandler {
         System.out.println("RESSS supportDataObj------>>>>>>> Nozzle"+supportDataObj);
 
         JSONObject tagData = dataObj.getJSONObject(0);
-        tagData.put("currentLocation",supportDataObj.getString("buildingIds"));
-        tagData.put("currentLocation",supportDataObj.getString("_id"));
-        tagData.put("buildingIds",supportDataObj.getString("buildingIds"));
+        tagData.put("currentLocation",sessionManager.getBuildingId());
+        tagData.put("buildingIds",sessionManager.getBuildingId());
         tagData.put("tagType",Constants.NOZZLE);
         tagData.put("readerId",supportDataObj.getString("deviceId"));
-        tagData.put("tagPlacement", supportDataObj.getString("buildingIds"));
+        tagData.put("tagPlacement", sessionManager.getBuildingId());
         tagData.put("tagInfo",supportDataObj.getString("value"));
         tagData.put("opreationStatus",Constants.ACTIVE);
         tagData.put("status",Constants.ACTIVE);
@@ -202,9 +248,9 @@ public class CaseExecutorHandler {
 
         System.out.println("<<-----RESSS tagData------>>>>>>> "+dataObj);
 
-//        System.out.println("inside the nozzle ---->>>>>");
-
         JSONObject res1 = Helper.commanHitApi(apiCallBackWithToken,Constants.addBulkTags,dataObj);
+
+        System.out.println("nozzle res--"+res1);
 
         return new JSONObject();
     }
@@ -227,25 +273,21 @@ public class CaseExecutorHandler {
         JSONObject tagData = dataObj.getJSONObject(0);
 
         try {
-            // Update tagData with values from supportDataObj
-            // Note: We're using the actual field names from your supportDataObj
-            tagData.put("currentLocation", supportDataObj.getString("buildingIds"));
-            tagData.put("buildingId", supportDataObj.getString("buildingIds")); // Changed from buildingIds to match your data structure
-            tagData.put("buildingIds", supportDataObj.getString("buildingIds"));
-            tagData.put("tagType", "WEIGHING_SCALE"); // Assuming this is your Constants.WeigingScale value
-            tagData.put("readerId", supportDataObj.getString("_id")); // Using _id since deviceId wasn't in the supportData
+
+            tagData.put("currentLocation", sessionManager.getBuildingId());
+            tagData.put("buildingId", sessionManager.getBuildingId());
+//            tagData.put("buildingIds", supportDataObj.getString("buildingIds"));
+            tagData.put("tagType", "WEIGHING_SCALE");
+            tagData.put("readerId", supportDataObj.getString("_id"));
             tagData.put("tagPlacement", supportDataObj.getString("buildingIds"));
 
-            // For tagInfo, you might want to use a specific field from supportDataObj
-            // Currently there's no "value" field in supportDataObj, so you might want to use something else
-            tagData.put("tagInfo", supportDataObj.getString("deviceName")); // Changed to deviceName as an example
+            tagData.put("tagInfo", supportDataObj.getString("deviceName"));
 
-            tagData.put("operationStatus", "ACTIVE"); // Changed from opreationStatus to operationStatus and using string instead of constant
+            tagData.put("operationStatus", "ACTIVE");
             tagData.put("status", "ACTIVE");
             tagData.put("createdBy", sessionManager.getUserId());
             tagData.put("updatedBy", sessionManager.getUserId());
 
-            // Optional: Add any additional fields that might be useful
             tagData.put("deviceType", supportDataObj.getString("deviceType"));
             tagData.put("macAddress", supportDataObj.getString("macAddress"));
             tagData.put("model", supportDataObj.getString("model"));

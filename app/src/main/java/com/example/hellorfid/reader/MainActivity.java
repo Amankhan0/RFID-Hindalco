@@ -463,7 +463,7 @@ private POWER_EVENT power_event;
                             obj.put("tagType",Constants.LOCATION.equals(obj.getString("tagType"))?"BLD_ERR":obj.getString("tagType"));
                             addErrorTag(tagId, isOverLimit, obj);
                         }
-                    }else if(sessionManager.getCheckTagOn().equals(Constants.INVENTORY) && obj.getString("opreationStatus").equals(Constants.ACTIVE) ||
+                    }else if(sessionManager.getCheckTagOn().equals(Constants.INVENTORY) && obj.getString("opreationStatus").equals(Constants.ACTIVE) || obj.getString("opreationStatus").equals(Constants.ORDER_RECEIVED_FR) ||
                             obj.getString("opreationStatus").equals(sessionManager.getOptionSelected().equals(Constants.INBOUND)?Constants.ORDER_RECEIVING:Constants.ORDER_PICKING)) {
 
                             String product_id = sessionManager.getProductData().getJSONObject("productId").getString("_id");
@@ -623,6 +623,27 @@ private POWER_EVENT power_event;
 
 
                     //INBOUND END
+                }else if(sessionManager.getOptionSelected().equals("WEIGHING_SCALE")){
+
+                    if(sessionManager.getCheckTagOn().equals(Constants.WeighingScale)) {
+                        if(obj.getString("tagType").equals(Constants.WeighingScale)) {
+                            addSuccessTag(tagId, isOverLimit, obj);
+                            tagCheckBtnEnable(obj,1);
+                        }else {
+                            obj.put("tagType",Constants.LOCATION.equals(obj.getString("tagType"))?"BLD_ERR":obj.getString("tagType"));
+                            addErrorTag(tagId, isOverLimit, obj);
+                        }
+                    }
+
+                    if(sessionManager.getCheckTagOn().equals(Constants.NOZZLE)) {
+                        if( obj.getString("tagType").equals(Constants.NOZZLE)) {
+                            submitButton.setEnabled(true);
+                            addSuccessTag(tagId, isOverLimit, obj);
+                        }else {
+                            obj.put("tagType",Constants.INVENTORY.equals(obj.getString("tagType"))?"BLD_ERR":obj.getString("tagType"));
+                            addErrorTag(tagId, isOverLimit, obj);
+                        }
+                    }
                 }else {
                     System.out.println("check opreaton"+sessionManager.getOptionSelected());
                     addErrorTag(tagId, isOverLimit, obj);
@@ -678,8 +699,11 @@ private POWER_EVENT power_event;
                 }else {
                     addErrorTag(tagId, isOverLimit, tagJson);
                 }
+            }
 
-            }else {
+
+
+            else {
                 System.out.println("check Mapping error---->>>"+sessionManager.getOptionSelected());
 
                 addErrorTag(tagId, isOverLimit, tagJson);

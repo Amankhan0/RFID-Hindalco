@@ -46,6 +46,7 @@ public class Constants {
     public static final String WeigingScale = "WEIGHING_SCALE";
     public static final String DEVICE = "DEVICE";
     public static final String WEIGHINGMACHINE = "WEIGHING MACHINE";
+    public static final String ORDER_RECEIVED_FR = "ORDER_RECEIVED_FR";
 
     public static String searchRole = "user/api/searchRole";
 
@@ -70,6 +71,7 @@ public class Constants {
     public final static String updateLocation = "plant/api/updateLocation";
     public final static String updateDevice = "device/api/updateDevice";
     public final static String searchNozzle = "device/api/searchDeviceProfile";
+    public final static String updateDeviceProfile = "device/api/updateDeviceProfile";
 
 
     public static final String ACTIVE = "ACTIVE";
@@ -86,6 +88,7 @@ public class Constants {
     public static final String CYCLE_COUNT = "CYCLE_COUNT";
     public static final String MOVE = "MOVE";
     public static final String OPERATION_STATUS_CHANGE = "OPERATION_STATUS_CHANGE";
+    public static final String WeighingScale = "WEIGHING_SCALE";
     public static final String INBOUND = "INBOUND";
     public static final String OUTBOUND = "OUTBOUND";
 

@@ -159,7 +159,8 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("orderId", order.getId());
-            jsonObject.put("orderStatus", Constants.RECHECKING);
+            jsonObject.put("updatedOrderId", order.getId());
+            jsonObject.put("orderStatus", Constants.DISPATCHED);
             jsonObject.put("operationStatus", Constants.RECHECKING);
 
             JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
@@ -203,9 +204,15 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
             if(sessionManager.getOptionSelected().equals(Constants.INBOUND)){
                 s.put("currentLocation", sessionManager.getBuildingId());
                 s.put("orderType",Constants.INBOUND);
-            } else {
+            } else if(sessionManager.getOptionSelected().equals(Constants.OUTBOUND)){
                 s.put("currentLocation", sessionManager.getBuildingId());
                 s.put("orderType",Constants.OUTBOUND);
+            }else {
+                s.put("currentLocation", sessionManager.getBuildingId());
+                s.put("orderStatus",Constants.DISPATCHED);
+                s.put("orderType",Constants.OUTBOUND);
+
+
             }
 
             // Modified to use currentPage and PAGE_SIZE

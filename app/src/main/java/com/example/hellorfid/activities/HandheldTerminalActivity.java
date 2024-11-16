@@ -98,7 +98,6 @@ public class HandheldTerminalActivity extends AppCompatActivity {
 
         buttonInfoList.add(new ButtonInfo("Replace", v -> {
             try {
-
                 sessionManager.setOptionSelected(Constants.REPLACE);
                 StoryHandler.replace(sessionManager, HandheldTerminalActivity.this, "NA", Constants.INVENTORY);
             } catch (JSONException e) {
@@ -107,7 +106,14 @@ public class HandheldTerminalActivity extends AppCompatActivity {
         }));
 
         buttonInfoList.add(new ButtonInfo("Consume", v -> {
-            startActivity(new Intent(HandheldTerminalActivity.this, ConsumeActivity.class));
+
+//            sessionManager.setOptionSelected(Constants.WeighingScale);
+//            try {
+//                StoryHandler.WeighingScale(sessionManager, HandheldTerminalActivity.this, "NA", Constants.INVENTORY);
+//            } catch (JSONException e) {
+//                throw new RuntimeException(e);
+//            }
+
         }
         ));
 

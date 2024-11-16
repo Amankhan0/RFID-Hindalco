@@ -151,10 +151,16 @@ private POWER_EVENT power_event;
                     try {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("orderId", sessionManager.getOrderData().getString("_id"));
+                        jsonObject.put("updatedOrderId", sessionManager.getOrderData().getString("_id"));
                         jsonObject.put("orderStatus", Constants.RECHECK_FAILED);
                         jsonObject.put("operationStatus", Constants.RECHECK_FAILED);
+
+                        System.out.println("jsonObject from fail" +jsonObject);
+
                         JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
+                        System.out.println("res from fail---" + res);
                         if (res != null) {
+//                            startActivity(new Intent(MainActivity.this, ActionActivity.class));
                             Toast.makeText(getApplicationContext(), "Order Recheck Failed clicked", Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
@@ -486,8 +492,9 @@ private POWER_EVENT power_event;
                 }
                 else if(sessionManager.getOptionSelected().equals(Constants.RECHECK)){
 
-                    if(sessionManager.getCheckTagOn().equals(Constants.INVENTORY) && obj.getString("opreationStatus").equals(Constants.DISPATCHED) || obj.getString("opreationStatus").equals(Constants.RECHECKING)) {
+                    if(sessionManager.getCheckTagOn().equals(Constants.INVENTORY) && obj.getString("opreationStatus").equals(Constants.ORDER_PICKED) || obj.getString("opreationStatus").equals(Constants.RECHECKING)) {
                         String order_id = sessionManager.getOrderData().getString("_id");
+                        System.out.println("order_id.equals(obj.getString(\"orderId\"))"+order_id+" "+obj.getString("orderId"));
                         if(order_id.equals(obj.getString("orderId")) && obj.getString("tagType").equals(Constants.INVENTORY)) {
                            if(errorTagList.size()==0){
                                submitButton.setEnabled(true);
@@ -769,27 +776,12 @@ private POWER_EVENT power_event;
         return false;
     }
 
-    private boolean isAnyTagOverLimit() {
-        for (Tag tag : successTagList) {
-            if (tag.isOverLimit()) {
-                playOverLimitSound();
-                return true;
-            }
-        }
-        for (Tag tag : errorTagList) {
-            if (tag.isOverLimit()) {
-                playOverLimitSound();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void playOverLimitSound() {
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
-        }
-    }
+//
+//    private void playOverLimitSound() {
+//        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+//            mediaPlayer.start();
+//        }
+//    }
 
     private void updateSubmitButtonState() {
 //        submitButton.setEnabled(!successTagList.isEmpty() || !errorTagList.isEmpty());

@@ -114,6 +114,7 @@ public class CaseExecutorHandler {
 
         for (int i = 0; i < resData.length(); i++) {
 
+            System.out.println("resData.getJSONObject(i).getString(\"status\")"+resData.getJSONObject(i).getString("status").equals("NA"));
             resData.getJSONObject(i).put("tagType",Constants.INVENTORY);
             resData.getJSONObject(i).put("currentLocation",sessionManager.getBuildingId());
             resData.getJSONObject(i).put("locationIds",location.getString("locationIds"));
@@ -125,7 +126,9 @@ public class CaseExecutorHandler {
             resData.getJSONObject(i).put("opreationStatus",orderStatus);
             resData.getJSONObject(i).put("dispatchTo",sessionManager.getOrderData().getString("dispatchTo"));
             resData.getJSONObject(i).put("movementStatus",Constants.IN_BUILDING);
-            // resData.getJSONObject(i).put("status",Constants.EMPTY);
+            if(resData.getJSONObject(i).getString("status").equals("NA")){
+                resData.getJSONObject(i).put("status",Constants.EMPTY);
+            }
             resData.getJSONObject(i).put("batchNumber",sessionManager.getOrderData().has("batchNumber")?sessionManager.getOrderData().getString("batchNumber"):"NA");
             resData.getJSONObject(i).put("product_id",sessionManager.getProductData().getJSONObject("productId").getString("_id"));
             resData.getJSONObject(i).put("orderId",sessionManager.getOrderData().getString("_id"));
@@ -142,7 +145,10 @@ public class CaseExecutorHandler {
             resData1.getJSONObject(i).put("dispatchFrom",sessionManager.getOrderData().getString("dispatchFrom"));
             resData1.getJSONObject(i).put("dispatchTo",sessionManager.getOrderData().getString("dispatchTo"));
             resData1.getJSONObject(i).put("movementStatus",Constants.IN_BUILDING);
-            resData1.getJSONObject(i).put("status",Constants.EMPTY);
+            if(resData1.getJSONObject(i).getString("status").equals("NA")){
+                resData1.getJSONObject(i).put("status",Constants.EMPTY);
+            }
+
             resData1.getJSONObject(i).put("batchNumber",sessionManager.getOrderData().has("batchNumber")?sessionManager.getOrderData().getString("batchNumber"):"NA");
             resData1.getJSONObject(i).put("product_id",sessionManager.getProductData().getJSONObject("productId").getString("_id"));
             resData1.getJSONObject(i).put("orderId",sessionManager.getOrderData().getString("_id"));
@@ -197,7 +203,7 @@ public class CaseExecutorHandler {
         tagData.put("tagType",Constants.VEHICLE);
         tagData.put("tagInfo",supportDataObj.getString("vehicleNumber"));
         tagData.put("opreationStatus",Constants.ACTIVE);
-        tagData.put("status",Constants.ACTIVE);
+//        tagData.put("status",Constants.ACTIVE);
         tagData.put("movementStatus",Constants.ACTIVE);
         tagData.put("createdBy",sessionManager.getUserId());
         tagData.put("updatedBy",sessionManager.getUserId());
@@ -242,7 +248,7 @@ public class CaseExecutorHandler {
         tagData.put("tagPlacement", sessionManager.getBuildingId());
         tagData.put("tagInfo",supportDataObj.getString("value"));
         tagData.put("opreationStatus",Constants.ACTIVE);
-        tagData.put("status",Constants.ACTIVE);
+//        tagData.put("status",Constants.ACTIVE);
         tagData.put("createdBy",sessionManager.getUserId());
         tagData.put("updatedBy",sessionManager.getUserId());
 
@@ -284,7 +290,7 @@ public class CaseExecutorHandler {
             tagData.put("tagInfo", supportDataObj.getString("deviceName"));
 
             tagData.put("operationStatus", "ACTIVE");
-            tagData.put("status", "ACTIVE");
+//            tagData.put("status", "ACTIVE");
             tagData.put("createdBy", sessionManager.getUserId());
             tagData.put("updatedBy", sessionManager.getUserId());
 
@@ -329,7 +335,7 @@ public class CaseExecutorHandler {
         tagData.put("tagPlacement",supportDataObj.getJSONArray("buildingIds").get(0));
         tagData.put("tagInfo",supportDataObj.getString("value"));
         tagData.put("opreationStatus",Constants.ACTIVE);
-        tagData.put("status",Constants.ACTIVE);
+//        tagData.put("status",Constants.ACTIVE);
         tagData.put("createdBy",sessionManager.getUserId());
         tagData.put("updatedBy",sessionManager.getUserId());
 
@@ -380,7 +386,7 @@ public class CaseExecutorHandler {
         tagData.put("tagPlacement",supportDataObj.getJSONArray("buildingIds").get(0));
         tagData.put("tagInfo",supportDataObj.getString("value"));
         tagData.put("opreationStatus",Constants.ACTIVE);
-        tagData.put("status",Constants.ACTIVE);
+//        tagData.put("status",Constants.ACTIVE);
         tagData.put("createdBy",sessionManager.getUserId());
         tagData.put("updatedBy",sessionManager.getUserId());
 
@@ -553,14 +559,16 @@ public class CaseExecutorHandler {
         System.out.println("reCheckOrder story------>>>>>>> "+story);
 
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("updatedOrderId", sessionManager.getOrderData().getString("_id"));
         jsonObject.put("orderId", sessionManager.getOrderData().getString("_id"));
         jsonObject.put("orderStatus", Constants.RECHECKED);
         jsonObject.put("operationStatus", Constants.RECHECKED);
+        jsonObject.put("movementStatus", Constants.GATEOUT);
         JSONObject res1 = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
         if(res1!=null && res1.getInt("status") == 200) {
             System.out.println("RESSS tag updated------>>>>>>> "+res1);
             sessionManager.clearPendingOps();
         }
-        return res1;
+        return new JSONObject();
     }
 }

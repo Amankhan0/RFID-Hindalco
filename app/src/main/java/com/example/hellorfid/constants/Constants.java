@@ -47,6 +47,7 @@ public class Constants {
     public static final String DEVICE = "DEVICE";
     public static final String WEIGHINGMACHINE = "WEIGHING MACHINE";
     public static final String ORDER_RECEIVED_FR = "ORDER_RECEIVED_FR";
+    public static final String GATEOUT = "GATEOUT";
 
     public static String searchRole = "user/api/searchRole";
 

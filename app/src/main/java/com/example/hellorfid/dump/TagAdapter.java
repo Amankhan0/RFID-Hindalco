@@ -46,19 +46,23 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
         holder.lotNumber.setText(tag.getTagType());
 
         holder.scanningFor.setText(sessionManager.getCheckTagOn());
+
         if(sessionManager.getCheckTagOn().equals(tag.getTagType())){
-            if (!tag.isOverLimit()) {
-                holder.scanningFor.setBackgroundColor(Color.parseColor("#039e00"));
-                holder.tagNumber.setTextColor(context.getResources().getColor(R.color.black));
-                holder.lotNumber.setTextColor(context.getResources().getColor(R.color.black));
-            }else {
-                holder.scanningFor.setBackgroundColor(Color.parseColor("#9e0005"));
-                holder.tagNumber.setTextColor(context.getResources().getColor(R.color.red));
-                holder.lotNumber.setTextColor(context.getResources().getColor(R.color.red));
-            }
+
+            holder.scanningFor.setBackgroundColor(Color.parseColor("#039e00"));
+            holder.tagNumber.setTextColor(context.getResources().getColor(R.color.black));
+            holder.lotNumber.setTextColor(context.getResources().getColor(R.color.black));
+//            if (!ttag.isOverLimit()ag.isOverLimit()) {
+//                holder.scanningFor.setBackgroundColor(Color.parseColor("#039e00"));
+//                holder.tagNumber.setTextColor(context.getResources().getColor(R.color.black));
+//                holder.lotNumber.setTextColor(context.getResources().getColor(R.color.black));
+//            }else {
+//                holder.scanningFor.setBackgroundColor(Color.parseColor("#9e0005"));
+//                holder.tagNumber.setTextColor(context.getResources().getColor(R.color.red));
+//                holder.lotNumber.setTextColor(context.getResources().getColor(R.color.red));
+//            }
         }else {
             holder.scanningFor.setBackgroundColor(Color.parseColor("#9e0005"));
-
             holder.tagNumber.setTextColor(context.getResources().getColor(R.color.red));
             holder.lotNumber.setTextColor(context.getResources().getColor(R.color.red));
         }

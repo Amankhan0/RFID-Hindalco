@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hellorfid.R;
 import com.example.hellorfid.activities.ActionActivity;
+import com.example.hellorfid.activities.HandheldTerminalActivity;
 import com.example.hellorfid.constants.Constants;
 import com.example.hellorfid.constants.Helper;
 import com.example.hellorfid.dump.ApiCallBackWithToken;
@@ -160,8 +161,13 @@ private POWER_EVENT power_event;
                         JSONObject res = Helper.commanUpdate(apiCallBackWithToken, Constants.updateOrder,jsonObject);
                         System.out.println("res from fail---" + res);
                         if (res != null) {
-//                            startActivity(new Intent(MainActivity.this, ActionActivity.class));
+                            sessionManager.clearPendingOps();
                             Toast.makeText(getApplicationContext(), "Order Recheck Failed clicked", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this, HandheldTerminalActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+
                         }
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
@@ -396,11 +402,6 @@ private POWER_EVENT power_event;
         System.out.println("rfConfig" + rfConfig);
         rfConfig.setTransmitPowerIndex(power);
         reader.Config.Antennas.setAntennaRfConfig(1, rfConfig);
-    }
-
-    public static int getCurrentPower(RFIDReader reader) throws InvalidUsageException, OperationFailureException {
-        Antennas.AntennaRfConfig rfConfig = reader.Config.Antennas.getAntennaRfConfig(1);
-        return rfConfig.getTransmitPowerIndex();
     }
 
 //    private void initializeRangeControl() {

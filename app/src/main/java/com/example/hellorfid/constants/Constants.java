@@ -15,8 +15,8 @@ public class Constants {
     public static final String SEARCH_FILE_ENDPOINT = "upload/api/searchFile";
     public static final String DOWNLOAD_FILE_ENDPOINT = "upload/api/download";
 
-    public final static String url = "https://api.hindalco.headsupcorporation.com/";
-
+//    public final static String url = "https://api.hindalco.headsupcorporation.com/";
+public final static String url = "http://192.168.0.100/";
     public final static String addBulkTags = "iot/api/addBulkTags";
     public final static String addTag = "iot/api/addTag";
 

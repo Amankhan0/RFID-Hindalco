@@ -205,23 +205,23 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
                 s.put("currentLocation", sessionManager.getBuildingId());
                 s.put("orderType",Constants.INBOUND);
             } else if(sessionManager.getOptionSelected().equals(Constants.OUTBOUND)){
+
                 s.put("currentLocation", sessionManager.getBuildingId());
                 s.put("orderType",Constants.OUTBOUND);
+
+                JSONObject statusCondition = new JSONObject();
+                statusCondition.put("$ne", "DISPATCH");
+                s.put("orderStatus", statusCondition);
             }else {
                 s.put("currentLocation", sessionManager.getBuildingId());
                 s.put("orderStatus",Constants.DISPATCHED);
                 s.put("orderType",Constants.OUTBOUND);
-
-
             }
-
-            // Modified to use currentPage and PAGE_SIZE
+            System.out.println("s-----s---"+s);
             JSONObject requestBody = Helper.getSearchJson(currentPage, PAGE_SIZE, s);
             JSONObject res = Helper.commanHitApi(apiCallBackWithToken,Constants.searchOrders,requestBody);
             System.out.println("<<---res--->" + res);
             if (res == null ) {
-
-
                 runOnUiThread(() -> {
                     runOnUiThread(() -> swipeRefreshLayout.setRefreshing(false));
                     hideLoader();
@@ -382,3 +382,29 @@ public class OrderActivity extends AppCompatActivity implements OrderAdapter.OnO
         }
     }
 }
+
+//
+//// Create OR condition array
+//JSONArray orConditions = new JSONArray();
+//
+//// First condition
+//JSONObject condition1 = new JSONObject();
+//            condition1.put("orderStatus", "STATUS_1");
+//
+//// Second condition
+//JSONObject condition2 = new JSONObject();
+//            condition2.put("orderStatus", "STATUS_2");
+//
+//// Add conditions to OR array
+//            orConditions.put(condition1);
+//            orConditions.put(condition2);
+//
+//// Add OR array to main query
+//JSONObject orQuery = new JSONObject();
+//            orQuery.put("$or", orConditions);
+//            s.put("$or", orConditions);
+//
+//// Add the NOT EQUAL condition for RECHECKED
+//JSONObject notRechecked = new JSONObject();
+//            notRechecked.put("$ne", Constants.RECHECKED);
+//            s.put("orderStatus", notRechecked);

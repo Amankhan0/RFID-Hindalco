@@ -125,11 +125,12 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
+
             apiCallBackWithToken.Api(apiEndpoint, requestBody, new ApiCallBackWithToken.ApiCallback() {
                 @Override
                 public JSONObject onSuccess(JSONObject responseJson) {
                     runOnUiThread(() -> {
-                        System.out.println("responseJson---"+responseJson);
+                        System.out.println("From Building - responseJson---"+responseJson);
                         parseAndDisplayBuildings(responseJson);
                         hideLoader();  // Hide the loader once data is loaded
                     });

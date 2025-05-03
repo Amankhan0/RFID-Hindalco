@@ -51,6 +51,7 @@ public class HandheldTerminalActivity extends AppCompatActivity {
             addButtonsBasedOnRole();
 
         } catch (JSONException | InterruptedException e) {
+            System.out.println("Error in HandheldTerminalActivity: " + e.getMessage());
             e.printStackTrace();
         }
 

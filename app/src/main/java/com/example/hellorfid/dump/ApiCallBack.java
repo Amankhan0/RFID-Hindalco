@@ -43,7 +43,6 @@ public class ApiCallBack {
 
 
        String ipAddress = sessionManager.getIpAddress();
-//       String ipAddress = sessionManager.getIpAddress();
        System.out.println("ipAddress" + ipAddress);
        System.out.println("session manager from api callback" + sessionManager.getIpAddress());
 
@@ -81,10 +80,8 @@ public class ApiCallBack {
                     try {
                         String responseBody = response.body().string();
                         JSONObject responseJson = new JSONObject(responseBody);
-
                         // Log the successful response
                         Log.d(TAG, "Request successful. Response: " + responseBody);
-
                         callback.onSuccess(responseJson);
                     } catch (Exception e) {
                         Log.e(TAG, "Error parsing response: " + e.getMessage(), e);
